@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block navbar %}
+{% endblock %}
+
+{% block content %}
+<div class="login_container grey darken-4">
+    <div class="container login_container_child">
+        <div class="row">
+            <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4">
+                <a href="{{ url_for('index') }}" class="brand-logo">
+                    <img class="social-icon" style="max-width: 100%;"
+                         src="{{ url_for('static', filename='images/logo.png') }}">
+                </a>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white center-align"
+                 style="padding: 30px 15px;">
+                {% if error %}
+                {% endif %}
+                <form class="login_form" action="" method="post">
+                    <input id="email_login" type="email" placeholder="Email Id" class="validate">
+                    <input id="password_login" type="password" placeholder="Password" class="validate">
+                    <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="action">
+                        LOGIN
+                    </button>
+                </form>   
+                <p class="center-align">Don't have an account? <a href="/register">Register</a></p>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block script %}
+{{ super() }}
+var windowHeight = $(window).height();
+var navHeight = $('nav').height();
+$('.login_container').css('height', windowHeight - navHeight);
+var minHeight = $('.login_container_child').height() + 50;
+$('.login_container').css('min-height', minHeight);
+
+{% endblock %}

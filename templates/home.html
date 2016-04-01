@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block navelements %}
+<a href="#" data-activates="mobile-demo" class="button-collapse">
+    <i class="material-icons moderate-pink-text text-darken-1">menu</i>
+</a>
+<ul class="right hide-on-med-and-down">
+    <li><a class="moderate-pink-text text-darken-1" href="{{ url_for('login') }}">LOGIN</a></li>
+</ul>
+<ul class="side-nav" id="mobile-demo">
+    <li><a href="{{ url_for('login') }}">LOGIN</a></li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<div class="intro">
+    <div class="welcome-message">
+        <h1 class="grey-text text-lighten-5">Welcome to Blue Garden</h1>
+        <a id="join_btn" class="waves-effect waves-light moderate-pink darken-1 btn-large" href="/register">Join Us</a>
+    </div>
+</div>
+{% endblock %}

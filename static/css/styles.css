@@ -1,0 +1,58 @@
+body, html {
+    background-color: #EDEDED !important;
+}
+
+.moderate-pink-text.text-darken-1 {
+    color: #87395d !important;
+}
+
+.moderate-pink.darken-1 {
+    background-color: #87395d !important;
+}
+
+.intro
+{
+    position: relative;
+    text-align: center;
+    height: 500px;
+    background-image: url("../images/banner_home.png");
+    margin-bottom: 0px;
+}
+
+.intro h1
+{
+    margin: 0 0 10px 0;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.welcome-message {
+    position: absolute;
+    width:100%;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.login_container {
+	position: relative;
+}
+
+.login_container_child {
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.tabs .indicator {
+  background-color: #87395d !important;
+}
+
+
+.social-icon {
+	max-width: 50px;
+}
+
+.page-footer {
+	margin: 0 !important;
+}
