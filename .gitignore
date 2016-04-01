@@ -2,3 +2,5 @@
 main.py
 
 *.pyc
+
+config.py

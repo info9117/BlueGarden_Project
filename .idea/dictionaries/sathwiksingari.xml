@@ -2,8 +2,13 @@
   <dictionary name="sathwiksingari">
     <words>
       <w>endblock</w>
+      <w>endfor</w>
+      <w>endwith</w>
+      <w>firstname</w>
+      <w>lastname</w>
       <w>navbar</w>
       <w>navelements</w>
+      <w>sqlalchemy</w>
       <w>tablename</w>
       <w>valign</w>
     </words>

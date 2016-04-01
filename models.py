@@ -17,7 +17,7 @@ class User(db.Model):
         self.set_password(password)
 
     def __repr__(self):
-        return '<Email ' + self.email + '>'
+        return self.email
 
     def set_password(self, password):
         self.password = generate_password_hash(password)

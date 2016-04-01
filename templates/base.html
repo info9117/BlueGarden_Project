@@ -19,14 +19,24 @@
 
 <body>
 <header>
-	{% block navbar %}
+    {% block navbar %}
     <nav class="blue-grey lighten-5 z-depth-4" role="navigation">
         <div class="nav-wrapper container">
             <a href="{{ url_for('index') }}" class="brand-logo">
                 <img style="max-width:120px; margin-left:10px"
                      src="{{ url_for('static', filename='images/logo.png') }}">
             </a>
-            {% block navelements %}{% endblock %}
+            {% block navelements %}
+            <a href="#" data-activates="mobile-demo" class="button-collapse">
+                <i class="material-icons moderate-pink-text text-darken-1">menu</i>
+            </a>
+            <ul class="right hide-on-med-and-down">
+                <li><a class="moderate-pink-text text-darken-1" href="{{ url_for('logout') }}">LOGOUT</a></li>
+            </ul>
+            <ul class="side-nav" id="mobile-demo">
+                <li><a href="{{ url_for('logout') }}">LOGOUT</a></li>
+            </ul>
+            {% endblock %}
         </div>
     </nav>
     {% endblock %}
@@ -86,6 +96,7 @@
         $('#register').addClass('active');
     });
     {% endblock %}
+
 
 </script>
 </body>
