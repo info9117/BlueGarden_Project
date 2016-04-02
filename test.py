@@ -1,6 +1,7 @@
 from main import app
 from models import *
 from flask_testing import TestCase
+from flask_testing.utils import _make_test_response
 import unittest
 
 
@@ -13,6 +14,7 @@ class BaseTestCase(TestCase):
     def setUp(self):
         db.create_all()
         db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
+        db.session.add(User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins'))
         db.session.commit()
 
     def tearDown(self):
@@ -51,6 +53,7 @@ class BlueGardenTestCase(BaseTestCase):
     def test_login_invalid_credentials(self):
         print('\n## Testing Login page with invalid credentials ##')
         response = self.login('singarisathwik007@gmail.com', 'dm08b48')
+        print(type(response))
         self.assertIn(b'Email Id/Password do not match', response.data)
 
     # Testing Logout

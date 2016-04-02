@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect, session, flash
 from functools import wraps
 from models import *
+from shared import db
 
 # Creating application object
 app = Flask(__name__)
@@ -9,7 +10,6 @@ app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
 
 # Creating SQLAlchemy Object
-from shared import db
 db.init_app(app)
 
 

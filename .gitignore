@@ -1,3 +1,11 @@
 *.pyc
-
+:memory
 config.py
+
+:memory
+
+:memory
+
+:memory
+
+dbconnect.py
