@@ -1,5 +1,4 @@
 from flask import Flask, render_template, url_for, request, redirect, session, flash
-from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from models import *
 
@@ -10,7 +9,8 @@ app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
 
 # Creating SQLAlchemy Object
-db = SQLAlchemy(app)
+from shared import db
+db.init_app(app)
 
 
 # Login Required wrap
