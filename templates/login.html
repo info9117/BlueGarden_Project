@@ -6,8 +6,8 @@
 {% endblock %}
 
 {% block content %}
-<div class="login_container grey darken-4">
-    <div class="container login_container_child">
+<div class="ver-hor-align-parent grey darken-4">
+    <div class="container ver-hor-align-child">
         <div class="row">
             <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4">
                 <a href="{{ url_for('index') }}" class="brand-logo">
@@ -65,8 +65,8 @@
 {{ super() }}
 var windowHeight = $(window).height();
 var navHeight = $('nav').height();
-$('.login_container').css('height', windowHeight - navHeight);
-var minHeight = $('.login_container_child').height() + 50;
-$('.login_container').css('min-height', minHeight);
+$('.ver-hor-align-parent').css('height', windowHeight - navHeight);
+var minHeight = $('.ver-hor-align-child').height() + 50;
+$('.ver-hor-align-parent').css('min-height', minHeight);
 
 {% endblock %}

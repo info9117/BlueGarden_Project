@@ -95,6 +95,9 @@
         $(".button-collapse").sideNav();
         $('#register').addClass('active');
     });
+    var windowHeight = $(window).height();
+    var navHeight = $('nav').height();
+    $('.full-window-container').css('height', windowHeight - navHeight);
     {% endblock %}
 
 
