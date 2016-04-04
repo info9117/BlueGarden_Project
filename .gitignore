@@ -9,3 +9,7 @@ config.py
 :memory
 
 dbconnect.py
+
+.idea/workspace.xml
+
+.idea/workspace.xml
