@@ -1,4 +1,5 @@
-Feature: As a System Owner, i want users to be able to login so that the system can identify individual users and that the system can personalize its services for each user.
+Feature: As a System Owner, i want users to be able to login so that the system can identify individual users and
+	that the system can personalize its services for each user.
 
 	Scenario: Login with existing email and password
 		Given I am not currently logged in

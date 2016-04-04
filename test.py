@@ -1,12 +1,10 @@
 from main import app
 from models import *
 from flask_testing import TestCase
-from flask_testing.utils import _make_test_response
 import unittest
 
 
 class BaseTestCase(TestCase):
-
     def create_app(self):
         app.config.from_object('config.TestingConfig')
         return app
@@ -23,7 +21,6 @@ class BaseTestCase(TestCase):
 
 
 class BlueGardenTestCase(BaseTestCase):
-
     # Testing the home page content
     def test_index_content(self):
         response = self.client.get('/', content_type='html/text')
@@ -32,7 +29,7 @@ class BlueGardenTestCase(BaseTestCase):
                 if session.get('logged_in', False):
                     print('\n## Testing Home page for content ##')
                     print('\n## User already logged in. So verifying dashboard ##')
-                    self.assertIn(b'Hello '+session['firstname'], response.data)
+                    self.assertIn(b'Hello ' + session['firstname'], response.data)
                 else:
                     print('\n## Testing Home page for welcome message ##')
                     self.assertIn(b'Welcome to Blue Garden', response.data)
@@ -96,6 +93,7 @@ class BlueGardenTestCase(BaseTestCase):
 
     def logout(self):
         return self.client.get('/logout', follow_redirects=True)
+
 
 if __name__ == '__main__':
     unittest.main()
