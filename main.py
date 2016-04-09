@@ -2,17 +2,30 @@ from flask import Flask, render_template, url_for, request, redirect, session, f
 from functools import wraps
 
 from controllers.userController import UserController as userController
-from models import *
 from shared import db
 
 # Creating application object
 app = Flask(__name__)
+host = "http://localhost"
+port = "5000"
+address = host+':'+port
 
 # Setting app configuration
 app.config.from_object('config.DevelopmentConfig')
 
 # Creating SQLAlchemy Object
 db.init_app(app)
+
+
+def serve_forever():
+    app.run()
+
+
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError("Not running with Werkzeug server")
+    func()
 
 
 # Login Required wrap
@@ -61,5 +74,10 @@ def page_not_found(e):
     return render_template('404.html')
 
 
+@app.route('/shutdown')
+def shutdown():
+    shutdown_server()
+
+
 if __name__ == '__main__':
-    app.run()
+    serve_forever()
