@@ -1,15 +1,1 @@
 *.pyc
-:memory
-config.py
-
-:memory
-
-:memory
-
-:memory
-
-dbconnect.py
-
-.idea/workspace.xml
-
-.idea/workspace.xml
