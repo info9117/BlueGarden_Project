@@ -24,3 +24,31 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+class Farm(db.Model):
+    __tablename__ = 'farms'
+    id = db.Column('id', db.Integer, primary_key=True)
+    farm_name = db.Column('farm_name', db.String(50))
+    address = db.Column('address', db.String(80), nullable=False)
+
+    def __init__(self, id, farm_name, address):
+        self.id = id
+        self.farm_name = farm_name
+        self.address = address
+
+        
+class Farmer(db.Model):
+    __tablename__ = 'farmers'
+    __table_args__ = (
+        db.PrimaryKeyConstraint('id', 'farms', name='OneFarmerOneFarmOneEntry_CK'),
+    )
+
+    id = db.Column('id', db.Integer, db.ForeignKey("users.id"), nullable=False)
+    farms = db.Column('farms',  db.Integer, db.ForeignKey("farms.id"), nullable=False)
+    
+    def __init__(self, id, farms):
+        self.id = id
+        self.farms = farms
+        
+        
+
