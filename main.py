@@ -1,6 +1,5 @@
 from flask import Flask, render_template, url_for, request, redirect, session, flash
 from functools import wraps
-
 from controllers.userController import UserController as userController
 from shared import db
 
