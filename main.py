@@ -68,6 +68,18 @@ def dashboard():
     return render_template('dashboard.html')
 
 
+@app.route('/browse')
+@login_required
+def browse():
+    return render_template('browse.html')
+
+
+@app.route('/sell')
+@login_required
+def sell():
+    return render_template('sell.html')
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html')

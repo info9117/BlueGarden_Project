@@ -2,6 +2,44 @@ body, html {
     background-color: #EDEDED !important;
 }
 
+body {
+    font-size: 14px;
+    font-weight: 400;
+    background-color: #eeeeee;
+}
+
+h1,h2,h3,h4,h5,h6,p {
+    margin: 0;
+    padding: 10px 0;
+    font-weight: 700;
+}
+
+h1 {
+    font-size: 4em;
+}
+
+h2 {
+    font-size: 3.5em;
+}
+
+h3 {
+    font-size: 2.75em;
+}
+
+h4 {
+    font-size: 2em;
+}
+
+h5 {
+    font-size: 1.5em;
+}
+
+h6,p {
+    padding: 0;
+    font-size: 1em;
+    font-weight: 400;
+}
+
 @font-face {
     font-family: 'Aniron';
     font-weight: normal;
@@ -15,6 +53,14 @@ body, html {
 
 .moderate-pink.darken-1 {
     background-color: #87395d !important;
+}
+
+nav .button-collapse i {
+    font-size: 2rem;
+}
+
+nav ul li a {
+    color: #87395D !important;
 }
 
 .intro
@@ -82,10 +128,4 @@ body, html {
     position: absolute;
     top: 15%;
     color: #AE2D02;
-}
-
-#not-found-container {
-    background-image: url('../images/thering.jpg');
-    background-size: cover;
-    background-position: center top;
 }
