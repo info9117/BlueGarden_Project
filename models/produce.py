@@ -7,7 +7,7 @@ class Produce(db.Model):
     name = db.Column('name', db.String(255), nullable=False)
     # Vegetables, Fruits, Grains, meats, diary
     category = db.Column('category', db.String(40), nullable=False)
-    description = db.Column('name', db.String(255))
+    description = db.Column('description', db.String(255))
     image_id = db.Column('image_id', db.Integer, db.ForeignKey("images.id"))
 
     def __init__(self, name, category):
