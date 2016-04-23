@@ -1,7 +1,7 @@
 import main
 from main import app, address
 from selenium import webdriver
-from modelss import *
+from models import *
 import threading
 
 
