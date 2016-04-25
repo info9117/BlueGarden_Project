@@ -62,6 +62,9 @@ def step_impl(context):
     assert 'Email Id already exists' in context.browser.page_source
 
 
+
+    
+
 def login(context, email, password):
     email_field = context.browser.find_element_by_id("email")
     password_field = context.browser.find_element_by_id("password")
@@ -80,3 +83,6 @@ def register(context, first_name, last_name, email, password):
     email_field.send_keys(email)
     password_field.send_keys(password)
     email_field.submit()
+    
+
+    
