@@ -94,7 +94,36 @@ class BlueGardenTestCase(BaseTestCase):
 
     def logout(self):
         return self.client.get('/logout', follow_redirects=True)
+    
+    #Testing the flag for farmer user type
+    def test_farmer_type(self):
+        user = User.query.filter_by(email='singarisathwik007@gmail.com').first()
+        User.set_user_farmer(user)
+        assert User.query.filter_by(type='C').first().first_name == 'Sathwik'
+        user.type = 'B'
+        assert not User.query.filter_by(email='singarisathwik007@gmail.com').first().type == 'C'
 
+    #Testing new farmer user has no farms yet
+    def test_farm_page_content(self):
+        self.login('singarisathwik007@gmail.com', 'dm08b048')
+        response = self.client.get('/sell', follow_redirects=True)
+        self.assertIn(b"You dont have any farms yet.",response.data)
+        
+    #Testing that user can add farms that they work on
+    def test_add_farms(self):
+        response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
+        self.assertIn(b"Farm added",response.data)
+        
+    def add_farm(self, name, address1, address2, city, state, country, postcode):
+        return self.client.post('/sell', data=dict(
+            name=name,
+            address1=address1,
+            address2=address2,
+            city=city,
+            state=state,
+            country=country,
+            postcode=postcode
+        ), follow_redirects=True)        
 
 if __name__ == '__main__':
     unittest.main()
