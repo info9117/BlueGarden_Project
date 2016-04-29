@@ -38,8 +38,8 @@ class FarmController:
             #db.session.commit()
             user = User.query.filter_by(email=session['email']).first()
             farm_id = db.session.query(Farm).order_by(Farm.id.desc()).first().id
-            #db.session.add(Works(user.id,farm_id))#farm_id failing not null constraint??
-            db.session.add(Works(1,2))
+            db.session.add(Works(user.id,farm_id))#farm_id failing not null constraint??
+            #db.session.add(Works(1,2))
             db.session.commit()
             User.set_user_farmer(user)
             return redirect(url_for('sell'))
