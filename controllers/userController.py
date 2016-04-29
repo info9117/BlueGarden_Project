@@ -67,3 +67,7 @@ class UserController:
         session.pop('lastname', None)
         flash('You successfully logged out', 'success')
         return redirect(url_for('login'))
+        
+        
+ 
+        

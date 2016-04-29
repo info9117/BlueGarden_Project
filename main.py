@@ -67,6 +67,11 @@ def logout():
 @login_required
 def dashboard():
     return render_template('dashboard.html')
+    
+@app.route('/addcrop')
+@login_required
+def addcrop():
+    return render_template('dashboard.html')
 
 
 @app.errorhandler(404)
