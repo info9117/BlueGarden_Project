@@ -1,15 +1,10 @@
 import os
-from flask import Flask, render_template, url_for, request, redirect, session, flash, send_from_directory
+from flask import Flask, render_template, url_for, request, redirect, session, flash, send_from_directory, abort
 from functools import wraps
 from controllers.userController import UserController
 from werkzeug.utils import secure_filename
 import utilities
-from models.produce import Produce
-from models.image import Image
-from models.price import Price
-from models.farm import Farm
-from models.unit import Unit
-from models import Address
+from models import *
 from shared import db
 
 # Creating application object
@@ -101,7 +96,7 @@ def add_produce_to_farm(farm_id):
         selected_units = request.form.get('units', '')
         prices = {}
         for unit in selected_units:
-            prices[unit] = request.form.get('price-'+selected_units)
+            prices[unit] = request.form.get('price'+selected_units)
         file = request.files['prod_image']
         if not name:
             errors.append('Name cannot be empty')
@@ -120,18 +115,24 @@ def add_produce_to_farm(farm_id):
             os.makedirs(os.path.dirname(directory), exist_ok=True)
             filename = secure_filename(file.filename)
             file.save(os.path.join(directory, filename))
-            image = Image('produce/' + str(farm_id)+'/'+filename)
-            db.session.add(image)
-            produce = Produce(name, description, category, image.id)
-            db.session.add(produce)
-            for price in prices:
-                db.session.add(Price(produce.id, price, prices[price]))
+            img = Image('produce/' + str(farm_id) + '/' + filename)
+            db.session.add(img)
+            db.session.flush()
+            prod = Produce(name, description, category, img.id)
+            db.session.add(prod)
+            db.session.flush()
+            db.session.add(Grows(farm_id, prod.id))
+            for p in prices:
+                db.session.add(Price(prod.id, p, prices[p]))
+                db.session.flush()
             db.session.commit()
             return 'Success'
     units = Unit.query.all()
-    farm = Farm.query.get(farm_id)
-    farm_address = Address.query.get(farm.address_id)
-    return render_template('add_produce.html', units=units, farm=farm, address=farm_address, errors=errors)
+    farm1 = Farm.query.get(farm_id)
+    if not farm1:
+        abort(404)
+    farm_address = Address.query.get(farm1.address_id)
+    return render_template('add_produce.html', units=units, farm=farm1, address=farm_address, errors=errors)
 
 
 @app.route('/uploads/<int:farm_id>/<filename>')
@@ -142,7 +143,7 @@ def uploaded_image(farm_id, filename):
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html')
+    return render_template('404.html'), 404
 
 
 @app.route('/shutdown')

@@ -7,4 +7,4 @@ class Image(db.Model):
     url = db.Column('url', db.String(255), nullable=False)
 
     def __init__(self, filename):
-        self.url = 'images/'+filename
+        self.url = filename
