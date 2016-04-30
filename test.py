@@ -118,6 +118,7 @@ class BlueGardenTestCase(BaseTestCase):
         self.assertIn(b"Community Farm",response.data)
         
     def add_farm(self, name, address1, address2, city, state, country, postcode):
+        self.login('singarisathwik007@gmail.com', 'dm08b048')
         return self.client.post('/sell', data=dict(
             name=name,
             address1=address1,
