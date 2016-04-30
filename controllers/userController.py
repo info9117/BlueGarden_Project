@@ -25,7 +25,7 @@ class UserController:
                 session['email'] = email
                 session['firstname'] = user.first_name
                 session['lastname'] = user.last_name
-                return redirect(url_for('addcrop'))
+                return redirect(url_for('dashboard'))
         return render_template("login.html", errors=errors)
 
     @staticmethod
