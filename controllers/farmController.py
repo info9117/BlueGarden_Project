@@ -10,23 +10,14 @@ class FarmController:
     @staticmethod
     def farms_view():
         errors = []
-        messages = []
+        myfarms = []
         user = User.query.get(User.query.filter_by(email=session['email']).first().id)
-        print(user.type)
         if user.type == 'C':
-            usrid = user.id
-            allfarmsiworkon = Works.query.filter_by(user_id=usrid).all()
-            for farm in allfarmsiworkon:
-                print(farm.farm_id)
-                fid = farm.farm_id
-                #print(Farm.query.get(farm.farm_id).name)
-                errors.append(Farm.query.get(fid).name)
-                
-        #test exists a farm:
-        #farm = Works.query.filter_by(user_id=user.id).first().farm_id
-        #print(Farm.query.get(farm).name)
-     #   else:
-     #       errors.append("You dont have any farms yet. Please add a farm.")
+            for farm in Works.query.filter_by(user_id=user.id).all():
+                myfarms.append(Farm.query.get(farm.farm_id).name)
+        else:
+            errors.append("You dont have any farms yet. Please add a farm.")
+            
    # @staticmethod
    # def add_farm():
         if request.method == 'POST':
@@ -52,8 +43,7 @@ class FarmController:
 
             User.set_user_farmer(user)
             db.session.commit()
-            print(user.type)
             return redirect(url_for('sell'))
-        return render_template("sell.html", errors=errors)    
+        return render_template("sell.html", errors=errors, myfarms=myfarms)    
         
 
