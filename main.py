@@ -68,6 +68,10 @@ def logout():
 def dashboard():
     return render_template('dashboard.html')
 
+@app.route('farm/<int:farm_id>/produce/<int:produce_id>')
+def view_produce(farm_id, produce_id):
+    return render_template()
+
 
 @app.errorhandler(404)
 def page_not_found(e):
