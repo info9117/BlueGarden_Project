@@ -53,10 +53,17 @@
                     </button>
                 </form>
             </div>
-            <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white center-align"
-                 style="padding: 30px 15px;"> <p>My Farms </p>
-                </div>
-        </div>
+            <div>
+                {% if myfarms %}
+                    <ul class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white left-align">
+                {% for myfarm in myfarms %}
+                    <a href="send me to add produce to my farm">{{ myfarm }} <br></a>
+                {% endfor %}
+                    </ul>
+                {% endif %}
+
+{% block body %}
+{% endblock %}
     </div>
 
 </div>
