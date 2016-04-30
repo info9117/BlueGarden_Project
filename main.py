@@ -61,17 +61,18 @@ def register():
 @app.route('/logout')
 def logout():
     return userController.logout()
-
+    
+@app.route('/addcrop',methods=['GET', 'POST'])
+@login_required
+def addcrop():
+    return userController.addcrop()
 
 @app.route('/dashboard')
 @login_required
 def dashboard():
     return render_template('dashboard.html')
     
-@app.route('/addcrop')
-@login_required
-def addcrop():
-    return render_template('dashboard.html')
+
 
 
 @app.errorhandler(404)

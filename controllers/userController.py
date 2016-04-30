@@ -25,7 +25,7 @@ class UserController:
                 session['email'] = email
                 session['firstname'] = user.first_name
                 session['lastname'] = user.last_name
-                return redirect(url_for('dashboard'))
+                return redirect(url_for('addcrop'))
         return render_template("login.html", errors=errors)
 
     @staticmethod
@@ -69,5 +69,18 @@ class UserController:
         return redirect(url_for('login'))
         
         
+        
+    @staticmethod
+    def addcrop():
+        errors = []
+        if request.method == 'POST':
+            id = request.form.get('id', '')
+            crop_name = request.form.get('cropname', '')
+            grow_state = request.form.get('growstate', '')
+            farm_id = request.form.get('farmid', '')
+            crop = Crop(id, crop_name, grow_state, farm_id)
+            db.session.add(crop)
+            db.session.commit()
+        return render_template("addcrop.html", errors=errors)
  
         

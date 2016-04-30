@@ -1,2 +1,20 @@
 {% extends "base.html" %}
 {% block title %}Add Your Crops{% endblock %}
+{% block content %}
+<div class="intro">
+    <div class="welcome-message">
+	    <h1 class="grey-text text-lighten-5">Hello {{ session['firstname'] }}</h1>
+        <h1 class="grey-text text-lighten-5">Welcome to Blue Garden</h1>
+    </div>
+    <form class="addcrop_form" action="{{ url_for('addcrop') }}" method="post">
+                    <input type=text size=30 name=id>
+                    <input type=text size=30 name=cropname>
+                    <input type=text size=30 name=growstate>
+                    <input type=text size=30 name=farmid>
+                    
+                    <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="action">
+                        submit
+                    </button>
+                </form>   
+</div>
+{% endblock %}
