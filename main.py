@@ -1,14 +1,22 @@
-from flask import Flask, render_template, url_for, request, redirect, session, flash
+import os
+from flask import Flask, render_template, url_for, request, redirect, session, flash, send_from_directory
 from functools import wraps
-
-from controllers.userController import UserController as userController
+from controllers.userController import UserController
+from werkzeug.utils import secure_filename
+import utilities
+from models.produce import Produce
+from models.image import Image
+from models.price import Price
+from models.farm import Farm
+from models.unit import Unit
+from models import Address
 from shared import db
 
 # Creating application object
 app = Flask(__name__)
 host = "http://localhost"
 port = "5000"
-address = host+':'+port
+address = host + ':' + port
 
 # Setting app configuration
 app.config.from_object('config.DevelopmentConfig')
@@ -36,8 +44,9 @@ def login_required(function):
             return function(*args, **kwargs)
         else:
             flash('Please login to view this page', 'error')
-            next_page = request.url
-            return redirect(url_for('login', next_page=next_page))
+            redirect_url = request.url
+            return redirect(url_for('login', redirect=redirect_url))
+
     return wrapped_function
 
 
@@ -50,17 +59,17 @@ def index():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    return userController.login()
+    return UserController.login()
 
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    return userController.register()
+    return UserController.register()
 
 
 @app.route('/logout')
 def logout():
-    return userController.logout()
+    return UserController.logout()
 
 
 @app.route('/dashboard')
@@ -71,6 +80,68 @@ def dashboard():
 @app.route('farm/<int:farm_id>/produce/<int:produce_id>')
 def view_produce(farm_id, produce_id):
     return render_template()
+
+
+@app.route('/browse')
+@login_required
+def browse():
+    return render_template('browse.html')
+
+
+@app.route('/sell')
+@login_required
+def sell():
+    return render_template('sell.html')
+
+
+@app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
+@login_required
+def add_produce_to_farm(farm_id):
+    errors = []
+    if request.method == 'POST':
+        name = request.form.get('name', '')
+        description = request.form.get('description', '')
+        category = request.form.get('category', '')
+        selected_units = request.form.get('units', '')
+        prices = {}
+        for unit in selected_units:
+            prices[unit] = request.form.get('price-'+selected_units)
+        file = request.files['prod_image']
+        if not name:
+            errors.append('Name cannot be empty')
+        if not description:
+            errors.append('Description cannot be empty')
+        if not category:
+            errors.append('Please choose a category for the produce')
+        if not selected_units:
+            errors.append('Please choose the units you wish to sell in')
+        if len(prices) < len(selected_units):
+            errors.append('Please enter the prices for the produce')
+        if not file or not utilities.allowed_file(file.filename):
+            errors.append("Please upload 'png', 'jpg', 'jpeg' or 'gif' image for produce")
+        if not errors:
+            directory = os.path.join(app.config['UPLOAD_FOLDER'], 'produce/' + str(farm_id) + '/')
+            os.makedirs(os.path.dirname(directory), exist_ok=True)
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(directory, filename))
+            image = Image('produce/' + str(farm_id)+'/'+filename)
+            db.session.add(image)
+            produce = Produce(name, description, category, image.id)
+            db.session.add(produce)
+            for price in prices:
+                db.session.add(Price(produce.id, price, prices[price]))
+            db.session.commit()
+            return 'Success'
+    units = Unit.query.all()
+    farm = Farm.query.get(farm_id)
+    farm_address = Address.query.get(farm.address_id)
+    return render_template('add_produce.html', units=units, farm=farm, address=farm_address, errors=errors)
+
+
+@app.route('/uploads/<int:farm_id>/<filename>')
+def uploaded_image(farm_id, filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER']+'produce/' + str(farm_id),
+                               filename)
 
 
 @app.errorhandler(404)

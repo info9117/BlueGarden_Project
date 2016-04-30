@@ -5,10 +5,12 @@ from shared import db
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column('id', db.Integer, primary_key=True)
-    first_name = db.Column('first_name', db.String(255))
-    last_name = db.Column('last_name', db.String(255))
+    first_name = db.Column('first_name', db.String(255), nullable=False)
+    last_name = db.Column('last_name', db.String(255), nullable=False)
     email = db.Column('email', db.String(255), unique=True)
-    password = db.Column('password', db.String(128))
+    password = db.Column('password', db.String(128), nullable=False)
+    # Buyer - B, Buyer & Farmer - C
+    type = db.Column('type', db.String(1), default='B')
 
     def __init__(self, first_name, last_name, email, password):
         self.first_name = first_name
@@ -24,3 +26,6 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+    def set_user_farmer(self):
+        self.type = 'C'

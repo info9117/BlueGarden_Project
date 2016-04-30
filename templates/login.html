@@ -16,7 +16,7 @@
                 </a>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white center-align"
                  style="padding: 30px 15px;">
@@ -49,7 +49,7 @@
                     <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="action">
                         LOGIN
                     </button>
-                </form>   
+                </form>
                 <p class="center-align">Don't have an account? <a href="/register">Register</a></p>
             </div>
         </div>
@@ -61,12 +61,13 @@
 {% block footer %}
 {% endblock %}
 
-{% block script %}
-{{ super() }}
-var windowHeight = $(window).height();
-var navHeight = $('nav').height();
-$('.ver-hor-align-parent').css('height', windowHeight - navHeight);
-var minHeight = $('.ver-hor-align-child').height() + 50;
-$('.ver-hor-align-parent').css('min-height', minHeight);
-
+{% block scripts %}
+<script>
+   var windowHeight = $(window).height();
+   var navHeight = $('nav').height();
+   $('.ver-hor-align-parent').css('height', windowHeight - navHeight);
+   var minHeight = $('.ver-hor-align-child').height() + 50;
+   $('.ver-hor-align-parent').css('min-height', minHeight);
+</script>
 {% endblock %}
+

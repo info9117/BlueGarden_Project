@@ -1,7 +1,8 @@
 import main
 from main import app, address
 from selenium import webdriver
-from models import *
+from shared import db
+from models.user import User
 import threading
 
 
