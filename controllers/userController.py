@@ -4,7 +4,6 @@ from models.user import *
 
 
 class UserController:
-
     @staticmethod
     def login():
         errors = []
@@ -26,6 +25,8 @@ class UserController:
                 session['email'] = email
                 session['firstname'] = user.first_name
                 session['lastname'] = user.last_name
+                if request.args.get('redirect'):
+                    return redirect(request.args.get('redirect'))
                 return redirect(url_for('dashboard'))
         return render_template("login.html", errors=errors)
 
