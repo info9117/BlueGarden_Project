@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Blue Garden Product Details</title>
+        <!-- Custom styles for this template -->
+        <link href="cover.css" rel="stylesheet">
+       
+    </head>
+    <body>
+        <div class="row"></div>
+        <img src="{{ url_for('static', filename='images/logo.png') }}" width="200" />
+        <div class="site-wrapper">
+            <div class="site-wrapper-inner">
+                <div class="cover-container">
+                    <div class="masthead clearfix">
+                        <div class="inner">
+                            <nav>
+                                <ul class="nav masthead-nav">
+                                    <li class="active">
+									<div align="center">
+                                        <a href="/">Home</a>
+										</div>
+                                    </li>
+                                    <li></li>
+                                    <li>
+                                        <a href="#">Contact</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="inner cover">
+                        <p class="lead"></p>
+                    </div>
+                    <div class="mastfoot">
+                        <div class="inner">
+                            <img src="{{ url_for('static', filename='images/favicon.ico') }}" width="30" />
+                            <p>Provided By&nbsp;</a>Blue Garden</a>&nbsp;</p>
+                        </div>
+                    </div>
+                </div>
+				<div data-position="title-vendor"><h1 class="page-title" itemprop="name">{{ produce.name }}</h1>
+                    <p style="font-size: small">{{ farm.name }}</p>
+					<p style="font-size: small">Product of Australia</p>
+                    <p>{% for price in prices %}
+                        <span class="price">${{ price.price }}</span><small>per kg</small>
+                        {% endfor %}
+                    </p>
+                </div>
+				<div align="center">
+				<img src="" style="width:304px;height:228px;">
+				</div>
+				<button class="btn addToCartButton" type="button" name="add" data-id="671650869" data-catering="" data-organic="" data-botanica="" data-belmore="" data-cap="569" data-slider="" style="white-space: nowrap; padding: 10px; height: 35px; width: 90px; letter-spacing: 0;">Add To Cart</button>
+				<select name="quantity" class="addToCartSelect" data-id="1461424057496-a7H7X">    
+    
+    	<option value="1">1</option>
+    
+    	<option value="2">2</option>
+    
+    	<option value="3">3</option>
+    
+    	<option value="4">4</option>
+    
+    	<option value="5">5</option>
+    
+    	<option value="6">6</option>
+    
+    	<option value="7">7</option>
+    
+    	<option value="8">8</option>
+    
+    	<option value="9">9</option>
+    
+    	<option value="10">10</option>
+    
+    	<option value="11">11</option>
+    
+    	<option value="12">12</option>
+    
+    	<option value="13">13</option>
+    
+    	<option value="14">14</option>
+    
+    	<option value="15">15</option>
+    
+    	<option value="16">16</option>
+    
+    	<option value="17">17</option>
+    
+    	<option value="18">18</option>
+    
+    	<option value="19">19</option>
+    
+    	<option value="20">20</option>
+    
+  </select>
+        <!--core JavaScript
+    ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <script src="{{ url_for('static', filename='js/ie10-viewport-bug-workaround.js') }}"></script>
+    </body>
+</html>
