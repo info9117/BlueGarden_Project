@@ -97,6 +97,7 @@ class BlueGardenTestCase(BaseTestCase):
     
     #Testing the flag for farmer user type
     def test_farmer_type(self):
+        print('\n## Testing the flag for farmer user type ##')
         user = User.query.filter_by(email='singarisathwik007@gmail.com').first()
         User.set_user_farmer(user)
         assert User.query.filter_by(type='C').first().first_name == 'Sathwik'
@@ -105,14 +106,16 @@ class BlueGardenTestCase(BaseTestCase):
 
     #Testing new farmer user has no farms yet
     def test_farm_page_content(self):
+        print('\n## Testing new farmer user has no farms yet ##')
         self.login('singarisathwik007@gmail.com', 'dm08b048')
         response = self.client.get('/sell', follow_redirects=True)
         self.assertIn(b"You dont have any farms yet.",response.data)
         
     #Testing that user can add farms that they work on
     def test_add_farms(self):
+        print('\n## Testing that user can add farms that they work on ##')
         response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
-        self.assertIn(b"Farm added",response.data)
+        self.assertIn(b"Community Farm",response.data)
         
     def add_farm(self, name, address1, address2, city, state, country, postcode):
         return self.client.post('/sell', data=dict(
