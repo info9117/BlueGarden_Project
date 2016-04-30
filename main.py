@@ -4,12 +4,7 @@ from functools import wraps
 from controllers.userController import UserController
 from werkzeug.utils import secure_filename
 import utilities
-from models.produce import Produce
-from models.image import Image
-from models.price import Price
-from models.farm import Farm
-from models.unit import Unit
-from models import Address
+from models import *
 from shared import db
 
 # Creating application object
@@ -77,10 +72,6 @@ def logout():
 def dashboard():
     return render_template('dashboard.html')
 
-@app.route('farm/<int:farm_id>/produce/<int:produce_id>')
-def view_produce(farm_id, produce_id):
-    return render_template()
-
 
 @app.route('/browse')
 @login_required
@@ -136,6 +127,15 @@ def add_produce_to_farm(farm_id):
     farm = Farm.query.get(farm_id)
     farm_address = Address.query.get(farm.address_id)
     return render_template('add_produce.html', units=units, farm=farm, address=farm_address, errors=errors)
+
+
+@app.route('/farm/<int:farm_id>/produce/<int:produce_id>')
+def view_produce(farm_id, produce_id):
+    farm = Farm.query.get(farm_id)
+    produce = Produce.query.get(produce_id)
+    image = Image.query.get(produce.image_id)
+    prices = Price.query.filter_by(produce_id=produce_id).all()
+    return render_template('view_produce.html', farm=farm, produce=produce, image=image, prices=prices)
 
 
 @app.route('/uploads/<int:farm_id>/<filename>')
