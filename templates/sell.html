@@ -40,7 +40,7 @@
                 {% endif %}
                 {% endwith %}
                 <form id="form" class="add_farm" action="" method="post">
-
+                    <p>Add Farm</p>
                     <input id="name" name="name" type="text" placeholder="Name" class="validate">
                     <input id="address1" name="address1" type="text" placeholder="address1" class="validate">
                     <input id="address2" name="address2" type="text" placeholder="address2" class="validate">
@@ -54,9 +54,9 @@
                 </form>
             </div>
             <div>
-            <p>My Farms</p>
+            
                 {% if myfarms %}
-                    <ul class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white left-align">
+                    <ul class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white left-align"><p>My Farms</p>
                 {% for myfarm in myfarms %}
                     <a href="send me to add produce to my farm">{{ myfarm }} <br></a>
                 {% endfor %}

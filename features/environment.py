@@ -21,6 +21,7 @@ def before_all(context):
         db.create_all()
         db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
         db.session.add(User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins'))
+        db.session.add(User('Joe', 'Farmer', 'farmer_j01@gmail.com', 'louise1993'))
         db.session.commit()
 
 

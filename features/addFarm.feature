@@ -10,8 +10,6 @@ Feature: Farmer user can add a farm which they work on
     Examples:
         |name|
         |Marrickville Community Garden|
-        |Ultimo Rooftop Garden|
-        |Parramatta Bee Keepers Cooperative|
 
     Scenario Outline: Farmer adds existing farm -->Fail
     Given at the sell page
