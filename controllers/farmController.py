@@ -21,6 +21,9 @@ class FarmController:
 
         if request.method == 'POST':
             name = request.form.get('name', '')
+            if name in myfarms:
+                errors.append("Already Exists")
+                return render_template("sell.html", errors=errors, myfarms=myfarms)
             address1 = request.form.get('address1', '')
             address2 = request.form.get('address2', '')
             city = request.form.get('city', '')
