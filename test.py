@@ -6,7 +6,7 @@ import unittest
 
 class BaseTestCase(TestCase):
     def create_app(self):
-        app.config.from_object('config.TestingConfig')
+        app.config.from_object('config.DevelopmentConfig')
         return app
 
     def setUp(self):
@@ -76,6 +76,13 @@ class BlueGardenTestCase(BaseTestCase):
         print('\n## Testing Register page with valid credentials ##')
         response = self.register('Frodo', 'Baggins', 'fbaggins@lotr.com', 'frodobaggins')
         self.assertIn(b'Hello Frodo', response.data)
+        
+    #Testing add crop with new crop
+    def test_login_addcrop(self):
+        print('\n## Testing add crop with new crop')
+        rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
+        rv=self.addcrop('563', 'corn', 'harvest', '892')
+        assert 'You success added crop' in rv.data
 
     def login(self, email, password):
         return self.client.post('/login', data=dict(
@@ -93,6 +100,15 @@ class BlueGardenTestCase(BaseTestCase):
 
     def logout(self):
         return self.client.get('/logout', follow_redirects=True)
+        
+    def addcrop(self,id, cropname, growstate, farmid):
+        return self.client.post('/addcrop',data=dict(
+            id = id,
+            crop_name = cropname,
+            grow_state = growstate,
+            farm_id = farmid
+            ),follow_redirects=True)
+            
 
 
 if __name__ == '__main__':

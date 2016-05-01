@@ -5,14 +5,14 @@ Feature: track the state of the crops
     
     Scenario Outline: Add crop to farms
     Given at the crop screen
-    When a farmer submit the <cropname>, <growstate> and <farmid>
-    Then the system should return "successfully added"
+    When a farmer submit the <id> <cropname>, <growstate> and <farmid>
+    Then the system should return "You success added crop"
     Examples:
-        |cropname|growstate|farm_id|
-        |corn|plant|1|
-        |banana|plant|2|
-        |wheat|plant|3|
-        |redbull|harvest|4|
+        |id|cropname|growstate|farm_id|
+        |1|corn|plant|1|
+        |2|banana|plant|2|
+        |3|wheat|plant|3|
+        |4|redbull|harvest|4|
        
         
     Scenario Outline: remove crop from farms

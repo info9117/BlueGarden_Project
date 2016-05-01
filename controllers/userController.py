@@ -81,6 +81,7 @@ class UserController:
             crop = Crop(id, crop_name, grow_state, farm_id)
             db.session.add(crop)
             db.session.commit()
+            flash('You success added crop')
         return render_template("addcrop.html", errors=errors)
  
         
