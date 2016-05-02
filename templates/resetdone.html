@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Reset{% endblock %}
 
 {% block navbar %}
 {% endblock %}
@@ -16,7 +16,7 @@
                 </a>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white center-align"
                  style="padding: 30px 15px;">
@@ -43,15 +43,10 @@
                 </div>
                 {% endif %}
                 {% endwith %}
-                <form class="login_form" action="" method="post">
-                    <input id="email" name="email" type="email" placeholder="Email Id" class="validate">
-                    <input id="password" name="password" type="password" placeholder="Password" class="validate">
-                    <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="action">
-                        LOGIN
-                    </button>
-                </form>   
-                <p class="center-align">Don't have an account? <a href="/register">Register</a></p>
-                <p class="center-align">Forgot password? <a href = "{{ url_for('resetpassword') }}">reset.</a></p>
+            <h4 class="green-text green-darken-4">An email has been sent</h4>
+                    <a class="btn waves-effect waves-light moderate-pink darken-1" href = "/login">
+                        Go
+                    </a>
             </div>
         </div>
     </div>
@@ -59,10 +54,8 @@
 </div>
 {% endblock %}
 
-{% block footer %}
-{% endblock %}
 
-{% block script %}
+ {% block script %}
 {{ super() }}
 var windowHeight = $(window).height();
 var navHeight = $('nav').height();
