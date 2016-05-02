@@ -117,6 +117,13 @@ class BlueGardenTestCase(BaseTestCase):
         response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
         self.assertIn(b"Community Farm",response.data)
         
+    #Testing that user cannot add duplicate farms that they work on
+    def test_add_duplicate_farms(self):
+        print('\n## Testing that user cannot add duplicate farms that they work on ##')
+        self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
+        response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
+        self.assertIn(b"Already Exists",response.data)
+        
     def add_farm(self, name, address1, address2, city, state, country, postcode):
         self.login('singarisathwik007@gmail.com', 'dm08b048')
         return self.client.post('/sell', data=dict(
