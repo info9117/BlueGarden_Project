@@ -141,12 +141,6 @@ def uploaded_image(farm_id, filename):
                                filename)
 
 
-@app.route('/test')
-def test():
-    return '<select id="cars"><option value="volvo">Volvo</option><option value="saab">Saab</option>' \
-           '<option value="vw">VW</option><option value="audi">Audi</option></select>'
-
-
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
