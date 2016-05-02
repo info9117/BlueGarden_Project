@@ -82,7 +82,7 @@ class BlueGardenTestCase(BaseTestCase):
         print('\n## Testing add crop with new crop')
         rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
         rv=self.addcrop('563', 'corn', 'harvest', '892')
-        assert 'You success added crop' in rv.data
+        assert b'You success added crop' in rv.data
 
     def login(self, email, password):
         return self.client.post('/login', data=dict(

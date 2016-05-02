@@ -83,5 +83,11 @@ class UserController:
             db.session.commit()
             flash('You success added crop')
         return render_template("addcrop.html", errors=errors)
+        
+        
+    '''@staticmethod
+    def viewcrop():
+        errors = []
+        if '''
  
         
