@@ -95,8 +95,8 @@ def add_produce_to_farm(farm_id):
         category = request.form.get('category', '')
         selected_units = request.form.get('units', '')
         prices = {}
-        for unit in selected_units:
-            prices[unit] = request.form.get('price'+selected_units)
+        for sel_unit in selected_units:
+            prices[sel_unit] = request.form.get('price' + selected_units)
         file = request.files['prod_image']
         if not name:
             errors.append('Name cannot be empty')
@@ -137,8 +137,14 @@ def add_produce_to_farm(farm_id):
 
 @app.route('/uploads/<int:farm_id>/<filename>')
 def uploaded_image(farm_id, filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER']+'produce/' + str(farm_id),
+    return send_from_directory(app.config['UPLOAD_FOLDER'] + 'produce/' + str(farm_id),
                                filename)
+
+
+@app.route('/test')
+def test():
+    return '<select id="cars"><option value="volvo">Volvo</option><option value="saab">Saab</option>' \
+           '<option value="vw">VW</option><option value="audi">Audi</option></select>'
 
 
 @app.errorhandler(404)
