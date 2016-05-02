@@ -1,9 +1,7 @@
-import os
 from flask import Flask, render_template, url_for, request, redirect, session, flash, send_from_directory, abort
 from functools import wraps
 from controllers.userController import UserController
-from werkzeug.utils import secure_filename
-import utilities
+from controllers import ProduceController
 from models import *
 from shared import db
 
@@ -18,6 +16,8 @@ app.config.from_object('config.DevelopmentConfig')
 
 # Creating SQLAlchemy Object
 db.init_app(app)
+with app.app_context():
+    db.create_all()
 
 
 def serve_forever():
@@ -88,51 +88,7 @@ def sell():
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
 @login_required
 def add_produce_to_farm(farm_id):
-    errors = []
-    if request.method == 'POST':
-        name = request.form.get('name', '')
-        description = request.form.get('description', '')
-        category = request.form.get('category', '')
-        selected_units = request.form.get('units', '')
-        prices = {}
-        for sel_unit in selected_units:
-            prices[sel_unit] = request.form.get('price' + selected_units)
-        file = request.files['prod_image']
-        if not name:
-            errors.append('Name cannot be empty')
-        if not description:
-            errors.append('Description cannot be empty')
-        if not category:
-            errors.append('Please choose a category for the produce')
-        if not selected_units:
-            errors.append('Please choose the units you wish to sell in')
-        if len(prices) < len(selected_units):
-            errors.append('Please enter the prices for the produce')
-        if not file or not utilities.allowed_file(file.filename):
-            errors.append("Please upload 'png', 'jpg', 'jpeg' or 'gif' image for produce")
-        if not errors:
-            directory = os.path.join(app.config['UPLOAD_FOLDER'], 'produce/' + str(farm_id) + '/')
-            os.makedirs(os.path.dirname(directory), exist_ok=True)
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(directory, filename))
-            img = Image('produce/' + str(farm_id) + '/' + filename)
-            db.session.add(img)
-            db.session.flush()
-            prod = Produce(name, description, category, img.id)
-            db.session.add(prod)
-            db.session.flush()
-            db.session.add(Grows(farm_id, prod.id))
-            for p in prices:
-                db.session.add(Price(prod.id, p, prices[p]))
-                db.session.flush()
-            db.session.commit()
-            return 'Success'
-    units = Unit.query.all()
-    farm1 = Farm.query.get(farm_id)
-    if not farm1:
-        abort(404)
-    farm_address = Address.query.get(farm1.address_id)
-    return render_template('add_produce.html', units=units, farm=farm1, address=farm_address, errors=errors)
+    return ProduceController.add_produce(farm_id)
 
 
 @app.route('/uploads/<int:farm_id>/<filename>')
