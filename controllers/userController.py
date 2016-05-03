@@ -1,5 +1,9 @@
 from flask import request, render_template, session, redirect, url_for, flash
-from models import *
+
+from models.user import *
+from models.crop import *
+from models.farm import *
+
 
 
 class UserController:

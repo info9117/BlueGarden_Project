@@ -1,12 +1,13 @@
 from main import app
-from models import *
+from shared import db
+from models.user import User
 from flask_testing import TestCase
 import unittest
 
 
 class BaseTestCase(TestCase):
     def create_app(self):
-        app.config.from_object('config.DevelopmentConfig')
+        app.config.from_object('config.TestingConfig')
         return app
 
     def setUp(self):
@@ -100,6 +101,7 @@ class BlueGardenTestCase(BaseTestCase):
 
     def logout(self):
         return self.client.get('/logout', follow_redirects=True)
+
         
     def addcrop(self,id, cropname, growstate, farmid):
         return self.client.post('/addcrop',data=dict(
@@ -110,6 +112,48 @@ class BlueGardenTestCase(BaseTestCase):
             ),follow_redirects=True)
             
 
+
+    
+    #Testing the flag for farmer user type
+    def test_farmer_type(self):
+        print('\n## Testing the flag for farmer user type ##')
+        user = User.query.filter_by(email='singarisathwik007@gmail.com').first()
+        User.set_user_farmer(user)
+        assert User.query.filter_by(type='C').first().first_name == 'Sathwik'
+        user.type = 'B'
+        assert not User.query.filter_by(email='singarisathwik007@gmail.com').first().type == 'C'
+
+    #Testing new farmer user has no farms yet
+    def test_farm_page_content(self):
+        print('\n## Testing new farmer user has no farms yet ##')
+        self.login('singarisathwik007@gmail.com', 'dm08b048')
+        response = self.client.get('/sell', follow_redirects=True)
+        self.assertIn(b"You dont have any farms yet.",response.data)
+        
+    #Testing that user can add farms that they work on
+    def test_add_farms(self):
+        print('\n## Testing that user can add farms that they work on ##')
+        response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
+        self.assertIn(b"Community Farm",response.data)
+        
+    #Testing that user cannot add duplicate farms that they work on
+    def test_add_duplicate_farms(self):
+        print('\n## Testing that user cannot add duplicate farms that they work on ##')
+        self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
+        response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
+        self.assertIn(b"Already Exists",response.data)
+        
+    def add_farm(self, name, address1, address2, city, state, country, postcode):
+        self.login('singarisathwik007@gmail.com', 'dm08b048')
+        return self.client.post('/sell', data=dict(
+            name=name,
+            address1=address1,
+            address2=address2,
+            city=city,
+            state=state,
+            country=country,
+            postcode=postcode
+        ), follow_redirects=True)        
 
 if __name__ == '__main__':
     unittest.main()

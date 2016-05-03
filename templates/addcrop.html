@@ -7,10 +7,7 @@
     {{ message }}
     {% endfor %}
     </div>
-    <div class="welcome-message">
-	    <h1 class="grey-text text-lighten-5">Hello {{ session['firstname'] }}</h1>
-        <h1 class="grey-text text-lighten-5">Welcome to Blue Garden</h1>
-    </div>
+    
     <form class="addcrop_form" action="{{ url_for('addcrop') }}" method="post">
                     <input type=text size=10 name=id>
                     <input type=text size=10 name=cropname>

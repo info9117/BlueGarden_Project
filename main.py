@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect, session, flash
 from functools import wraps
-
 from controllers.userController import UserController as userController
+from controllers.farmController import FarmController as farmController
 from shared import db
 
 # Creating application object
@@ -15,7 +15,6 @@ app.config.from_object('config.DevelopmentConfig')
 
 # Creating SQLAlchemy Object
 db.init_app(app)
-
 
 def serve_forever():
     app.run()
@@ -73,6 +72,18 @@ def dashboard():
     return render_template('dashboard.html')
     
 
+
+
+@app.route('/browse')
+@login_required
+def browse():
+    return render_template('browse.html')
+
+
+@app.route('/sell', methods=['GET', 'POST'])
+@login_required
+def sell():
+    return farmController.farms_view()
 
 
 @app.errorhandler(404)
