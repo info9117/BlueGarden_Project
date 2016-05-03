@@ -88,7 +88,7 @@ def sell():
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
 @login_required
 def add_produce_to_farm(farm_id):
-    return ProduceController.add_produce(farm_id)
+    return ProduceController.add_produce(farm_id, app.config['UPLOAD_FOLDER'])
 
 
 @app.route('/uploads/<int:farm_id>/<filename>')

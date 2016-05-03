@@ -1,5 +1,4 @@
 import os
-from main import app
 from models import Produce, Image, Farm, Address, Grows, Price, Unit
 from shared import db
 from flask import request, render_template, abort
@@ -10,7 +9,7 @@ import utilities
 class ProduceController:
 
     @staticmethod
-    def add_produce(farm_id):
+    def add_produce(farm_id, upload_folder):
             errors = []
             if request.method == 'POST':
                 name = request.form.get('name', '')
@@ -34,7 +33,7 @@ class ProduceController:
                 if not file or not utilities.allowed_file(file.filename):
                     errors.append("Please upload 'png', 'jpg', 'jpeg' or 'gif' image for produce")
                 if not errors:
-                    directory = os.path.join(app.config['UPLOAD_FOLDER'], 'produce/' + str(farm_id) + '/')
+                    directory = os.path.join(upload_folder, 'produce/' + str(farm_id) + '/')
                     os.makedirs(os.path.dirname(directory), exist_ok=True)
                     filename = secure_filename(file.filename)
                     file.save(os.path.join(directory, filename))
