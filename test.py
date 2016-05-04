@@ -3,6 +3,7 @@ from shared import db
 from models import *
 from flask_testing import TestCase
 import unittest
+from io import StringIO, BytesIO
 
 
 class BaseTestCase(TestCase):
@@ -30,7 +31,6 @@ class BaseTestCase(TestCase):
 
 
 class BlueGardenTestCase(BaseTestCase):
-
     # Testing the home page content
     def test_index_content(self):
         print('\n## Testing Home page for welcome message ##')
@@ -120,17 +120,29 @@ class BlueGardenTestCase(BaseTestCase):
         self.assertIn(b'Shire Farms', response.data)
 
     def test_adding_produce_to_farm(self):
-        response = self.add_produce()
+        with self.client as c:
+            with c.session_transaction() as session:
+                session['logged_in'] = True
+                session['email'] = 'singarisathwik007@gmail.com'
+                session['firstname'] = 'Sathwik'
+                session['lastname'] = 'Singari'
+        response = self.add_produce('Eggplant', 'Big eggplants', 'Vegetable', 1, 4.38, 'static/images/eggplant.jpeg')
+        self.assertIn(b"Success", response.data)
 
-    # def add_produce(self, name, description, category, selected_units, prices, prod_image):
-    #     return self.client.post('/farm/2/produce/add', data=dict(
-    #         name=name,
-    #         description=description,
-    #         category=category,
-    #         selected_units=selected_units,
-    #         price-1=prices,
-    #         prod_image=prod_image
-    #     ))
+    def add_produce(self, name, description, category, selected_units, price1, prod_image):
+        with open(prod_image, 'rb') as img:
+            img_bytes_io = BytesIO(img.read())
+            post_data = {
+                'name': name, 'description': description, 'category': category,
+                'units': selected_units,
+                'price1': price1,
+            }
+            for key, val in post_data.items():
+                if not isinstance(val, str):
+                    post_data[key] = str(val)
+            post_data['prod_image'] = (img_bytes_io, 'eggplant.jpeg')
+            return self.client.post('/farm/2/produce/add', content_type='multipart/form-data',
+                                    data=post_data)
 
 
 if __name__ == '__main__':
