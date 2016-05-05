@@ -1,8 +1,9 @@
 from flask import Flask, render_template, url_for, request, redirect, session, flash, send_from_directory, abort
 from functools import wraps
-from controllers.userController import UserController
 from controllers import ProduceController
 from models import *
+from controllers.userController import UserController as userController
+from controllers.farmController import FarmController as farmController
 from shared import db
 
 # Creating application object
@@ -18,7 +19,6 @@ app.config.from_object('config.DevelopmentConfig')
 db.init_app(app)
 with app.app_context():
     db.create_all()
-
 
 def serve_forever():
     app.run()
@@ -54,17 +54,17 @@ def index():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    return UserController.login()
+    return userController.login()
 
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    return UserController.register()
+    return userController.register()
 
 
 @app.route('/logout')
 def logout():
-    return UserController.logout()
+    return userController.logout()
 
 
 @app.route('/dashboard')
@@ -79,10 +79,10 @@ def browse():
     return render_template('browse.html')
 
 
-@app.route('/sell')
+@app.route('/sell', methods=['GET', 'POST'])
 @login_required
 def sell():
-    return render_template('sell.html')
+    return farmController.farms_view()
 
 
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
