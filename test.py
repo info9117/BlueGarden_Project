@@ -126,7 +126,7 @@ class BlueGardenTestCase(BaseTestCase):
                 session['email'] = 'singarisathwik007@gmail.com'
                 session['firstname'] = 'Sathwik'
                 session['lastname'] = 'Singari'
-        response = self.add_produce('Eggplant', 'Big eggplants', 'Vegetable', 1, 4.38, 'static/images/eggplant.jpeg')
+        response = self.add_produce('Eggplant', 'Big eggplants', 'Vegetable', 1, 4.38, 'static/images/eggplant.jpg')
         self.assertIn(b"Success", response.data)
 
     def add_produce(self, name, description, category, selected_units, price1, prod_image):
