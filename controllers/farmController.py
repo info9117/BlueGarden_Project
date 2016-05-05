@@ -4,6 +4,7 @@ from models.works import *
 from models.farm import *
 #from models.produce import *
 from models.address import *
+from models.crop import *
 
 class FarmController:
  
