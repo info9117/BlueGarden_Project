@@ -10,6 +10,8 @@
 
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"
           media="screen,projection"/>
+    {% block styles %}
+    {% endblock %}
 
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -24,7 +26,7 @@
         <li><a href="#!">Settings</a></li>
         <li><a href="{{ url_for('logout') }}">Logout</a></li>
     </ul>
-    <nav class="blue-grey lighten-5 z-depth-4" role="navigation">
+    <nav class="blue-grey lighten-5 z-depth-1" role="navigation">
         <div class="nav-wrapper container">
             <a href="{{ url_for('index') }}" class="brand-logo">
                 <img style="max-width:120px; margin-left:10px"
@@ -37,7 +39,8 @@
             <ul class="right hide-on-med-and-down">
                 <li><a href="{{ url_for('browse') }}">Browse</a></li>
                 <li><a href="{{ url_for('sell') }}">Sell</a></li>
-                <li><a class="dropdown-button" href="#!" data-activates="profile-dropdown">{{ session['firstname'] + ' ' + session['lastname'] }}<i class="material-icons right">arrow_drop_down</i></a></li>
+                <li><a class="dropdown-button" href="#!" data-activates="profile-dropdown">{{ session['firstname'] + ' '
+                    + session['lastname'] }}<i class="material-icons right">arrow_drop_down</i></a></li>
             </ul>
             <ul class="side-nav" id="mobile-demo">
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
@@ -104,6 +107,7 @@
     var windowHeight = $(window).height();
     var navHeight = $('nav').height();
     $('.full-window-container').css('height', windowHeight - navHeight);
+
 </script>
 {% block scripts %}
 {% endblock %}

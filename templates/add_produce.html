@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title %}Add Produce{% endblock %}
+
+{% block styles %}
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/add_produce.css') }}"
+      media="screen,projection"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col s6 left-align moderate-pink-text text-darken-1">
+            <h3 class="hide-on-med-and-down">Add Produce</h3>
+            <h4 class="hide-on-large-only">Add Produce</h4>
+        </div>
+    </div>
+    <div class="row white z-depth-1">
+        {% if errors %}
+        <div id="errors" class="col s12 m6 offset-m3 l6 offset-l3 red lighten-3">
+            {% for error in errors %}
+            <p class="red-text text-darken-4" style="margin: 0; padding: 5px 0">{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <form class="s12" method=post enctype=multipart/form-data>
+            <div id="produce-img-container" class="col s12 m6">
+                <div class="produce-img col s12 center-align ">
+                    <img id='prod-img' src="{{ url_for('static', filename='images/placeholder.svg') }}">
+                    <div class="img-choose">
+                        <div class="file-field input-field">
+                            <div class="waves-effect waves-light btn">
+                                <span>Choose Image</span>
+                                <input id="prod_image" name="prod_image" type="file">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="farm-details-container" class="col s12 m6">
+                <div id="farm-details" class="col s10 offset-s1">
+                    <h4 id="farm-name">{{ farm.name }}</h4>
+                    <h6 id="farm-address">{{ address.address1 }},{% if address.address2 %}<br>address.address2,{% endif
+                        %}
+                        <br>{{ address.city }}, {{ address.state }} - {{ address.post_code }},<br>{{ address.country }}
+                    </h6>
+                </div>
+                <div id="produce-details" class="col s10 offset-s1">
+                    <h4 class="no-padding">Enter Produce Details</h4>
+                    <div class="input-field col s12">
+                        <input name="name" id="name" placeholder="Name" type="text" class="validate">
+                    </div>
+                    <div class="input-field col s12">
+                        <textarea name="description" id="description" placeholder="Description"
+                                  class="materialize-textarea"></textarea>
+                    </div>
+                    <div class="input-field col s12">
+                        <select id="category" name="category">
+                            <option value="" disabled selected>Category</option>
+                            <option value="Vegetable">Vegetable</option>
+                            <option value="Fruit">Fruit</option>
+                            <option value="Grain">Grain</option>
+                            <option value="Meat">Meat</option>
+                            <option value="Dairy">Dairy</option>
+                        </select>
+                    </div>
+
+                    <div class="input-field col s12">
+                        <select name="units" id="unit" multiple>
+                            <option value="" disabled selected>Sale Units</option>
+                            {% for unit in units %}
+                            <option value="{{ unit.id }}">{{ unit.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div id='sale-price' class="col s12">
+                    </div>
+                </div>
+            </div>
+            <div id="save-details-container" class="col s12 center-align">
+                <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="action">Add
+                    Produce
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    $('select').material_select();
+});
+
+imgWidth = $('#prod-img').width();
+console.log(imgWidth);
+$('#prod-img').height(imgWidth*3/4);
+
+
+$(function () {
+    $(":file").change(function () {
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = imageIsLoaded;
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+});
+
+function imageIsLoaded(e) {
+    $('#prod-img').attr('src', e.target.result);
+};
+var existingUnits = [];
+var currency = '$';
+$('#unit').change(function() {
+    selectedUnit();
+});
+
+
+function selectedUnit() {
+    $( "#unit option:selected" ).each(function(index, value) {
+        if (index != 0) {
+            if (existingUnits.indexOf($(this).text()) == -1) {
+                existingUnits.push($(this).text());
+                $('#sale-price').append('<div id="'+$(this).text()+'-price"  class="price-unit col s12" >'+
+                '<div class="input-field col s12">'+
+                '<input name="price'+$(this).val()+'" id="price'+$(this).val()+'" min=0.01 step=0.01 type="number" class="validate">'+
+                '<label for="price">Price ('+$(this).text()+')</label>'+
+                '</div>'+
+                '</div>');
+            }
+        }
+    });
+
+    $('#unit option').not(':selected').each(function() {
+        if (existingUnits.indexOf($(this).text()) != -1) {
+            existingUnits.splice(existingUnits.indexOf($(this).text()), 1);
+            var divToRemove = document.getElementById($(this).text()+"-price");
+            $(divToRemove).remove();
+        }
+    });
+}
+
+function addItem() {
+    $('#sale-price').append('<div id="Kg-price"  class="price-unit col s12" ><div class="input-field col s12">'+
+    '<input name="price1" id="price1" min=0.01 step=0.01 type="number" class="validate"><label for="price">Price (Kg)'+
+    '</label></div></div>');
+}
+
+
+
+</script>
+{% endblock %}

@@ -1,5 +1,7 @@
-from flask import Flask, render_template, url_for, request, redirect, session, flash
+from flask import Flask, render_template, url_for, request, redirect, session, flash, send_from_directory, abort
 from functools import wraps
+from controllers import ProduceController
+from models import *
 from controllers.userController import UserController as userController
 from controllers.farmController import FarmController as farmController
 from shared import db
@@ -8,13 +10,15 @@ from shared import db
 app = Flask(__name__)
 host = "http://localhost"
 port = "5000"
-address = host+':'+port
+address = host + ':' + port
 
 # Setting app configuration
 app.config.from_object('config.DevelopmentConfig')
 
 # Creating SQLAlchemy Object
 db.init_app(app)
+with app.app_context():
+    db.create_all()
 
 def serve_forever():
     app.run()
@@ -35,8 +39,9 @@ def login_required(function):
             return function(*args, **kwargs)
         else:
             flash('Please login to view this page', 'error')
-            next_page = request.url
-            return redirect(url_for('login', next_page=next_page))
+            redirect_url = request.url
+            return redirect(url_for('login', redirect=redirect_url))
+
     return wrapped_function
 
 
@@ -86,9 +91,21 @@ def sell():
     return farmController.farms_view()
 
 
+@app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
+@login_required
+def add_produce_to_farm(farm_id):
+    return ProduceController.add_produce(farm_id, app.config['UPLOAD_FOLDER'])
+
+
+@app.route('/uploads/<int:farm_id>/<filename>')
+def uploaded_image(farm_id, filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'] + 'produce/' + str(farm_id),
+                               filename)
+
+
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html')
+    return render_template('404.html'), 404
 
 
 @app.route('/shutdown')

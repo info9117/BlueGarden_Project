@@ -1,6 +1,8 @@
 import main
-from main import app, address
+from main import app
 from selenium import webdriver
+from shared import db
+from models import *
 import threading
 from models.user import *
 
@@ -9,11 +11,10 @@ def before_all(context):
     app.config.from_object('config.TestingConfig')
     # context.client = app.test_client()
     context.server = main
-    context.address = address
+    context.address = main.address
     context.thread = threading.Thread(target=context.server.serve_forever)
     context.thread.start()  # start flask app server
     context.browser = webdriver.Firefox()
-    context.address = address
     db.init_app(app)
     with app.app_context():
         # Extensions like Flask-SQLAlchemy now know what the "current" app
@@ -21,6 +22,18 @@ def before_all(context):
         db.create_all()
         db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
         db.session.add(User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins'))
+        db.session.add(Unit('Kg'))
+        db.session.add(Unit('gm'))
+        db.session.add(Unit('l'))
+        db.session.add(Unit('ml'))
+        db.session.add(Address('123 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
+        db.session.add(Address('126 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
+        db.session.add(Farm('Shire Farms', 1))
+        db.session.add(Farm('Mordor Farms', 2))
+        db.session.add(Image('produce/1/eggplant.jpeg'))
+        db.session.add(Produce('Eggplant', 'Sweet organic eggplants', 'Vegetable', 1))
+        db.session.add(Price(1, 1, 4.35))
+        db.session.add(Price(1, 2, 2.8))
         db.session.add(User('Joe', 'Farmer', 'farmer_j01@gmail.com', 'louise1993'))
         db.session.commit()
 
