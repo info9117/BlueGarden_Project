@@ -10,7 +10,7 @@ class User(db.Model):
     email = db.Column('email', db.String(255), unique=True)
     password = db.Column('password', db.String(128), nullable=False)
     # Buyer - B, Buyer & Farmer - C
-    #type = db.Column('type', db.String(1), default='B')
+    type = db.Column('type', db.String(1), default='B')
 
     def __init__(self, first_name, last_name, email, password):
         self.first_name = first_name
