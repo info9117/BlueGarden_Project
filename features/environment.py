@@ -1,8 +1,8 @@
 import main
 from main import app, address
 from selenium import webdriver
-from models import *
 import threading
+from models.user import *
 
 
 def before_all(context):

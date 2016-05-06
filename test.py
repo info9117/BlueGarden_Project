@@ -1,5 +1,6 @@
 from main import app
-from models import *
+from shared import db
+from models.user import User
 from flask_testing import TestCase
 import unittest
 

@@ -1,6 +1,5 @@
 from flask import Flask, render_template, url_for, request, redirect, session, flash
 from functools import wraps
-
 from controllers.userController import UserController as userController
 from shared import db
 
@@ -73,6 +72,18 @@ def dashboard():
     return render_template('dashboard.html')
     
 
+
+
+@app.route('/browse')
+@login_required
+def browse():
+    return render_template('browse.html')
+
+
+@app.route('/sell')
+@login_required
+def sell():
+    return render_template('sell.html')
 
 
 @app.errorhandler(404)

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>{% block title%}{% endblock %} - Blue Garden</title>
     <!--Import Google Icon Font-->
@@ -20,6 +20,10 @@
 <body>
 <header>
     {% block navbar %}
+    <ul id="profile-dropdown" class="dropdown-content">
+        <li><a href="#!">Settings</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
     <nav class="blue-grey lighten-5 z-depth-4" role="navigation">
         <div class="nav-wrapper container">
             <a href="{{ url_for('index') }}" class="brand-logo">
@@ -31,10 +35,12 @@
                 <i class="material-icons moderate-pink-text text-darken-1">menu</i>
             </a>
             <ul class="right hide-on-med-and-down">
-                <li><a class="moderate-pink-text text-darken-1" href="{{ url_for('logout') }}">LOGOUT</a></li>
+                <li><a href="{{ url_for('browse') }}">Browse</a></li>
+                <li><a href="{{ url_for('sell') }}">Sell</a></li>
+                <li><a class="dropdown-button" href="#!" data-activates="profile-dropdown">{{ session['firstname'] + ' ' + session['lastname'] }}<i class="material-icons right">arrow_drop_down</i></a></li>
             </ul>
             <ul class="side-nav" id="mobile-demo">
-                <li><a href="{{ url_for('logout') }}">LOGOUT</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
             </ul>
             {% endblock %}
         </div>
@@ -89,18 +95,17 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="{{ url_for('static',filename='js/materialize.min.js') }}"></script>
 <script>
-    {% block script %}
     $( document ).ready(function() {
         console.log( "document loaded" );
         $(".button-collapse").sideNav();
         $('#register').addClass('active');
+        $(".dropdown-button").dropdown();
     });
     var windowHeight = $(window).height();
     var navHeight = $('nav').height();
     $('.full-window-container').css('height', windowHeight - navHeight);
-    {% endblock %}
-
-
 </script>
+{% block scripts %}
+{% endblock %}
 </body>
 </html>
