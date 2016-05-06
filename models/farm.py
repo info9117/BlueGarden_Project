@@ -8,9 +8,21 @@ class Farm(db.Model):
     address_id = db.Column('address_id', db.Integer, db.ForeignKey('addresses.id'), nullable=False)
 
 
+
+   ''' def __init__(self, name, address_id):
+        self.name = name
+        self.address_id = address_id
+
+    #produce_id = db.Column('produce_id', db.Integer, db.ForeignKey('produces.id'))'''
+
+
     def __init__(self, name, address_id):
         self.name = name
         self.address_id = address_id
 
-    #produce_id = db.Column('produce_id', db.Integer, db.ForeignKey('produces.id'))
+    produce_id = db.Column('produce_id', db.Integer, db.ForeignKey('produces.id'))
 
+    def __init__(self, name, address_id, produce_id):
+        self.name = name
+        self.address_id = address_id
+        self.produce_id = produce_id
