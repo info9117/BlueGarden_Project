@@ -74,7 +74,8 @@ class UserController:
         flash('You successfully logged out', 'success')
         return redirect(url_for('login'))
 
-        
+      
+      
         
     @staticmethod
     def addcrop():
