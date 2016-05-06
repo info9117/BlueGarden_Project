@@ -14,6 +14,3 @@ class Farm(db.Model):
     def __init__(self, name, address_id):
         self.name = name
         self.address_id = address_id
-
-    produce_id = db.Column('produce_id', db.Integer, db.ForeignKey('produces.id'))
-
