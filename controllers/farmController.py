@@ -12,17 +12,19 @@ class FarmController:
     def farms_view():
         errors = []
         myfarms = []
+        names = []
         user = User.query.get(User.query.filter_by(email=session['email']).first().id)
         
         if user.type == 'C':#Display users previously added farms
             for farm in Works.query.filter_by(user_id=user.id).all():
-                myfarms.append(Farm.query.get(farm.farm_id).name)
+                myfarms.append(Farm.query.get(farm.farm_id))
+                names.append(Farm.query.get(farm.farm_id).name)
         else:
             errors.append("You dont have any farms yet. Please add a farm.")
 
         if request.method == 'POST':
             name = request.form.get('name', '')
-            if name in myfarms:
+            if name in names:#??Does this identify adding duplicate farms sufficiently??
                 errors.append("Already Exists")
                 return render_template("sell.html", errors=errors, myfarms=myfarms)
             address1 = request.form.get('address1', '')
