@@ -6,7 +6,6 @@ from models.farm import *
 from models.address import *
 
 
-
 class UserController:
     @staticmethod
     def login():
@@ -75,7 +74,6 @@ class UserController:
         return redirect(url_for('login'))
 
       
-      
         
     @staticmethod
     def addcrop():
@@ -90,6 +88,5 @@ class UserController:
             db.session.commit()
             flash('You success added crop')
         return render_template("addcrop.html", errors=errors)
-        
         
 

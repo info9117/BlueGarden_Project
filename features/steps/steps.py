@@ -62,7 +62,6 @@ def step_impl(context):
     assert 'Email Id already exists' in context.browser.page_source
 
 
-
 @given(u'I am in the add produce page')
 def step_impl(context):
     context.browser.get(context.address + '/farm/1/produce/add')
@@ -101,7 +100,6 @@ def register(context, first_name, last_name, email, password):
     email_field.send_keys(email)
     password_field.send_keys(password)
     email_field.submit()
-
 
 
 def add_produce(context, name, description, category, units, price1, prod_image):

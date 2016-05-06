@@ -115,6 +115,7 @@ class BlueGardenTestCase(BaseTestCase):
             
 
 
+
     def test_dashboard_for_content(self):
         with self.client as c:
             with c.session_transaction() as session:
