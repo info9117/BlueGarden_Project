@@ -9,12 +9,12 @@
     </div>
     
     <form class="addcrop_form" action="{{ url_for('addcrop') }}" method="post">
-                    <input type=text size=30 name=id>
-                    <input type=text size=30 name=cropname>
-                    <input type=text size=30 name=growstate>
-                    <input type=text size=30 name=farmid>
+                    <input id="id" type=text size=30 name=id>
+                    <input id="cropname" type=text size=30 name=cropname>
+                    <input id="growstate" type=text size=30 name=growstate>
+                    <input id="farmid" type=text size=30 name=farmid>
                     
-                    <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="action" value="add crop">
+                    <button class="btn waves-effect waves-light moderate-pink darken-1" id="submit" type="submit" name="action" value="add crop">
                         submit
                     </button>
                 </form> 
