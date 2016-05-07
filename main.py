@@ -89,6 +89,11 @@ def browse():
 @login_required
 def sell():
     return farmController.farms_view()
+    
+@app.route('/activity', methods=['GET', 'POST'])
+@login_required
+def activity():
+    return render_template("activity.html")
 
 
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])

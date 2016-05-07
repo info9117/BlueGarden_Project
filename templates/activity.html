@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Farm Activity{% endblock %}
+
+
+{% block content %}
+
+<div class=container> 
+    <div class="row">
+        <div class="input-field col s6">
+            <div class="col s6">Description<input id="description" type="text" class="validate"></input>
+            <label>Description</label>
+              <div class="input-field col s6">
+    <select>
+      <option value="" disabled selected>Choose your option</option>
+      <option value="1">Option 1</option>
+    {{% for farm in farms %}}
+      <option value="" disabled selected>Choose your farm</option>
+      <option value=" {{ farm.id }} "> {{ farm.name }} </option>
+    {{% endfor % }}
+    </select>
+    <label>Farm</label>
+    
+  </div></div>
+</div> </div>           
+<div class="input-field col s6">
+    <select>
+    {% if recources %}
+    {{% for resource in recources %}}
+      <option value="" disabled selected>Choose your farm</option>
+      <option value=" {{ resource.id }} "> {{ resource.name }} </option>
+    {{% endfor % }}
+    {{% endif % }}
+    </select>
+    <label>Resource</label>
+        </div>
+    </div>
+</div>
+    <div class="row">
+        <div class="col s6">Activity Date<input id="date" type="date" class="datepicker"></input>
+        <div class="col s6">Farm<input id="farm" type="dropdown" class="datepicker"></input>
+        
+            </div>
+        </div>
+    </div>    
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  $('.datepicker').pickadate({
+    selectMonths: true,
+    selectYears: 15
+  });
+        
+
+</script>
+{% endblock %}
