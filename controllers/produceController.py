@@ -55,3 +55,7 @@ class ProduceController:
                 abort(404)
             farm_address = Address.query.get(current_farm.address_id)
             return render_template('add_produce.html', units=units, farm=current_farm, address=farm_address, errors=errors)
+
+    @staticmethod
+    def browse_produce(search_term):
+        results_per_page = 10

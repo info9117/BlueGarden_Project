@@ -91,6 +91,11 @@ def add_produce_to_farm(farm_id):
     return ProduceController.add_produce(farm_id, app.config['UPLOAD_FOLDER'])
 
 
+@app.route('/search/produce=<search_term>')
+def browse_produce(search_term):
+    return ProduceController.browse_produce(search_term)
+
+
 @app.route('/uploads/<int:farm_id>/<filename>')
 def uploaded_image(farm_id, filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'] + 'produce/' + str(farm_id),
