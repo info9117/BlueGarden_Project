@@ -7,16 +7,21 @@ from models.address import *
 from models.crop import *
 
 class FarmController:
+
+    @staticmethod
+    def get_user_farms(user):
+        farms = Works.query.filter_by(user_id=user.id).all()
+        return farms
  
     @staticmethod
-    def farms_view():
+    def add_farm():
         errors = []
         myfarms = []
         names = []
         user = User.query.get(User.query.filter_by(email=session['email']).first().id)
         
         if user.type == 'C':#Display users previously added farms
-            for farm in Works.query.filter_by(user_id=user.id).all():
+            for farm in FarmController.get_user_farms(user):
                 myfarms.append(Farm.query.get(farm.farm_id))
                 names.append(Farm.query.get(farm.farm_id).name)
         else:
@@ -24,7 +29,7 @@ class FarmController:
 
         if request.method == 'POST':
             name = request.form.get('name', '')
-            if name in names:#??Does this identify adding duplicate farms sufficiently??
+            if name in names:
                 errors.append("Already Exists")
                 return render_template("sell.html", errors=errors, myfarms=myfarms)
             address1 = request.form.get('address1', '')
@@ -52,6 +57,13 @@ class FarmController:
                 User.set_user_farmer(user)
                 db.session.commit()
                 return redirect(url_for('sell'))         
-        return render_template("sell.html", errors=errors, myfarms=myfarms)    
+        return render_template("sell.html", errors=errors, myfarms=myfarms)  
+        
+    @staticmethod
+    def activity():
+        myfarms = []
+        for farm in FarmController.get_user_farms(user):
+            myfarms.append(Farm.query.get(farm.farm_id))
+        return render_template("activity.html", myfarms=myfarms)  
         
 

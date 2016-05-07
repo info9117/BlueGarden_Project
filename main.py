@@ -88,12 +88,12 @@ def browse():
 @app.route('/sell', methods=['GET', 'POST'])
 @login_required
 def sell():
-    return farmController.farms_view()
+    return farmController.add_farm()
     
 @app.route('/activity', methods=['GET', 'POST'])
 @login_required
 def activity():
-    return render_template("activity.html")
+    return farmController.activity()
 
 
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
