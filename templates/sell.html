@@ -59,7 +59,7 @@
                     <ul class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white left-align"><p>My Farms</p>
                 {% for myfarm in myfarms %}
                     <a href="/addcrop">Add Crop to {{ myfarm.name }} </a>
-                    <a href="/farm/{{ myfarm.id }}/produce/add">Add Produce to {{ myfarm.name }}<br></a>
+                    <a href="{{ url_for('add_produce_to_farm', farm_id=myfarm.id) }}">Add Produce to {{ myfarm.name }}<br></a>
                 {% endfor %}
                     </ul>
                 {% endif %}
