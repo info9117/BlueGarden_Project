@@ -3,5 +3,4 @@
 /.idea
 /images/d/produce
 /images/t/produce
-bluegarden.db
-set
+*.db

@@ -62,11 +62,11 @@ def step_impl(context):
     assert 'Email Id already exists' in context.browser.page_source
 
 
-@given(u'I am in the add produce page')
+@given('I am in the add produce page')
 def step_impl(context):
+    context.browser.get(context.address + "/login")
+    login(context, 'singarisathwik007@gmail.com', 'dm08b048')
     context.browser.get(context.address + '/farm/1/produce/add')
-    if 'LOGIN' in context.browser.page_source:
-        login(context, 'singarisathwik007@gmail.com', 'dm08b048')
     assert 'Add Produce' in context.browser.page_source
 
 
@@ -79,7 +79,6 @@ def step_impl(context):
 @then(u'I will receive a success message')
 def step_impl(context):
     assert 'Success' in context.browser.page_source
-
 
 
 def login(context, email, password):
