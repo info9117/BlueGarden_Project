@@ -4,6 +4,7 @@ from selenium import webdriver
 from shared import db
 from models import *
 import threading
+from models.user import *
 
 
 def before_all(context):
@@ -33,6 +34,7 @@ def before_all(context):
         db.session.add(Produce('Eggplant', 'Sweet organic eggplants', 'Vegetable', 1))
         db.session.add(Price(1, 1, 4.35))
         db.session.add(Price(1, 2, 2.8))
+        db.session.add(User('Joe', 'Farmer', 'farmer_j01@gmail.com', 'louise1993'))
         db.session.commit()
 
 

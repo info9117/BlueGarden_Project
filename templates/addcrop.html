@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Add Your Crops{% endblock %}
+{% block content %}
+
+<div class="intro">
+    <div class="mess">
+    {% for message in get_flashed_messages() %}
+    {{ message }}
+    {% endfor %}
+    </div 
+    <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white center-align"
+                 style="padding: 30px 15px;">
+    
+    <form class="addcrop_form" action="{{ url_for('addcrop') }}" method="post">
+                    
+                    <input id="id" type=text  name=id>
+                    <input id="cropname" type=text  name=cropname>
+                    <input id="growstate" type=text  name=growstate>
+                    <input id="farmid" type=text  name=farmid>
+                    
+                    <button class="btn waves-effect waves-light moderate-pink darken-1" id="submit" type="submit" name="action" value="add crop">
+                        submit
+                    </button>
+                </form> 
+    
+</div>
+<div class="ver-hor-align-parent grey darken-4">
+    <div class="container ver-hor-align-child">
+        <div class="row">
+            <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4">
+                <a href="{{ url_for('index') }}" class="brand-logo">
+                    <img class="social-icon" style="max-width: 100%;"
+                         src="{{ url_for('static', filename='images/logo.png') }}">
+                </a>
+            </div>
+        </div>
+{% endblock %}
