@@ -9,9 +9,16 @@ from models.crop import *
 class FarmController:
 
     @staticmethod
-    def get_user_farms(user):
+    def get_user_farms():
+        user = User.query.get(User.query.filter_by(email=session['email']).first().id)
         farms = Works.query.filter_by(user_id=user.id).all()
         return farms
+        
+    @staticmethod
+    def get_farm_resources(farm_id):
+        #resources = Resources.query.filter_by(farm_id=farm_id).all()
+        #return resources
+        return ['seeds','fertiliser', 'water']
  
     @staticmethod
     def add_farm():
@@ -19,9 +26,8 @@ class FarmController:
         myfarms = []
         names = []
         user = User.query.get(User.query.filter_by(email=session['email']).first().id)
-        
         if user.type == 'C':#Display users previously added farms
-            for farm in FarmController.get_user_farms(user):
+            for farm in FarmController.get_user_farms():
                 myfarms.append(Farm.query.get(farm.farm_id))
                 names.append(Farm.query.get(farm.farm_id).name)
         else:
@@ -62,8 +68,17 @@ class FarmController:
     @staticmethod
     def activity():
         myfarms = []
-        for farm in FarmController.get_user_farms(user):
+        resources = []
+        for farm in FarmController.get_user_farms():
             myfarms.append(Farm.query.get(farm.farm_id))
-        return render_template("activity.html", myfarms=myfarms)  
+        farm_id = request.form.get('farm', '')
+        if farm:
+            for resource in FarmController.get_farm_resources(farm_id):
+                resources.append(resource)
+        if request.method == 'POST':
+            #db...
+            
+            flash("added new activity")
+        return render_template("activity.html", myfarms=myfarms, resources=resources)  
         
 
