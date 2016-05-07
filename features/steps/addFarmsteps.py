@@ -29,7 +29,7 @@ def step_impl(context):
 @then('the the error: "Already Exists" is returned')
 def step_impl(context):
     assert 'Already Exists' in context.browser.page_source
-    
+
 @given('The user has not registered any existing farms')
 def step_impl(context):
     context.browser.get(context.address + "/register")
@@ -44,7 +44,7 @@ def step_impl(context):
     assert 'You dont have any farms yet.' in context.browser.page_source
 
 def add_farm(context, name, address1, address2, city, state, country, postcode):
-    
+
     context.browser.find_element_by_name('name').send_keys(name)
     context.browser.find_element_by_name('address1').send_keys(address1)
     context.browser.find_element_by_name('address2').send_keys(address2)
@@ -52,15 +52,15 @@ def add_farm(context, name, address1, address2, city, state, country, postcode):
     context.browser.find_element_by_name('state').send_keys(state)
     context.browser.find_element_by_name('country').send_keys(country)
     context.browser.find_element_by_name('postcode').send_keys(postcode)
-    context.browser.find_element_by_id("form").submit()   
-     
+    context.browser.find_element_by_id("form").submit()
+
 def login(context, email, password):
     email_field = context.browser.find_element_by_id("email")
     password_field = context.browser.find_element_by_id("password")
     email_field.send_keys(email)
     password_field.send_keys(password)
     email_field.submit()
-    
+
 def register(context, first_name, last_name, email, password):
     firstname_field = context.browser.find_element_by_id("firstname")
     lastname_field = context.browser.find_element_by_id("lastname")

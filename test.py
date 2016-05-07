@@ -15,14 +15,20 @@ class BaseTestCase(TestCase):
         db.create_all()
         db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
         db.session.add(User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins'))
+        db.session.add(Unit('Kg'))
+        db.session.add(Unit('gm'))
+        db.session.add(Unit('l'))
+        db.session.add(Unit('ml'))
+        db.session.flush()
         db.session.add(Address('123 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
         db.session.add(Address('126 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
+        db.session.flush()
         db.session.add(Farm('Shire Farms', 1))
         db.session.add(Farm('Mordor Farms', 2))
-        db.session.add(Image('produce/1/eggplant.jpeg'))
-        db.session.add(Produce('Eggplant', 'Sweet organic eggplants', 'Vegetable', 1))
-        db.session.add(Price(1, 1, 4.35))
-        db.session.add(Price(1, 2, 2.8))
+        db.session.flush()
+        db.session.add(Works(1, 1))
+        db.session.add(Works(2, 2))
+        db.session.flush()
         db.session.commit()
 
     def tearDown(self):
@@ -130,27 +136,19 @@ class BlueGardenTestCase(BaseTestCase):
 
     def test_add_produce_page_content(self):
         print('\n## Testing Add produce page content ##')
-        with self.client as c:
-            with c.session_transaction() as session:
-                session['logged_in'] = True
-                session['email'] = 'singarisathwik007@gmail.com'
-                session['firstname'] = 'Sathwik'
-                session['lastname'] = 'Singari'
-        response = self.client.get('/farm/1/produce/add', content_type='html/text')
+        self.login('singarisathwik007@gmail.com', 'dm08b048')
+        response = self.client.get('/farm/1/produce/add', content_type='html/text', follow_redirects=True)
         self.assertIn(b'Shire Farms', response.data)
 
     def test_adding_produce_to_farm(self):
-        with self.client as c:
-            with c.session_transaction() as session:
-                session['logged_in'] = True
-                session['email'] = 'singarisathwik007@gmail.com'
-                session['firstname'] = 'Sathwik'
-                session['lastname'] = 'Singari'
+        print('\n## Testing Add produce to farm ##')
+        self.login('singarisathwik007@gmail.com', 'dm08b048')
         response = self.add_produce('Eggplant', 'Big eggplants', 'Vegetable', 1, 4.38, 'static/images/eggplant.jpg')
         self.assertIn(b"Success", response.data)
 
     def add_produce(self, name, description, category, selected_units, price1, prod_image):
-        with open(prod_image, 'rb') as img:
+        img = open(prod_image, 'rb')
+        try:
             img_bytes_io = BytesIO(img.read())
             post_data = {
                 'name': name, 'description': description, 'category': category,
@@ -161,7 +159,9 @@ class BlueGardenTestCase(BaseTestCase):
                 if not isinstance(val, str):
                     post_data[key] = str(val)
             post_data['prod_image'] = (img_bytes_io, 'eggplant.jpeg')
-            return self.client.post('/farm/2/produce/add', content_type='multipart/form-data',
+        finally:
+            img.close()
+        return self.client.post('/farm/1/produce/add', content_type='multipart/form-data',
                                     data=post_data)
 
 
