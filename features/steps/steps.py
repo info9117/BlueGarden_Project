@@ -1,8 +1,5 @@
 from behave import *
-from selenium.webdriver.support.select import Select
-from selenium.webdriver.support.wait import WebDriverWait
 import re
-import time
 
 
 @given('I am in the login page')
@@ -65,11 +62,12 @@ def step_impl(context):
     assert 'Email Id already exists' in context.browser.page_source
 
 
-@given(u'I am in the add produce page')
+@given('I am in the add produce page')
 def step_impl(context):
-    context.browser.get(context.address+'/farm/1/produce/add')
+    context.browser.get(context.address + "/login")
     login(context, 'singarisathwik007@gmail.com', 'dm08b048')
-    assert re.search('Add Produce', context.browser.page_source)
+    context.browser.get(context.address + '/farm/1/produce/add')
+    assert 'Add Produce' in context.browser.page_source
 
 
 @when(u'I enter the produce details')

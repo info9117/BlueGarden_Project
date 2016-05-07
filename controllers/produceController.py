@@ -1,7 +1,7 @@
 import os
-from models import Produce, Image, Farm, Address, Grows, Price, Unit
+from models import Produce, Image, Farm, Address, Grows, Price, Unit, Works
 from shared import db
-from flask import request, render_template, abort
+from flask import request, render_template, abort, session, redirect, flash, url_for
 from werkzeug.utils import secure_filename
 import utilities
 
@@ -11,6 +11,9 @@ class ProduceController:
     @staticmethod
     def add_produce(farm_id, upload_folder):
             errors = []
+            if not Works.query.filter_by(user_id=session.get('id')).filter_by(farm_id=farm_id).first():
+                flash("Sorry, This farm doesn't belong to you", 'error')
+                return redirect(url_for('sell'))   
             if request.method == 'POST':
                 name = request.form.get('name', '')
                 description = request.form.get('description', '')
