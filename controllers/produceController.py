@@ -61,4 +61,7 @@ class ProduceController:
 
     @staticmethod
     def browse_produce(search_term):
-        results_per_page = 10
+        results_per_page = 16
+        results = Produce.query.filter(Produce.name.contains(search_term)).order_by(Produce.id).limit(results_per_page)
+        return render_template('browse_produce.html', results=results)
+
