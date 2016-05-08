@@ -3,7 +3,7 @@ from models import Produce, Image, Farm, Address, Grows, Price, Unit, Works
 from shared import db
 from flask import request, render_template, abort, session, redirect, flash, url_for
 from flask_sqlalchemy import Pagination
-from sqlalchemy import func
+from sqlalchemy import func, and_
 from werkzeug.utils import secure_filename
 import utilities
 
@@ -62,16 +62,33 @@ class ProduceController:
     @staticmethod
     def browse_produce(page):
         results_per_page = 12
+        results_filtered = False
         categories = ['Vegetable', 'Fruit', 'Grain', 'Meat', 'Diary', 'Other']
         category_filter = []
         for category in categories:
             if request.args.get(category.lower()) == 'on':
                 category_filter.append(category.lower())
+        location = request.args.get('location')
         if category_filter:
-            results = Produce.query.filter(func.lower(Produce.category).in_(category_filter))\
-                .order_by(Produce.id).paginate(page, results_per_page, False)
-        else:
-            results = Produce.query.order_by(Produce.id).paginate(page, results_per_page, False)
+            results_filtered = True
+            results = Produce.query.filter(func.lower(Produce.category).in_(category_filter)) \
+                .order_by(Produce.id)
+        if results_filtered and location:
+                results = results.filter(Produce.farm_id == Farm.query.with_entities(Farm.id)
+                                         .filter(and_(Farm.address_id == Address.id, func.lower(Address.city) ==
+                                                      location.lower()))).order_by(Produce.id) \
+                    .paginate(page, results_per_page, False)
+        if not results_filtered and location:
+            results = Produce.query.filter(Produce.farm_id == Farm.query.with_entities(Farm.id)
+                                           .filter(and_(Farm.address_id == Address.id, func.lower(Address.city) ==
+                                                        location.lower()))).order_by(Produce.id) \
+                .paginate(page, results_per_page, False)
+        if results_filtered and not location:
+            results = results.paginate(page, results_per_page, False)
+            
+        if not results_filtered:
+            results = Produce.query.order_by(Produce.farm_id).paginate(page, results_per_page, False)
         total = results.total
         pagination = Pagination(results, page, results_per_page, total, results.items)
-        return render_template('browse_produce.html', results=results.items, categories=categories, pagination=pagination)
+        return render_template('browse_produce.html', results=results.items, categories=categories,
+                               pagination=pagination)

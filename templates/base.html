@@ -43,6 +43,8 @@
                     + session['lastname'] }}<i class="material-icons right">arrow_drop_down</i></a></li>
             </ul>
             <ul class="side-nav" id="mobile-demo">
+                <li><a href="{{ url_for('browse_produce') }}">Browse</a></li>
+                <li><a href="{{ url_for('sell') }}">Sell</a></li>
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
             </ul>
             {% endblock %}
