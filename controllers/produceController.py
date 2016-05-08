@@ -2,66 +2,76 @@ import os
 from models import Produce, Image, Farm, Address, Grows, Price, Unit, Works
 from shared import db
 from flask import request, render_template, abort, session, redirect, flash, url_for
+from flask_sqlalchemy import Pagination
+from sqlalchemy import func
 from werkzeug.utils import secure_filename
 import utilities
 
 
 class ProduceController:
-
     @staticmethod
     def add_produce(farm_id, upload_folder):
-            errors = []
-            if not Works.query.filter_by(user_id=session.get('id')).filter_by(farm_id=farm_id).first():
-                flash("Sorry, This farm doesn't belong to you", 'error')
-                return redirect(url_for('sell'))   
-            if request.method == 'POST':
-                name = request.form.get('name', '')
-                description = request.form.get('description', '')
-                category = request.form.get('category', '')
-                selected_units = request.form.get('units', '')
-                prices = {}
-                for sel_unit in selected_units:
-                    prices[sel_unit] = request.form.get('price' + selected_units)
-                file = request.files['prod_image']
-                if not name:
-                    errors.append('Name cannot be empty')
-                if not description:
-                    errors.append('Description cannot be empty')
-                if not category:
-                    errors.append('Please choose a category for the produce')
-                if not selected_units:
-                    errors.append('Please choose the units you wish to sell in')
-                if len(prices) < len(selected_units):
-                    errors.append('Please enter the prices for the produce')
-                if not file or not utilities.allowed_file(file.filename):
-                    errors.append("Please upload 'png', 'jpg', 'jpeg' or 'gif' image for produce")
-                if not errors:
-                    directory = os.path.join(upload_folder, 'produce/' + str(farm_id) + '/')
-                    os.makedirs(os.path.dirname(directory), exist_ok=True)
-                    filename = secure_filename(file.filename)
-                    file.save(os.path.join(directory, filename))
-                    img = Image('produce/' + str(farm_id) + '/' + filename)
-                    db.session.add(img)
+        errors = []
+        if not Works.query.filter_by(user_id=session.get('id')).filter_by(farm_id=farm_id).first():
+            flash("Sorry, This farm doesn't belong to you", 'error')
+            return redirect(url_for('sell'))
+        if request.method == 'POST':
+            name = request.form.get('name', '')
+            description = request.form.get('description', '')
+            category = request.form.get('category', '')
+            selected_units = request.form.get('units', '')
+            prices = {}
+            for sel_unit in selected_units:
+                prices[sel_unit] = request.form.get('price' + selected_units)
+            file = request.files['prod_image']
+            if not name:
+                errors.append('Name cannot be empty')
+            if not description:
+                errors.append('Description cannot be empty')
+            if not category:
+                errors.append('Please choose a category for the produce')
+            if not selected_units:
+                errors.append('Please choose the units you wish to sell in')
+            if len(prices) < len(selected_units):
+                errors.append('Please enter the prices for the produce')
+            if not file or not utilities.allowed_file(file.filename):
+                errors.append("Please upload 'png', 'jpg', 'jpeg' or 'gif' image for produce")
+            if not errors:
+                directory = os.path.join(upload_folder, 'produce/' + str(farm_id) + '/')
+                os.makedirs(os.path.dirname(directory), exist_ok=True)
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(directory, filename))
+                img = Image(filename, 'produce/' + str(farm_id) + '/' + filename)
+                db.session.add(img)
+                db.session.flush()
+                prod = Produce(name, description, category, farm_id, img.id)
+                db.session.add(prod)
+                db.session.flush()
+                for p in prices:
+                    db.session.add(Price(prod.id, p, prices[p]))
                     db.session.flush()
-                    prod = Produce(name, description, category, img.id)
-                    db.session.add(prod)
-                    db.session.flush()
-                    db.session.add(Grows(farm_id, prod.id))
-                    for p in prices:
-                        db.session.add(Price(prod.id, p, prices[p]))
-                        db.session.flush()
-                    db.session.commit()
-                    return 'Success'
-            units = Unit.query.all()
-            current_farm = Farm.query.get(farm_id)
-            if not current_farm:
-                abort(404)
-            farm_address = Address.query.get(current_farm.address_id)
-            return render_template('add_produce.html', units=units, farm=current_farm, address=farm_address, errors=errors)
+                db.session.commit()
+                return 'Success'
+        units = Unit.query.all()
+        current_farm = Farm.query.get(farm_id)
+        if not current_farm:
+            abort(404)
+        return render_template('add_produce.html', units=units, farm=current_farm, address=current_farm.address,
+                               errors=errors)
 
     @staticmethod
-    def browse_produce(search_term):
-        results_per_page = 16
-        results = Produce.query.filter(Produce.name.contains(search_term)).order_by(Produce.id).limit(results_per_page)
-        return render_template('browse_produce.html', results=results)
-
+    def browse_produce(page):
+        results_per_page = 12
+        categories = ['Vegetable', 'Fruit', 'Grain', 'Meat', 'Diary', 'Other']
+        category_filter = []
+        for category in categories:
+            if request.args.get(category.lower()) == 'on':
+                category_filter.append(category.lower())
+        if category_filter:
+            results = Produce.query.filter(func.lower(Produce.category).in_(category_filter))\
+                .order_by(Produce.id).paginate(page, results_per_page, False)
+        else:
+            results = Produce.query.order_by(Produce.id).paginate(page, results_per_page, False)
+        total = results.total
+        pagination = Pagination(results, page, results_per_page, total, results.items)
+        return render_template('browse_produce.html', results=results.items, categories=categories, pagination=pagination)
