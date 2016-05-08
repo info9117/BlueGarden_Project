@@ -18,36 +18,36 @@
         </div>
     </div>
     <div class="row white z-depth-1">
-        <!--<ul class="collapsible col s12 hide-on-med-and-up z-depth-0" data-collapsible="accordion">-->
-            <!--<li>-->
-                <!--<div class="collapsible-header"><h5>Filter</h5><i class="material-icons">arrow_drop_down</i></div>-->
-                <!--<div class="collapsible-body">-->
-                    <!--<form id="filter-form-small" method="GET" action="">-->
-                        <!--<div id="category-container-small">-->
-                            <!--<h5>Category</h5>-->
-                            <!--<div id="category-items-small">-->
-                                <!--&lt;!&ndash;{% for category in categories %}&ndash;&gt;-->
-                                <!--&lt;!&ndash;<p>&ndash;&gt;-->
-                                    <!--&lt;!&ndash;<input name="{{ category.lower() }}" type="checkbox"&ndash;&gt;-->
-                                           <!--&lt;!&ndash;class="filled-in checkbox-default"&ndash;&gt;-->
-                                           <!--&lt;!&ndash;id="{{ category.lower() }}-small" {% if request.args.get(category.lower()) %}&ndash;&gt;-->
-                                           <!--&lt;!&ndash;checked="checked"&ndash;&gt;-->
-                                           <!--&lt;!&ndash;{% endif %}/>&ndash;&gt;-->
-                                    <!--&lt;!&ndash;<label for="{{ category.lower() }}">{{ category }}</label>&ndash;&gt;-->
-                                <!--&lt;!&ndash;</p>&ndash;&gt;-->
-                                <!--&lt;!&ndash;{% endfor %}&ndash;&gt;-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div id="location-container-small">-->
-                            <!--<h5>Location</h5>-->
-                            <!--<input name="location" id="location-small" type="text" placeholder="Sydney">-->
-                        <!--</div>-->
-                        <!--<button class="btn waves-effect waves-light moderate-pink darken-1" type="submit">Apply</button>-->
-                    <!--</form>-->
-                <!--</div>-->
-            <!--</li>-->
-        <!--</ul>-->
-        <div id="filter-column" class="col m3 l3 s12">
+        <ul class="collapsible col s12 hide-on-med-and-up z-depth-0" data-collapsible="accordion">
+            <li>
+                <div class="collapsible-header"><h5>Filter</h5><i class="material-icons">arrow_drop_down</i></div>
+                <div class="collapsible-body">
+                    <form id="filter-form-small" method="GET" action="">
+                        <div id="category-container-small">
+                            <h5>Category</h5>
+                            <div id="category-items-small">
+                                {% for category in categories %}
+                                <p>
+                                    <input name="{{ category.lower() }}" type="checkbox"
+                                           class="filled-in checkbox-default"
+                                           id="{{ category.lower() }}-small" {% if request.args.get(category.lower()) %}
+                                           checked="checked"
+                                           {% endif %}/>
+                                    <label for="{{ category.lower() }}-small">{{ category }}</label>
+                                </p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div id="location-container-small">
+                            <h5>Location</h5>
+                            <input name="location" id="location-small" type="text" placeholder="Sydney">
+                        </div>
+                        <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit">Apply</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+        <div id="filter-column" class="col m3 l3 hide-on-small-only">
             <form id="filter-form" method="GET" action="">
                 <div id="category-container">
                     <h5>Category</h5>
