@@ -79,6 +79,7 @@ class ProduceController:
                                                       location.lower()))).order_by(Produce.id) \
                     .paginate(page, results_per_page, False)
         if not results_filtered and location:
+            results_filtered = True
             results = Produce.query.filter(Produce.farm_id == Farm.query.with_entities(Farm.id)
                                            .filter(and_(Farm.address_id == Address.id, func.lower(Address.city) ==
                                                         location.lower()))).order_by(Produce.id) \
@@ -89,6 +90,7 @@ class ProduceController:
         if not results_filtered:
             results = Produce.query.order_by(Produce.farm_id).paginate(page, results_per_page, False)
         total = results.total
+        print(results.query.as_scalar())
         pagination = Pagination(results, page, results_per_page, total, results.items)
         return render_template('browse_produce.html', results=results.items, categories=categories,
                                pagination=pagination)
