@@ -1,60 +1,59 @@
 {% extends "base.html" %}
 {% block title %}Farm Activity{% endblock %}
 
-
 {% block content %}
 
-<div class=container>
-    <form class="activity" action="{{ url_for('activity') }}" method="post"> 
-        <div class="row">
+<div class="ver-hor-align-parent grey darken-4">
+    <div class="section">
+        <div class="container white">
+            <form class="activity" id="form" action="{{ url_for('activity') }}" method="post"> 
         
-            <div class="input-field col s6">
-                <input id="description" type="text" class="validate"></input>
-                    <label>Activity Description</label></div>
-                  
-                {% if myfarms %}
-            <div class="input-field col s6" id="farm">
-                <select>
-                    <option value="" disabled selected>Choose your Farm</option>
-                {% for farm in myfarms %}
+        <div class="row">
+            <div class="section">
+                <div class="input-field col s6 center-align" id="description">
+                    <input id="description" type="text" class="validate"></input>
+                    <label>Activity Description</label></div></div>
                     
-                    <option value="{{ farm.id }}">{{ farm.name }}</option>
-                {% endfor %}
-                </select>
-                    <label>Farm</label></div>
-                {% endif %}
-                
+            <div class="section">
+                    {% if myfarms %}
+                <div class="input-field col s6 center-align" id="farm">
+                    <select>
+                <option value="" disabled selected>Choose your Farm</option>
+                    {% for farm in myfarms %}
+                <option value="{{ farm.id }}">{{ farm.name }}</option>
+                    {% endfor %}
+                    </select>
+                <label>Farm</label></div></div> 
+                    {% endif %}   
         </div>
-        <div class="row">
-        
-            <div class="col s6">Activity Date<input id="date" type="date" class="datepicker"></input></div>
-        
 
-                {% if resources %}
-            <div class="input-field col s6" id="resource">
-                <select>
+        <div class="row">
+            <div class="col s6">Activity Date<input id="date" type="date" class="datepicker"></input></div>
+            
+                    
+                <div class="input-field col s6" id="resource">
+                    {% if resources %}
+                    <select>
                     <option value="" disabled selected>Choose your Resource</option>
-                {% for resource in resources %}
-                    
+                    {% for resource in resources %}
                     <option value="{{ resource.id }}">{{ resource }}</option>
-                {% endfor %}
-                </select>
+                    {% endfor %}
+                    </select>
                     <label>Resource</label></div>
-                {% endif %}
-    </div>
+                    {% endif %}
+        </div>
     
-<div class=valign>
-    <button class="btn waves-effect waves-light moderate-pink darken-1" id="submit" type="submit" name="action" value="add_activity">Record Activity</button>
+        <div class="section">    
+            <button class="btn waves-effect waves-light moderate-pink darken-1" id="submit" type="submit" name="action" value="add_activity">Record Activity</button>
+        </div>
     
-    <div class="messages">
-    {% for message in get_flashed_messages() %}
-    {{ message }}
-    {% endfor %}</div>
-                    
+        <div class="green lighten-3">
+            {% for message in get_flashed_messages() %}
+            <p class="green-text green-darken-4" style="margin: 0; padding: 5px 0">{{ message }}</p>
+            {% endfor %}</div>        
         </div>     
     </form>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
@@ -68,7 +67,7 @@
   $(document).ready(function() {
     $('select').material_select();
   });
-  
+
   
 </script>
 {% endblock %}

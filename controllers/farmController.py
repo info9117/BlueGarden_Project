@@ -5,6 +5,7 @@ from models.farm import *
 #from models.produce import *
 from models.address import *
 from models.crop import *
+from models.activity import *
 
 class FarmController:
 
@@ -75,9 +76,13 @@ class FarmController:
         if farm:
             for resource in FarmController.get_farm_resources(farm_id):
                 resources.append(resource)
+        description = request.form.get('description', '')
+        date = request.form.get('date', '')
+        resource = request.form.get('resource', '')
         if request.method == 'POST':
-            #db...
-            
+            db.session.add(Activity(description,farm_id,date,resource))
+            #db.session.update(Resource(..............))
+            db.session.commit()
             flash("added new activity")
         return render_template("activity.html", myfarms=myfarms, resources=resources)  
         
