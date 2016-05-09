@@ -1,4 +1,5 @@
 from flask import request, render_template, session, redirect, url_for, flash
+from flask.ext.wtf import Form
 from models.user import *
 from models.crop import *
 from models.address import *
@@ -74,6 +75,7 @@ class UserController:
     @staticmethod
     def addcrop():
         errors = []
+        crop_m = []
         if request.method == 'POST':
             id = request.form.get('id', '')
             crop_name = request.form.get('cropname', '')
@@ -83,6 +85,16 @@ class UserController:
             db.session.add(crop)
             db.session.commit()
             flash('You success added crop')
-        return render_template("addcrop.html", errors=errors)
+        
+        #cropm = Crop.get('cropname')
+        crop_message = Crop.query.all()
+        for crop in crop_message:
+            crop_m.append(crop.id)
+            crop_m.append(crop.crop_name)
+            crop_m.append(crop.grow_state)
+            crop_m.append(crop.farm_id)
+            print(crop_m)
+            
+        return render_template("addcrop.html",crop_m=crop_m,errors = errors)
 
 

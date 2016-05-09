@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+<!{% extends "base.html" %}>
 {% block title %}Add Your Crops{% endblock %}
 {% block content %}
 
@@ -7,7 +7,14 @@
     {% for message in get_flashed_messages() %}
     {{ message }}
     {% endfor %}
-    </div 
+    </div>
+    <div class = "crop message">
+    {% for message in crop_m %}
+    {{message}}
+    {% endfor %}
+    <h1> {{cropm}} </h1>
+    
+    </div>
     <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white center-align"
                  style="padding: 30px 15px;">
     
