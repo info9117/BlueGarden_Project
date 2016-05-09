@@ -6,6 +6,8 @@ from models.farm import *
 from models.address import *
 from models.crop import *
 from models.activity import *
+from datetime import datetime
+
 
 class FarmController:
 
@@ -77,7 +79,8 @@ class FarmController:
             for resource in FarmController.get_farm_resources(farm_id):
                 resources.append(resource)
         description = request.form.get('description', '')
-        date = request.form.get('date', '')
+        date = datetime.strptime(request.form.get('date', ''), '%d %b, %Y').date()
+        print (date)
         resource = request.form.get('resource', '')
         if request.method == 'POST':
             db.session.add(Activity(description,farm_id,date,resource))

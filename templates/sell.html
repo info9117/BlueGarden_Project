@@ -14,7 +14,7 @@
         </div>
 
         <div class="row">
-            <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white center-align"
+            <div class="col s4 white"
                  style="padding: 30px 15px;">
                 {% with messages = get_flashed_messages(with_categories=True) %}
                 {% if errors or messages %}
@@ -52,26 +52,22 @@
                         ADD
                     </button>
                 </form>
-            </div>
-            <div>
+            </div> 
+            <div class="section">
+            <div class="col s4">
             
                 {% if myfarms %}
-                    <ul class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white left-align"><p>My Farms</p>
+                    <ul class="col white"><p>My Farms</p>
                 {% for myfarm in myfarms %}
-                    <a href="/addcrop">Add Crop to {{ myfarm.name }} </a>
-                    <a href="/farm/{{ myfarm.id }}/produce/add">Add Produce to {{ myfarm.name }}<br></a>
+                    <a href="/addcrop">Add Crop to {{ myfarm.name }} </a><br>
+                    <a href="/farm/{{ myfarm.id }}/produce/add">Add Produce to {{ myfarm.name }}</a>
                 {% endfor %}
                     </ul>
                 {% endif %}
-
-{% block body %}
-{% endblock %}
+            </div>
     </div>
 
 </div>
-{% endblock %}
-
-{% block footer %}
 {% endblock %}
 
 {% block scripts %}
