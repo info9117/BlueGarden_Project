@@ -16,6 +16,10 @@
     padding-left:1px !important;
 }
 
+.result-item .btn {
+    margin-bottom:10px !important;
+}
+
 @media only screen and (max-width: 600px) {
     .result-item {
         padding-left:0px !important;
