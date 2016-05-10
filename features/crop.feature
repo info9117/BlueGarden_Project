@@ -13,6 +13,15 @@ Feature: track the state of the crops
     When a farmer login as a farmer
     Then the system should show all the details of crops
     
+    Scenario: Change the state of crop
+    Given at the crop screen
+    When a famer choose a crop
+    Then he could change the state of that crop
+    
+    Scenario: Change the crop to produce
+    Given at the crop screen
+    When the state of a crop is harvested
+    Then this crop will be changed to produce
     
         
     

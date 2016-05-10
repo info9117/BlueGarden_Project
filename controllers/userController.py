@@ -93,7 +93,7 @@ class UserController:
             crop_m.append(crop.crop_name)
             crop_m.append(crop.grow_state)
             crop_m.append(crop.farm_id)
-            print(crop_m)
+            #print(crop_m)
             
         return render_template("addcrop.html",crop_m=crop_m,errors = errors)
 
