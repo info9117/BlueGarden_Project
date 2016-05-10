@@ -8,15 +8,37 @@
     {{ message }}
     {% endfor %}
     </div>
-    <div class = "crop message">
-    {% for message in crop_m %}
-    {{message}}
+    <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white center-align"
+                 style="padding: 30px 15px;">
+    {% for crop in crop_m %}
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+        }
+    </style>
+    <table style="width:100%" color="red" border="1">
+      <tr>
+        <td>{{crop.id}}</td>
+        <td>{{crop.crop_name}}</td>
+        <td>{{crop.grow_state}}</td>
+        <td>{{crop.farm_id}}</td>
+      </tr>
+     
+    </table> 
     {% endfor %}
-    <h1> {{cropm}} </h1>
+    
+    
+    
+    
     
     </div>
     <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white center-align"
-                 style="padding: 30px 15px;">
+                 style="padding: 30px 15px;"
+                 >
     
     <form class="addcrop_form" action="{{ url_for('addcrop') }}" method="post">
                     

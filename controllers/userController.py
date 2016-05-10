@@ -1,5 +1,5 @@
 from flask import request, render_template, session, redirect, url_for, flash
-from flask.ext.wtf import Form
+
 from models.user import *
 from models.crop import *
 from models.address import *
@@ -86,14 +86,15 @@ class UserController:
             db.session.commit()
             flash('You success added crop')
         
-        #cropm = Crop.get('cropname')
+        '''#cropm = Crop.get('cropname')
         crop_message = Crop.query.all()
         for crop in crop_message:
             crop_m.append(crop.id)
             crop_m.append(crop.crop_name)
             crop_m.append(crop.grow_state)
             crop_m.append(crop.farm_id)
-            #print(crop_m)
+            #print(crop_m)'''
+        crop_m=Crop.query.all()
             
         return render_template("addcrop.html",crop_m=crop_m,errors = errors)
 
