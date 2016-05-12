@@ -38,6 +38,7 @@ class UserController:
             last_name = request.form.get('lastname', '')
             email = request.form.get('email', '')
             password = request.form.get('password', '')
+            conf_pswd = request.form.get('confirm password', '')
             if not first_name:
                 errors.append('First Name cannot be empty')
             if not last_name:
@@ -50,6 +51,8 @@ class UserController:
                     errors.append("Email Id already exists")
             if not password:
                 errors.append('Password cannot be empty')
+            if conf_pswd != password:
+                errors.append('Password mismatch! ')
             if not errors:
                 user = User(first_name, last_name, email, password)
                 db.session.add(user)
