@@ -71,7 +71,7 @@ class UserController:
         session.pop('email', None)
         session.pop('firstname', None)
         session.pop('lastname', None)
-        flash('You successfully logged out', 'success')
+        flash('You are successfully logged out', 'success')
         return redirect(url_for('login'))
 
     @staticmethod
@@ -85,7 +85,7 @@ class UserController:
             crop = Crop(id, crop_name, grow_state, farm_id)
             db.session.add(crop)
             db.session.commit()
-            flash('You success added crop')
+            flash('You have added crop successfully')
         return render_template("addcrop.html", errors=errors)
 
 
