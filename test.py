@@ -110,15 +110,27 @@ class BlueGardenTestCase(BaseTestCase):
         return self.client.get('/logout', follow_redirects=True)
 
 
-        
+    # Test add crop function    
     def addcrop(self,id, cropname, growstate, farmid):
+        
         return self.client.post('/addcrop',data=dict(
             id = id,
             crop_name = cropname,
             grow_state = growstate,
             farm_id = farmid
             ),follow_redirects=True)
-            
+
+    #Test change crop state
+    def change_state(self, cropid,changestate):
+        
+        return self.client.post('/change_state/563',data=dict(
+            crop_id=cropid, 
+            change_state=changestate), follow_redirects=True)
+
+    #Test change crop state       
+    def test_change_state(self):
+        rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
+        rv=self.change_state('563',"harvest")
 
 
 

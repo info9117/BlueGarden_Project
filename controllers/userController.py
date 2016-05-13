@@ -76,7 +76,11 @@ class UserController:
     def addcrop():
         errors = []
         crop_m = []
+        myfarm = []
+        #user = User.query.get(User.query.filter_by(email=session['email']).first().id())
+        #myfarms
         if request.method == 'POST':
+            #if request.form['action']=="add crop":
             id = request.form.get('id', '')
             crop_name = request.form.get('cropname', '')
             grow_state = request.form.get('growstate', '')
@@ -85,15 +89,11 @@ class UserController:
             db.session.add(crop)
             db.session.commit()
             flash('You success added crop')
+            
+
+
         
-        '''#cropm = Crop.get('cropname')
-        crop_message = Crop.query.all()
-        for crop in crop_message:
-            crop_m.append(crop.id)
-            crop_m.append(crop.crop_name)
-            crop_m.append(crop.grow_state)
-            crop_m.append(crop.farm_id)
-            #print(crop_m)'''
+        
         crop_m=Crop.query.all()
             
         return render_template("addcrop.html",crop_m=crop_m,errors = errors)

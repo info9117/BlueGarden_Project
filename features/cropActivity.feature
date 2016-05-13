@@ -9,11 +9,13 @@ Feature: farmer users could change their crop to produce
     Given at the change state screen
     When a famer choose a crop
     Then he could change the state of that crop harvested
-    
+
+    @slow
     Scenario: Change the crop to produce
-    Given at the crop screen
+    Given at the added crop screen
     When the state of a crop is harvested
-    Then this crop will be changed to produce
+    Then this crop can be changed to produce
+
     
         
     

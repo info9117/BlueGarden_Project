@@ -71,11 +71,18 @@ def logout():
 @login_required
 def addcrop():
     return userController.addcrop()
+
+
     
 @app.route('/change_state/<int:crop_id>',methods=['GET', 'POST'])
 @login_required
 def change_state(crop_id):
     return cropController.change_state(crop_id)
+
+
+
+
+
 
 @app.route('/dashboard')
 @login_required

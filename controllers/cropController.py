@@ -9,6 +9,7 @@ class CropController:
     @staticmethod
     def change_state(crop_id):
         errors=[]
+        
         if request.method == 'POST':
             new_state = request.form.get('change_state','')
             oristate = Crop.query.get(crop_id)
@@ -16,7 +17,10 @@ class CropController:
             db.session.add(oristate)
             db.session.commit()
             flash("you successfully change the state")
-            return redirect(url_for('change_state',crop_id = crop_id))
+            #return redirect(url_for('change_state',crop_id = crop_id))
+            return redirect(url_for('addcrop'))
             
         return render_template('change_state.html',errors = errors,crop_id=crop_id)
         
+
+    

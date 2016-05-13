@@ -14,7 +14,7 @@ def step_impl(context):
 
 @when('a farmer submit the id cropname, growstate and farm_id')
 def step_impl(context):
-    addcrop(context,"3",  "corn", "plant", "1")
+    addcrop(context,"1",  "corn", "plant", "1")
     assert context.browser.page_source
 
 @then('the system should return "You success added crop"')
@@ -27,7 +27,7 @@ def step_impl(context):
     context.browser.get(context.address + "/login")
     login(context, 'singarisathwik007@gmail.com', 'dm08b048')
 
-    context.browser.get(context.address + "/change_state/3")
+    context.browser.get(context.address + "/change_state/1")
     assert "change_state" in context.browser.page_source
 
 @when('a famer choose a crop')
@@ -39,7 +39,25 @@ def step_impl(context):
 def step_impl(context):
     assert 'you successfully change the state' in context.browser.page_source
 
-    
+@given('at the added crop screen')
+def step_impl(context):
+    context.browser.get(context.address + "/login")
+    login(context, 'singarisathwik007@gmail.com', 'dm08b048')
+    assert context.browser.page_source
+
+@when('the state of a crop is harvested')
+def step_impl(context):
+    context.browser.get(context.address + "/change_state/1")
+    change_state(context, "harvest")
+    assert context.browser.page_source
+
+@then('this crop can be changed to produce')
+def step_impl(context):
+    context.browser.get(context.address + '/farm/1/produce/add')
+    assert context.browser.page_source
+
+
+
     
     
     
