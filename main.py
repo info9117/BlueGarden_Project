@@ -4,6 +4,7 @@ from controllers import ProduceController
 from models import *
 from controllers.userController import UserController as userController
 from controllers.farmController import FarmController as farmController
+from controllers.fieldController import FieldController as fieldController
 from shared import db
 
 # Creating application object
@@ -75,21 +76,21 @@ def addcrop():
 @login_required
 def dashboard():
     return render_template('dashboard.html')
-    
-
-
 
 @app.route('/browse')
 @login_required
 def browse():
     return render_template('browse.html')
 
-
 @app.route('/sell', methods=['GET', 'POST'])
 @login_required
 def sell():
     return farmController.farms_view()
 
+@app.route('/field', methods=['GET', 'POST'])
+@login_required
+def field():
+    return fieldController.addField()
 
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
 @login_required
