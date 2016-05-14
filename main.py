@@ -4,7 +4,6 @@ from controllers import ProduceController
 from models import *
 from controllers.userController import UserController as userController
 from controllers.farmController import FarmController as farmController
-from shared import db
 
 # Creating application object
 app = Flask(__name__)
