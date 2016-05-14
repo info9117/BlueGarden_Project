@@ -53,6 +53,26 @@ class BlueGardenTestCase(BaseTestCase):
         print(type(response))
         self.assertIn(b'Email Id/Password do not match', response.data)
 
+    #Testing enter reset password page with valid credentials
+    def test_reset_valid_credentials(self):
+        print('\n## Testing resetpassword page with valid credentials ##')
+        response = self.resetpassword('singarisathwik007@gmail.com')
+        print(type(response))
+        self.assertIn(b'An email has been sent', response.data)
+
+     # Testing enter reset password page with invalid email
+    def test_reset_invalid_email(self):
+        print('\n## Testing resetpassword page with invalid email ##')
+        response = self.resetpassword('007@gmail.com')
+        print(type(response))
+        self.assertIn(b'This email is not registered.', response.data)
+
+    # Testing enter reset password page with no email
+    def test_reset_no_email(self):
+        print('\n## Testing resetpassword page with no email ##')
+        response = self.resetpassword('')
+        print(type(response))
+        self.assertIn(b'Email cannot be empty.', response.data)
 
     # Testing Logout
     def test_logout(self):
@@ -82,6 +102,11 @@ class BlueGardenTestCase(BaseTestCase):
         return self.client.post('/login', data=dict(
             email=email,
             password=password
+        ), follow_redirects=True)
+
+    def resetpassword(self, email):
+        return self.client.post('/resetpassword', data = dict(
+            email=email
         ), follow_redirects=True)
 
     def register(self, first_name, last_name, email, password):

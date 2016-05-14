@@ -1,11 +1,11 @@
 Feature: As a System Owner, I want users to be able to reset their password if they forget it
 
-	Scenario: Get to reset
-		Given I am in the login page
-		When I click reset password
-		Then I should be redirected to "password reset"
-
-	Scenario: Reset
-		Given I am in password reset page
+	Scenario: Reset password
+		Given I am in reset password page
 		When I enter my email
-		Then I should recieve an email to that email with reset instructions
+		Then I will be redirected to "resetdone"
+
+	Scenario: Reset wrong
+		Given I am in reset password page
+		When I enter an unregistered email
+		Then I should be shown error

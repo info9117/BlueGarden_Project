@@ -68,7 +68,7 @@ class UserController:
         if request.method == 'POST':
             email = request.form.get('email', '')
             if not email:
-                errors.append('Email cannot be empty')
+                errors.append('Email cannot be empty.')
             else:
                 user = User.query.filter_by(email=email).first()
                 if user:
@@ -84,6 +84,8 @@ class UserController:
                     msg.html = "<b>Click <a href = 'http://127.0.0.1:5000/resetpassword/%s/%s'>here</a> to reset your password</b>" % (passwordReset.password_reset_token,  passwordReset.user_id)
                     mail.send(msg)
                     return redirect(url_for('resetdone'))
+                else:
+                    errors.append('This email is not registered.')
         return render_template("resetpassword.html", errors=errors)
 
     @staticmethod
