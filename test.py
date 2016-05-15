@@ -89,7 +89,7 @@ class BlueGardenTestCase(BaseTestCase):
     def test_login_addcrop(self):
         print('\n## Testing add crop with new crop')
         rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
-        rv=self.addcrop('563', 'corn', 'harvest', '892')
+        rv=self.addcrop('1', 'corn', 'plant', '1')
         assert b'You success added crop' in rv.data
 
     def login(self, email, password):
@@ -120,17 +120,18 @@ class BlueGardenTestCase(BaseTestCase):
             farm_id = farmid
             ),follow_redirects=True)
 
-    #Test change crop state
-    def change_state(self, cropid,changestate):
-        
-        return self.client.post('/change_state/563',data=dict(
-            crop_id=cropid, 
-            change_state=changestate), follow_redirects=True)
+    '''#Test change crop state
+    def change_state(self, cropid, changestate):
+        return self.client.post('/change_state/1',data=dict(
+            oristate = Crop.query.get(cropid), 
+            new_state=changestate), follow_redirects=True)
 
     #Test change crop state       
     def test_change_state(self):
         rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
-        rv=self.change_state('563',"harvest")
+        rv=self.change_state('1','harvest')
+        assert b'you successfully change the state' in rv.data'''
+
 
 
 
