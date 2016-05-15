@@ -37,7 +37,6 @@ class BaseTestCase(TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
-        # shutil.rmtree('images/t/produce')
 
 
 class BlueGardenTestCase(BaseTestCase):
@@ -181,7 +180,6 @@ class BlueGardenTestCase(BaseTestCase):
         if not self.produce_added:
             self.add_test_produce()
         response = self.client.get('/search/produce?vegetable=on&location=Sydney', follow_redirects=True)
-        print(response.data)
         self.assertNotIn(b'Apple', response.data)
 
     def add_test_produce(self):
