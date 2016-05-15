@@ -38,9 +38,9 @@ class FieldController:
             if farmname not in myfarms:
                 errors.append("That's not your farm")
             if not fieldname:
-                errors.append("You must enter a Field name")
+                errors.append("You must enter a field name")
             if not farmname:
-                errors.append("You must enter a farm")
+                errors.append("You must enter a farm name")
 
             if not errors:
                 #add field:

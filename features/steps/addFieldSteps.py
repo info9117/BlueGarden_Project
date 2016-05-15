@@ -15,7 +15,42 @@ def step_impl(context):
 @then('the new field name is recorded with the parent farm')
 def step_impl(context):
     assert 'Addison Field'in context.browser.page_source
-    #assert 'not your farm'in context.browser.page_source
+
+@when('a farmer submits new field name for another farmers farm')
+def step_impl(context):
+    addTestField(context, "Canterbury Field","Wayne Farms" )
+
+@when('a farmer submits new field name for nonexistant farm')
+def step_impl(context):
+    addTestField(context, "Stawberry Fields","Abbey Road Farm" )
+
+@when('I submit without a farm name')
+def step_impl(context):
+    addTestField(context, "Orphan Field","" )
+
+@when('I submit without a field name')
+def step_impl(context):
+    addTestField(context, "","Shire Farms" )
+
+@then('I will be advised to enter a farm name')
+def step_impl(context):
+    assert 'must enter a farm name'in context.browser.page_source
+
+
+@then('I will be advised to enter a field name')
+def step_impl(context):
+    assert 'must enter a field name'in context.browser.page_source
+
+@then('I will be advised it is not my farm')
+def step_impl(context):
+    assert 'not your farm'in context.browser.page_source
+
+
+
+
+
+
+
 
 
 def login(context, email, password):
