@@ -6,9 +6,16 @@ class BaseConfig(object):
     MAX_CONTENT_LENGTH = 10 * 1024 * 1024  # Max File size = 10MB
 
 
+
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_USE_SSL = False
+    MAIL_USERNAME = 'test9430384@gmail.com'
+    MAIL_PASSWORD = 'thisiseight'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///bluegarden.db'
     UPLOAD_FOLDER = 'images/d/'
 
@@ -22,4 +29,10 @@ class TestingConfig(BaseConfig):
     DEBUG = False
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_USE_SSL = False
+    MAIL_USERNAME = 'test9430384@gmail.com'
+    MAIL_PASSWORD = 'thisiseight'
     UPLOAD_FOLDER = 'images/t/'

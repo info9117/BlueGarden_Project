@@ -1,12 +1,13 @@
 import os
 from flask import Flask, render_template, url_for, request, redirect, session, flash, send_from_directory
 from functools import wraps
+from controllers.userController import UserController as userController
+from shared import db, mail
 from werkzeug.security import safe_join
 from controllers.userController import UserController
 from werkzeug.utils import secure_filename
 import utilities
 from models import *
-from shared import db
 
 # Creating application object
 app = Flask(__name__)
@@ -19,9 +20,9 @@ app.config.from_object('config.DevelopmentConfig')
 
 # Creating SQLAlchemy Object
 db.init_app(app)
+mail.init_app(app)
 with app.app_context():
     db.create_all()
-
 
 def serve_forever():
     app.run()
@@ -65,6 +66,20 @@ def register():
     return UserController.register()
 
 
+@app.route("/resetpassword", methods=['GET','POST'])
+def resetpassword():
+    return userController.resetpassword()
+
+
+@app.route("/resetpassword/<token>/<int:user_id>", methods=['GET', 'POST'])
+def changepassword(token, user_id):
+    return userController.changepassword(token,user_id)
+
+@app.route("/resetdone", methods=['GET','POST'])
+def resetdone():
+    return userController.resetdone()
+
+
 @app.route('/logout')
 def logout():
     return UserController.logout()
@@ -74,7 +89,6 @@ def logout():
 @login_required
 def dashboard():
     return render_template('dashboard.html')
-
 
 @app.route('/browse')
 @login_required
@@ -156,7 +170,6 @@ def uploaded_image(farm_id, filename):
     print(safe_join(app.config['UPLOAD_FOLDER']+'produce/' + str(farm_id), filename))
     return send_from_directory(app.config['UPLOAD_FOLDER']+'produce/' + str(farm_id)+'/',
                                filename)
-
 
 @app.errorhandler(404)
 def page_not_found(e):

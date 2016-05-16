@@ -1,7 +1,6 @@
 import main
 from main import app
 from selenium import webdriver
-from shared import db
 from models import *
 import threading
 

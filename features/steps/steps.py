@@ -75,6 +75,36 @@ def step_impl(context):
     assert 'Email Id already exists' in context.browser.page_source
 
 
+@given('I am in reset password page')
+def step_impl(context):
+    context.browser.get(context.address + "/resetpassword")
+    email_found = re.search("Enter email", context.browser.page_source)
+    assert email_found
+
+
+@when('I enter my Email')
+def step_impl(context):
+    register(context,  email='fbaggins@lotr.com')
+    assert context.browser.page_source
+
+
+@then('I will be redirected to "resetdone"')
+def step_impl(context):
+    context.browser.get(context.address + "/resetdone")
+    assert 'An email has been sent' in context.browser.page_source
+
+
+@when('I enter an unregistered email')
+def step_impl(context):
+    register(context,  email='baberahamLincoln@freedom.com')
+    assert context.browser.page_source
+
+
+@then('I should be shown an error')
+def step_impl(context):
+    assert 'email' in context.browser.page_source
+
+
 def login(context, email, password):
     email_field = context.browser.find_element_by_id("email")
     password_field = context.browser.find_element_by_id("password")
@@ -95,32 +125,7 @@ def register(context, first_name, last_name, email, password):
     email_field.submit()
 
 
-@given(u'the product details page and produce price')
-def step_impl(context):
-    context.browser.get(context.address + "/produce/1")
-
-
-@when(u'the user selects the {amount} of the product')
-def step_impl(context, amount):
-    """
-    :type context:  behave,runner.context
-    :type amount: int
-    """
-    amount_field = context.browser.find_element_by_id("amount")
-    amount_field.send_keys(str(amount))
-    amount_field.submit()
-
-
-@then(u'the system shows the total is {total}')
-def step_impl(context, total):
-    """
-    :type context:  behave,runner.context
-    :type total: float
-    """
-    assert str(total) in context.browser.page_source
-
-
-
-
-
-
+def resetPassword(context, email):
+    email_field = context.browser.find_element_by_id("email")
+    email_field.send_keys(email)
+    email_field.submit()

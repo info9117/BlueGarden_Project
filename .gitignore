@@ -1,5 +1,5 @@
 *.pyc
 /venv
 /.idea
-/images/d/produce
-/images/t/produce
+*.db
+images/
