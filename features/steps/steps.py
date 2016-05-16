@@ -2,6 +2,17 @@ from behave import *
 import re
 
 
+@given('at the product details page')
+def step_impl(context):
+    context.browser.get(context.address + "/produce/1")
+
+
+@then('the system shows product details product name, farm name, price, unit and image')
+def step_impl(context):
+    """
+    :type context: behave.runner.Context
+    """
+
 @given('I am in the login page')
 def step_impl(context):
     context.browser.get(context.address + "/login")
