@@ -100,6 +100,7 @@ def step_impl(context):
 def step_impl(context):
     assert 'Eggplant' in context.browser.page_source
 
+
 def login(context, email, password):
     email_field = context.browser.find_element_by_id("email")
     password_field = context.browser.find_element_by_id("password")
