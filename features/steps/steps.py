@@ -61,7 +61,7 @@ def step_impl(context):
 def step_impl(context):
     assert 'Email Id already exists' in context.browser.page_source
 
-
+# begin of add_produce feature
 @given('I am in the add produce page')
 def step_impl(context):
     context.browser.get(context.address + "/login")
@@ -80,6 +80,7 @@ def step_impl(context):
 def step_impl(context):
     assert 'Success' in context.browser.page_source
 
+# end of add_produce feature
 
 def login(context, email, password):
     email_field = context.browser.find_element_by_id("email")

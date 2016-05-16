@@ -1,4 +1,4 @@
-<!--
+
 {% extends "base.html" %}
 
 {% block title %}Login{% endblock %}
@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
--->
+
 <div class="ver-hor-align-parent grey darken-4">
     <div class="container ver-hor-align-child">
         <div class="row">
@@ -59,18 +59,21 @@
                 <form class="form">
   
   <p class="name">
-   <input type="text" name="name" id="name" placeholder="John Doe" />
    <label for="name">Name</label>
+      <input type="text" name="name" id="name" placeholder="John Doe" />
+
   </p>
   
   <p class="email">
-   <input type="text" name="email" id="email" placeholder="mail@example.com" />
    <label for="email">Email</label>
+      <input type="text" name="email" id="email" placeholder="mail@example.com" />
+
   </p>
   
   <p class="web">
-   <input type="text" name="web" id="web" placeholder="" />
-   <label for="web">Subject</label>
+    <label for="web">Subject</label>
+      <input type="text" name="web" id="web" placeholder="" />
+
   </p>  
  
   <p class="text">
@@ -81,10 +84,6 @@
    <input type="submit" value="Send" />
   </p>
  </form>
-                <p class="center-align">Don't have an account? <a href="/register">Register</a></p>
-            </div>
-        </div>
-    </div>
 
 </div>
 {% endblock %}

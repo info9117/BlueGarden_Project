@@ -1,8 +1,13 @@
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
 
+
 class Contact():
+    
+
+
+    '''
     @staticmethod
-    def register():
+    def contact():
         errors = []
         if request.method == 'POST':
             email = request.form.get('email', '')
@@ -15,3 +20,5 @@ class Contact():
                 flash('\nCongrats! You have sent us enquiry! We will reply to you shortly. ^_^')
                 return redirect(url_for('contact_form'))
         return render_template("contact.html", errors=errors)
+
+    '''

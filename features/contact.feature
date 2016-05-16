@@ -6,12 +6,12 @@ Feature: As a system administrator, I want anyone can contact the firm using thi
   Scenario: User Submit Contact Form Without Title
     Given user is in contact form page
     When user fills the form without title
-    Then system should show an error
+    Then system should show an error to ask user fill title
 
    Scenario: User Submit Contact Form Without Body
      Given user is in contact form page
      When user fills the form without body
-     Then system should show an error
+     Then system should show an error to ask user fill body
 
    Scenario: User Submit Contact Form Without Email Address
      Given user is in contact form page
