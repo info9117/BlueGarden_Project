@@ -4,8 +4,4 @@ Feature: Browse Produce
   Scenario: Browse produce without any filters
     Given I am at home page
     When I go to browse produce page
-    Then I see <produce> in the page
-    Examples: Produce
-    | produce |
-    | Apple   |
-    | Banana  |
+    Then I see produce in the page
