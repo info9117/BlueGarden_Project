@@ -12,6 +12,8 @@ def step_impl(context):
     """
     :type context: behave.runner.Context
     """
+    assert context.browser.page_source
+
 
 @given('I am in the login page')
 def step_impl(context):
