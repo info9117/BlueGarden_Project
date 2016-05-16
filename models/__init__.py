@@ -9,3 +9,4 @@ from .user import User
 from .user import db
 from .works import Works
 from .password_resets import PasswordResets
+from .item import Item

@@ -1,4 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import session
 from shared import db
 
 
@@ -29,3 +30,11 @@ class User(db.Model):
 
     def set_user_farmer(self):
         self.type = 'C'
+
+    def add_user_to_session(self):
+        session['logged_in'] = True
+        session['id'] = self.id
+        session['email'] = self.email
+        session['firstname'] = self.first_name
+        session['lastname'] = self.last_name
+        session['type'] = self.type
