@@ -83,21 +83,14 @@ def step_impl(context):
 
 @given(u'I am logged in at the dashboard page')
 def step_impl(context):
+    context.browser.get(context.address + "/login")
     login(context, 'singarisathwik007@gmail.com', 'dm08b048')
-    context.browser.get(context.address + "/dashboard")
     assert 'Hello Sathwik' in context.browser.page_source
-
-
-@when(u'I have looked at produce previously')
-def step_impl(context):
-    add_produce(context, 'Eggplant', 'Bright Eggplants', 'Vegetable', '1', '4.32', '/eggplant.jpeg')
-    assert context.browser.page_source
 
 
 @then(u'I will see the most recently viewed produce')
 def step_impl(context):
-    assert 'Eggplant' in context.browser.page_source
-
+    assert 'corn' in context.browser.page_source
 
 
 def login(context, email, password):

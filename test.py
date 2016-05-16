@@ -188,6 +188,7 @@ class BlueGardenTestCase(BaseTestCase):
         user.type = 'B'
         assert not User.query.filter_by(email='singarisathwik007@gmail.com').first().type == 'C'
 
+
     #Testing new farmer user has no farms yet
     def test_farm_page_content(self):
         print('\n## Testing new farmer user has no farms yet ##')
@@ -195,11 +196,13 @@ class BlueGardenTestCase(BaseTestCase):
         response = self.client.get('/sell', follow_redirects=True)
         self.assertIn(b"You dont have any farms yet.",response.data)
 
+
     #Testing that user can add farms that they work on
     def test_add_farms(self):
         print('\n## Testing that user can add farms that they work on ##')
         response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
         self.assertIn(b"Community Farm",response.data)
+
 
     #Testing that user cannot add duplicate farms that they work on
     def test_add_duplicate_farms(self):

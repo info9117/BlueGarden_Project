@@ -4,5 +4,4 @@
 
 	Scenario: See recently viewed produce on dashboard
 		Given I am logged in at the dashboard page
-		When I have looked at produce previously
 		Then I will see the most recently viewed produce
