@@ -5,11 +5,23 @@ from models.farm import *
 #from models.produce import *
 from models.address import *
 from models.crop import *
+from models.field import *
 from models.activity import *
+from models.resource import *
 from datetime import datetime
 
 
 class FarmController:
+
+    @staticmethod
+    def get_farm_fields(farm_id):
+        if not farm_id:
+            return redirect(url_for('activity'))
+        #db.session.add(Field('east block', farm_id))#
+        #db.session.commit()        
+        fields = Field.query.filter_by(farm_id=farm_id).all()
+        return fields
+        
 
     @staticmethod
     def get_user_farms():
@@ -19,9 +31,12 @@ class FarmController:
         
     @staticmethod
     def get_farm_resources(farm_id):
-        #resources = Resources.query.filter_by(farm_id=farm_id).all()
-        #return resources
-        return ['seeds','fertiliser', 'water']
+        if not farm_id:
+            return redirect(url_for('activity'))
+        #db.session.add(Resource('fertiliser',farm_id))#
+        #db.session.commit()
+        resources = Resource.query.filter_by(farm_id=farm_id).all()
+        return resources
  
     @staticmethod
     def add_farm():
@@ -29,7 +44,7 @@ class FarmController:
         myfarms = []
         names = []
         user = User.query.get(User.query.filter_by(email=session['email']).first().id)
-        if user.type == 'C':#Display users previously added farms
+        if user.type == 'C':
             for farm in FarmController.get_user_farms():
                 myfarms.append(Farm.query.get(farm.farm_id))
                 names.append(Farm.query.get(farm.farm_id).name)
@@ -72,21 +87,38 @@ class FarmController:
     def activity():
         myfarms = []
         resources = []
+        fields = []
+        
         for farm in FarmController.get_user_farms():
             myfarms.append(Farm.query.get(farm.farm_id))
+            
         farm_id = request.form.get('farm', '')
-        if farm:
+        resource = request.form.get('resource', '')
+        field = request.form.get('field', '')
+        description = request.form.get('description', '')
+        date = request.form.get('date', '')
+        if resource == '' and request.method == 'POST':
+            selectedfarm = Farm.query.get(farm_id)
             for resource in FarmController.get_farm_resources(farm_id):
                 resources.append(resource)
-        description = request.form.get('description', '')
-        date = datetime.strptime(request.form.get('date', ''), '%d %b, %Y').date()
-        print (date)
-        resource = request.form.get('resource', '')
-        if request.method == 'POST':
-            db.session.add(Activity(description,farm_id,date,resource))
-            #db.session.update(Resource(..............))
+            for field in FarmController.get_farm_fields(farm_id):
+                fields.append(field)
+            return render_template('activity.html', selectedfarm=selectedfarm, 
+                                                        myfarms=myfarms, resources=resources, fields=fields)
+           
+        if request.method == 'POST' and resource != '':
+            if field =='' or date =='' or description =='':
+                flash("You must fill out all the forms") 
+                return render_template('activity.html', myfarms=myfarms, resources=resources, fields=fields)
+            
+            date_obj = datetime.strptime(date, '%d %b, %Y')#.date()
+            if request.form.get('harvest', '') == 'on':
+                sendto="add produce with args?"
+                #crop = Crop.query.filter_by(farm_id=farm_id).first()
+                #Crop.delete(crop)
+                #add crop to produce??
+            db.session.add(Activity(description,field,date,resource))
             db.session.commit()
-            flash("added new activity")
-        return render_template("activity.html", myfarms=myfarms, resources=resources)  
-        
+            flash("Activity was recorded")       
+        return render_template('activity.html', myfarms=myfarms)
 

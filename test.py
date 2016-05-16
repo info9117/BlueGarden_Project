@@ -14,6 +14,7 @@ class BaseTestCase(TestCase):
     def setUp(self):
         db.create_all()
         db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
+        db.session.add(User('Master', 'Farmer', 'mrmf@gmail.com', 'shazza'))
         db.session.add(User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins'))
         db.session.add(Address('123 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
         db.session.add(Address('126 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
@@ -114,8 +115,6 @@ class BlueGardenTestCase(BaseTestCase):
             ),follow_redirects=True)
             
 
-
-
     def test_dashboard_for_content(self):
         with self.client as c:
             with c.session_transaction() as session:
@@ -169,16 +168,16 @@ class BlueGardenTestCase(BaseTestCase):
     #Testing the flag for farmer user type
     def test_farmer_type(self):
         print('\n## Testing the flag for farmer user type ##')
-        user = User.query.filter_by(email='singarisathwik007@gmail.com').first()
+        user = User.query.filter_by(email='mrmf@gmail.com').first()
         User.set_user_farmer(user)
-        assert User.query.filter_by(type='C').first().first_name == 'Sathwik'
+        assert User.query.filter_by(type='C').first().first_name == 'Master'
         user.type = 'B'
-        assert not User.query.filter_by(email='singarisathwik007@gmail.com').first().type == 'C'
+        assert not User.query.filter_by(email='mrmf@gmail.com').first().type == 'C'
 
     #Testing new farmer user has no farms yet
     def test_farm_page_content(self):
         print('\n## Testing new farmer user has no farms yet ##')
-        self.login('singarisathwik007@gmail.com', 'dm08b048')
+        self.login('mrmf@gmail.com', 'shazza')
         response = self.client.get('/sell', follow_redirects=True)
         self.assertIn(b"You dont have any farms yet.",response.data)
         
@@ -196,7 +195,7 @@ class BlueGardenTestCase(BaseTestCase):
         self.assertIn(b"Already Exists",response.data)
         
     def add_farm(self, name, address1, address2, city, state, country, postcode):
-        self.login('singarisathwik007@gmail.com', 'dm08b048')
+        self.login('mrmf@gmail.com', 'shazza')
         return self.client.post('/sell', data=dict(
             name=name,
             address1=address1,
@@ -205,7 +204,31 @@ class BlueGardenTestCase(BaseTestCase):
             state=state,
             country=country,
             postcode=postcode
-        ), follow_redirects=True)        
+        ), follow_redirects=True)
+        
+    def add_activity(self, description,field,date,resource):
+        self.login('mrmf@gmail.com', 'shazza')
+        return self.client.post('/activity', data=dict(
+            description=description,
+            field=field,
+            date=date,
+            resource=resource
+        ), follow_redirects=True)
+        
+    #Testing that user can record activities to their farm
+    def test_add_activity(self):
+        print('\n## Testing that user can record activities to their farm ##')
+        self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
+        farm_id = 1
+        db.session.add(Field('west block', farm_id))
+        db.session.add(Resource('fertiliser',farm_id))
+        db.session.commit()        
+        field = Field.query.filter_by(farm_id=farm_id).first()
+        resource = Resource.query.filter_by(farm_id=farm_id).all()
+        date = '3 May, 2016'
+        description = 'Mowing the lawn'
+        response = self.add_activity(description,field,date,resource)
+        self.assertIn(b"Activity was recorded",response.data)        
 
 if __name__ == '__main__':
     unittest.main()
