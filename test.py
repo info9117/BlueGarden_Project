@@ -3,7 +3,6 @@ from shared import db
 from models import *
 from flask_testing import TestCase
 import unittest
-from io import StringIO, BytesIO
 
 
 class BaseTestCase(TestCase):
@@ -15,20 +14,14 @@ class BaseTestCase(TestCase):
         db.create_all()
         db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
         db.session.add(User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins'))
-        db.session.add(Unit('Kg'))
-        db.session.add(Unit('gm'))
-        db.session.add(Unit('l'))
-        db.session.add(Unit('ml'))
-        db.session.flush()
         db.session.add(Address('123 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
         db.session.add(Address('126 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
-        db.session.flush()
         db.session.add(Farm('Shire Farms', 1))
         db.session.add(Farm('Mordor Farms', 2))
-        db.session.flush()
-        db.session.add(Works(1, 1))
-        db.session.add(Works(2, 2))
-        db.session.flush()
+        db.session.add(Image('eggplant.jpg','produce/1/eggplant.jpeg'))
+        db.session.add(Produce('Eggplant', 'Sweet organic eggplants', 'Vegetable', 1, 1))
+        db.session.add(Price(1, 1, 4.35))
+        db.session.add(Price(1, 2, 2.8))
         db.session.commit()
 
     def tearDown(self):
@@ -37,6 +30,7 @@ class BaseTestCase(TestCase):
 
 
 class BlueGardenTestCase(BaseTestCase):
+
     # Testing the home page content
     def test_index_content(self):
         print('\n## Testing Home page for welcome message ##')
@@ -84,13 +78,6 @@ class BlueGardenTestCase(BaseTestCase):
         print('\n## Testing Register page with valid credentials ##')
         response = self.register('Frodo', 'Baggins', 'fbaggins@lotr.com', 'frodobaggins')
         self.assertIn(b'Hello Frodo', response.data)
-        
-    #Testing add crop with new crop
-    def test_login_addcrop(self):
-        print('\n## Testing add crop with new crop')
-        rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
-        rv=self.addcrop('563', 'corn', 'harvest', '892')
-        assert b'You success added crop' in rv.data
 
     def login(self, email, password):
         return self.client.post('/login', data=dict(
@@ -109,19 +96,6 @@ class BlueGardenTestCase(BaseTestCase):
     def logout(self):
         return self.client.get('/logout', follow_redirects=True)
 
-
-        
-    def addcrop(self,id, cropname, growstate, farmid):
-        return self.client.post('/addcrop',data=dict(
-            id = id,
-            crop_name = cropname,
-            grow_state = growstate,
-            farm_id = farmid
-            ),follow_redirects=True)
-            
-
-
-
     def test_dashboard_for_content(self):
         with self.client as c:
             with c.session_transaction() as session:
@@ -136,76 +110,28 @@ class BlueGardenTestCase(BaseTestCase):
 
     def test_add_produce_page_content(self):
         print('\n## Testing Add produce page content ##')
-        self.login('singarisathwik007@gmail.com', 'dm08b048')
-        response = self.client.get('/farm/1/produce/add', content_type='html/text', follow_redirects=True)
+        with self.client as c:
+            with c.session_transaction() as session:
+                session['logged_in'] = True
+                session['email'] = 'singarisathwik007@gmail.com'
+                session['firstname'] = 'Sathwik'
+                session['lastname'] = 'Singari'
+        response = self.client.get('/farm/1/produce/add', content_type='html/text')
         self.assertIn(b'Shire Farms', response.data)
 
-    def test_adding_produce_to_farm(self):
-        print('\n## Testing Add produce to farm ##')
-        self.login('singarisathwik007@gmail.com', 'dm08b048')
-        response = self.add_produce('Eggplant', 'Big eggplants', 'Vegetable', 1, 4.38, 'static/images/eggplant.jpg')
-        self.assertIn(b"Success", response.data)
+    # Products details test
+    def test_view_produce_page_content(self):
+        print('\n## Testing produce details page content ##')
+        response = self.client.get('/produce/1', content_type='html/text')
+        self.assertIn(b'Eggplant', response.data)
+        self.assertIn(b'4.35', response.data)
+        self.assertIn(b'Shire Farms', response.data)
 
-    def add_produce(self, name, description, category, selected_units, price1, prod_image):
-        img = open(prod_image, 'rb')
-        try:
-            img_bytes_io = BytesIO(img.read())
-            post_data = {
-                'name': name, 'description': description, 'category': category,
-                'units': selected_units,
-                'price1': price1,
-            }
-            for key, val in post_data.items():
-                if not isinstance(val, str):
-                    post_data[key] = str(val)
-            post_data['prod_image'] = (img_bytes_io, 'eggplant.jpeg')
-        finally:
-            img.close()
-        return self.client.post('/farm/1/produce/add', content_type='multipart/form-data',
-                                    data=post_data)
+    def test_add_to_cart(self):
+        response = self.client.post('/produce/1', data=dict(
+            amount='2'))
+        self.assertIn(b'8.7', response.data)
 
-
-    
-    #Testing the flag for farmer user type
-    def test_farmer_type(self):
-        print('\n## Testing the flag for farmer user type ##')
-        user = User.query.filter_by(email='singarisathwik007@gmail.com').first()
-        User.set_user_farmer(user)
-        assert User.query.filter_by(type='C').first().first_name == 'Sathwik'
-        user.type = 'B'
-        assert not User.query.filter_by(email='singarisathwik007@gmail.com').first().type == 'C'
-
-    #Testing new farmer user has no farms yet
-    def test_farm_page_content(self):
-        print('\n## Testing new farmer user has no farms yet ##')
-        self.login('singarisathwik007@gmail.com', 'dm08b048')
-        response = self.client.get('/sell', follow_redirects=True)
-        self.assertIn(b"You dont have any farms yet.",response.data)
-        
-    #Testing that user can add farms that they work on
-    def test_add_farms(self):
-        print('\n## Testing that user can add farms that they work on ##')
-        response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
-        self.assertIn(b"Community Farm",response.data)
-        
-    #Testing that user cannot add duplicate farms that they work on
-    def test_add_duplicate_farms(self):
-        print('\n## Testing that user cannot add duplicate farms that they work on ##')
-        self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
-        response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
-        self.assertIn(b"Already Exists",response.data)
-        
-    def add_farm(self, name, address1, address2, city, state, country, postcode):
-        self.login('singarisathwik007@gmail.com', 'dm08b048')
-        return self.client.post('/sell', data=dict(
-            name=name,
-            address1=address1,
-            address2=address2,
-            city=city,
-            state=state,
-            country=country,
-            postcode=postcode
-        ), follow_redirects=True)        
 
 if __name__ == '__main__':
     unittest.main()
