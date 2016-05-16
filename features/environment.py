@@ -4,7 +4,6 @@ from selenium import webdriver
 from shared import db
 from models import *
 import threading
-from models.user import *
 
 
 def before_all(context):

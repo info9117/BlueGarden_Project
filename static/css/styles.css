@@ -12,7 +12,11 @@ h1,h2,h3,h4,h5,h6,p {
     margin: 0;
     padding: 10px 0;
     font-weight: 700;
-    color: #87395D;
+    color: #87395D !important;
+}
+
+.strong {
+    font-weight: 700;
 }
 
 h1 {
@@ -38,7 +42,7 @@ h5 {
 h6,p {
     padding: 0;
     font-size: 1em;
-    font-weight: 400;
+    font-weight: 400 !important;
 }
 
 .no-padding-top {
@@ -72,12 +76,25 @@ h6,p {
     background-color: #87395d !important;
 }
 
+.checkbox-default[type="checkbox"].filled-in:checked + label:after{
+     border: 2px solid #87395d;
+     background-color: #87395d;
+}
+
 /* label underline focus color */
 .input-field input[type=text]:focus,
 .input-field input[type=number]:focus {
     border-bottom: 1px solid #87395d;
     box-shadow: 0 1px 0 0 #87395d;
 }
+
+/* label underline focus color */
+.white.input-field input[type=text]:focus,
+.white.input-field input[type=number]:focus {
+    border-bottom: 1px solid #ffffff;
+    box-shadow: 0 1px 0 0 #ffffff;
+}
+
 /*
 textarea.material-textarea:focus {
     border-bottom: 1px solid #87395d !important;
@@ -111,6 +128,10 @@ nav .button-collapse i {
 
 nav ul li a {
     color: #87395D !important;
+}
+
+i.right {
+    margin-left:0 !important;
 }
 
 .intro
@@ -186,4 +207,21 @@ nav ul li a {
     position: absolute;
     top: 15%;
     color: #AE2D02;
+}
+
+.pagination li a {
+  color: #87395d !important;
+}
+
+.pagination li.active a {
+  color: #fff !important;
+}
+
+.pagination li.disabled a {
+  cursor: default;
+  color: #999 !important;
+}
+
+.pagination li.active {
+  background-color: #87395d !important;
 }
