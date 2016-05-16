@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Farm Activity{% endblock %}
+
+{% block content %}
+
+<div class="ver-hor-align-parent grey darken-4">
+    <div class="section">
+        <div class="container white">
+            <h5>Record Farm Activity</h5>
+            <a href="/activity" class="right-align"><p right-align>RESET FORM   </p></a>
+            
+            <form class="activity" id="form" name="form" action="" method="post">
+             
+            <div class="row">
+                <div class="input-field col s6 center-align">
+                    {% if selectedfarm %}<select id="farm" name="farm"><option value="{{ selectedfarm.id }}">{{ selectedfarm.name }}</option></select><label>Farm</label>
+                    {% elif myfarms %}
+                    <select id="farm" name="farm">
+                <option value="" disabled selected>Choose your Farm</option>
+                    {% for afarm in myfarms %}
+                <option value="{{ afarm.id }}">{{ afarm.name }}</option>
+                    {% endfor %}
+                    </select>
+                <label>Farm</label></div> 
+                    {% endif %}   
+        
+        {% if not selectedfarm %}
+        <div class="section">    
+            <button class="btn waves-effect waves-light moderate-pink darken-1" id="submit" type="submit" name="action" value="add_activity">View Farm fields and resources</button>
+        </div>{% endif %}
+</div>
+{% if selectedfarm %}        
+                <div class="input-field col s6">
+                    {% if resources %}
+                    <select id="resource" name="resource">
+                    <option value="" disabled selected>Choose your Resource</option>
+                    {% for resource in resources %}
+                    <option value="{{ resource.id }}">{{ resource.name }}</option>
+                    {% endfor %}
+                    </select>
+                    <label>Resource</label></div>
+                    {% endif %}
+                    
+<div class="input-field col s6">
+                    {% if fields %}
+                    <select id="field" name="field">
+                    <option value="" disabled selected>Choose your Field</option>
+                    {% for field in fields %}
+                    <option value="{{ field.id }}">{{ field.name }}</option>
+                    {% endfor %}
+                    </select>
+                    <label>Field</label></div>
+                    {% endif %}
+                    
+<div class="row">
+            <div class="input-field col s6">Activity Date<input value="" id="date" placeholder="date" type="date" name="date" class="datepicker"></input></div></div>
+            
+        <div class="row">
+            <div class="section">
+                <div class="input-field col s6">
+                    <input id="description" name="description" type="text" class="materialize-textarea"></input>
+                    <label>Activity Description</label></div></div>
+
+        <div class="section">                      
+              <div class="switch">Harvesting crop for produce?
+    <label>
+      No
+      <input type="checkbox" name="harvest" id="harvest">
+      <span class="lever"></span>
+      Yes
+    </label>
+  </div>
+       </div>
+  
+            <button class="btn waves-effect waves-light moderate-pink darken-1" id="submit" type="submit" >Record Activity</button>
+        </div>
+{% endif %}        
+    </form>
+    
+        <div class="green lighten-3">
+            {% for message in get_flashed_messages() %}
+            <p class="green-text green-darken-4" style="margin: 0; padding: 5px 0">{{ message }}</p>
+            {% endfor %}</div>        
+    </div>     
+    
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  $('.datepicker').pickadate({
+    selectMonths: true,
+    selectYears: 15
+  });
+        
+
+  $(document).ready(function() {
+    $('select').material_select();
+  });
+
+  $('#textarea1').val('New Text');
+  $('#textarea1').trigger('autoresize');
+  
+  
+</script>
+{% endblock %}
+
