@@ -13,7 +13,6 @@ def step_impl(context):
     add_farm(context, "Marrickville Community Garden", "1 Marry St", "", "Marickville", "NSW", "Australia", "2009")
 
 
-
 @then('the new farm name is displayed in the My Farms list')
 def step_impl(context):
     assert 'Marrickville Community Garden' in context.browser.page_source

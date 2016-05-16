@@ -2,12 +2,13 @@ from flask import Flask, request, session, g, redirect, url_for, abort, render_t
 
 
 class Contact():
-    # do we need to write contact form data into database?
+    '''
 
-    # which part should be programmed, including that "submit" button?
+    This file will feature front end control through contact form webpage.
+    Validation rules will also be included in this file.
+    And through this file, there should be a link to backend feedback management portal/system.
 
-    #
-
+    '''
 
     '''
     @staticmethod

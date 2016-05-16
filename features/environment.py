@@ -14,7 +14,7 @@ def before_all(context):
     context.address = main.address
     context.thread = threading.Thread(target=context.server.serve_forever)
     context.thread.start()  # start flask app server
-#    context.browser = webdriver.FireFox()
+    context.browser = webdriver.Firefox()
     db.init_app(app)
     with app.app_context():
         # Extensions like Flask-SQLAlchemy now know what the "current" app

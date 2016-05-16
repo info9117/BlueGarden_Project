@@ -23,7 +23,7 @@ def step_impl(context):
 
 @when('user fills the form without body')
 def step_impl(context):
-    contact(context, 'Hey! ', '', 'test@test.com')
+    contact(context, 'Hey!', '', 'test@test.com')
     assert context.browser.page_source
 
 
@@ -34,7 +34,7 @@ def step_impl(context):
 
 @when('user fills the form without email address')
 def step_impl(context):
-    contact(context, 'Hey! ', 'I have something to say! >_<', '')
+    contact(context, 'Hey!', 'I have something to say! >_<', '')
     assert context.browser.page_source
 
 
