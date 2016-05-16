@@ -7,3 +7,5 @@ from .price import Price
 from .unit import Unit
 from .user import User
 from .works import Works
+from .recent_produce import RecentProduce
+

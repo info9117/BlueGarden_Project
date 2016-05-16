@@ -21,6 +21,7 @@ with app.app_context():
     db.create_all()
 
 
+
 def serve_forever():
     app.run()
 
@@ -77,7 +78,7 @@ def addcrop():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    return userController.show_dashboard()
 
 
 @app.route('/search/produce', defaults={'page': 1})

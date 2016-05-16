@@ -13,8 +13,10 @@ class BaseTestCase(TestCase):
 
     def setUp(self):
         db.create_all()
+        user1 = User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins')
+        user1.set_user_farmer()
         db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
-        db.session.add(User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins'))
+        db.session.add(user1)
         db.session.add(Unit('Kg'))
         db.session.add(Unit('gm'))
         db.session.add(Unit('l'))
@@ -24,7 +26,13 @@ class BaseTestCase(TestCase):
         db.session.add(Address('126 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
         db.session.flush()
         db.session.add(Farm('Shire Farms', 1))
-        db.session.add(Farm('Mordor Farms', 2))
+        db.session.add(Farm('Mordor Farms', 1))
+        db.session.add(Produce('corn', 'vegetable', 'tasty', 1, 1))
+        db.session.add(Produce('milk', 'dairy', 'yum', 2, 2))
+        db.session.flush()
+        db.session.add(Price(1,1,2.2))
+        db.session.add(Price(2,1,4.4))
+        db.session.add(RecentProduce(1, 1))
         db.session.flush()
         db.session.add(Works(1, 1))
         db.session.add(Works(2, 2))
@@ -84,13 +92,18 @@ class BlueGardenTestCase(BaseTestCase):
         print('\n## Testing Register page with valid credentials ##')
         response = self.register('Frodo', 'Baggins', 'fbaggins@lotr.com', 'frodobaggins')
         self.assertIn(b'Hello Frodo', response.data)
-        
+
     #Testing add crop with new crop
     def test_login_addcrop(self):
         print('\n## Testing add crop with new crop')
         rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
         rv=self.addcrop('563', 'corn', 'harvest', '892')
         assert b'You success added crop' in rv.data
+
+    def test_dashboard_recently_viewed(self):
+        print('\n## Testing viewing recently viewed on the dashboard')
+        rv = self.login('singarisathwik007@gmail.com', 'dm08b048')
+        assert b'corn' in rv.data
 
     def login(self, email, password):
         return self.client.post('/login', data=dict(
@@ -118,7 +131,7 @@ class BlueGardenTestCase(BaseTestCase):
             grow_state = growstate,
             farm_id = farmid
             ),follow_redirects=True)
-            
+
 
 
 
@@ -165,7 +178,7 @@ class BlueGardenTestCase(BaseTestCase):
                                     data=post_data)
 
 
-    
+
     #Testing the flag for farmer user type
     def test_farmer_type(self):
         print('\n## Testing the flag for farmer user type ##')
@@ -181,20 +194,20 @@ class BlueGardenTestCase(BaseTestCase):
         self.login('singarisathwik007@gmail.com', 'dm08b048')
         response = self.client.get('/sell', follow_redirects=True)
         self.assertIn(b"You dont have any farms yet.",response.data)
-        
+
     #Testing that user can add farms that they work on
     def test_add_farms(self):
         print('\n## Testing that user can add farms that they work on ##')
         response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
         self.assertIn(b"Community Farm",response.data)
-        
+
     #Testing that user cannot add duplicate farms that they work on
     def test_add_duplicate_farms(self):
         print('\n## Testing that user cannot add duplicate farms that they work on ##')
         self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
         response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
         self.assertIn(b"Already Exists",response.data)
-        
+
     def add_farm(self, name, address1, address2, city, state, country, postcode):
         self.login('singarisathwik007@gmail.com', 'dm08b048')
         return self.client.post('/sell', data=dict(
@@ -205,7 +218,7 @@ class BlueGardenTestCase(BaseTestCase):
             state=state,
             country=country,
             postcode=postcode
-        ), follow_redirects=True)        
+        ), follow_redirects=True)
 
 if __name__ == '__main__':
     unittest.main()
