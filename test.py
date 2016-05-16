@@ -13,14 +13,6 @@ class BaseTestCase(TestCase):
         db.create_all()
         db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
         db.session.add(User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins'))
-        db.session.add(Address('123 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
-        db.session.add(Address('126 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
-        db.session.add(Farm('Shire Farms', 1))
-        db.session.add(Farm('Mordor Farms', 2))
-        db.session.add(Image('eggplant.jpg','produce/1/eggplant.jpeg'))
-        db.session.add(Produce('Eggplant', 'Sweet organic eggplants', 'Vegetable', 1, 1))
-        db.session.add(Price(1, 1, 4.35))
-        db.session.add(Price(1, 2, 2.8))
         db.session.commit()
 
     def tearDown(self):
@@ -29,12 +21,18 @@ class BaseTestCase(TestCase):
 
 
 class BlueGardenTestCase(BaseTestCase):
-
     # Testing the home page content
     def test_index_content(self):
-        print('\n## Testing Home page for welcome message ##')
         response = self.client.get('/', content_type='html/text')
-        self.assertIn(b'Welcome to Blue Garden', response.data)
+        with self.client as c:
+            with c.session_transaction() as session:
+                if session.get('logged_in', False):
+                    print('\n## Testing Home page for content ##')
+                    print('\n## User already logged in. So verifying dashboard ##')
+                    self.assertIn(b'Hello ' + session['firstname'], response.data)
+                else:
+                    print('\n## Testing Home page for welcome message ##')
+                    self.assertIn(b'Welcome to Blue Garden', response.data)
 
     # Testing Login page content
     def test_login_page_content(self):
@@ -52,6 +50,7 @@ class BlueGardenTestCase(BaseTestCase):
     def test_login_invalid_credentials(self):
         print('\n## Testing Login page with invalid credentials ##')
         response = self.login('singarisathwik007@gmail.com', 'dm08b48')
+        print(type(response))
         self.assertIn(b'Email Id/Password do not match', response.data)
 
     #Testing enter reset password page with valid credentials
@@ -120,42 +119,6 @@ class BlueGardenTestCase(BaseTestCase):
 
     def logout(self):
         return self.client.get('/logout', follow_redirects=True)
-
-    def test_dashboard_for_content(self):
-        with self.client as c:
-            with c.session_transaction() as session:
-                session['logged_in'] = True
-                session['email'] = 'singarisathwik007@gmail.com'
-                session['firstname'] = 'Sathwik'
-                session['lastname'] = 'Singari'
-                print('\n## Testing dashboard page for content ##')
-
-        response = self.client.get('/dashboard', content_type='html/text')
-        self.assertIn(b'Hello Sathwik', response.data)
-
-    def test_add_produce_page_content(self):
-        print('\n## Testing Add produce page content ##')
-        with self.client as c:
-            with c.session_transaction() as session:
-                session['logged_in'] = True
-                session['email'] = 'singarisathwik007@gmail.com'
-                session['firstname'] = 'Sathwik'
-                session['lastname'] = 'Singari'
-        response = self.client.get('/farm/1/produce/add', content_type='html/text')
-        self.assertIn(b'Shire Farms', response.data)
-
-    # Products details test
-    def test_view_produce_page_content(self):
-        print('\n## Testing produce details page content ##')
-        response = self.client.get('/produce/1', content_type='html/text')
-        self.assertIn(b'Eggplant', response.data)
-        self.assertIn(b'4.35', response.data)
-        self.assertIn(b'Shire Farms', response.data)
-
-    def test_add_to_cart(self):
-        response = self.client.post('/produce/1', data=dict(
-            amount='2'))
-        self.assertIn(b'8.7', response.data)
 
 
 if __name__ == '__main__':

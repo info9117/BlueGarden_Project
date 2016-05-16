@@ -10,7 +10,3 @@ class Grows(db.Model):
 
     farm_id = db.Column('farm_id', db.Integer, db.ForeignKey("farms.id"))
     produce_id = db.Column('produce_id', db.Integer, db.ForeignKey('produces.id'))
-
-    def __init__(self, farm_id, produce_id):
-        self.farm_id = farm_id
-        self.produce_id = produce_id
