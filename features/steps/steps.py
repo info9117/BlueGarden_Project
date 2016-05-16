@@ -81,12 +81,23 @@ def step_impl(context):
     assert 'Success' in context.browser.page_source
 
 
-@given(u'I am at home page')
+@given(u'I am logged in at the dashboard page')
 def step_impl(context):
     context.browser.get(context.address + "/login")
     login(context, 'singarisathwik007@gmail.com', 'dm08b048')
     assert 'Hello Sathwik' in context.browser.page_source
 
+
+@then(u'I will see the most recently viewed produce')
+def step_impl(context):
+    assert 'corn' in context.browser.page_source
+
+
+@given(u'I am at home page')
+def step_impl(context):
+    context.browser.get(context.address + "/login")
+    login(context, 'singarisathwik007@gmail.com', 'dm08b048')
+    assert 'Hello Sathwik' in context.browser.page_source
 
 @when(u'I go to browse produce page')
 def step_impl(context):

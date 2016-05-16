@@ -8,3 +8,5 @@ from .unit import Unit
 from .user import User
 from .unit import db
 from .works import Works
+from .recent_produce import RecentProduce
+
