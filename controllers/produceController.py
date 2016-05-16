@@ -9,6 +9,7 @@ import utilities
 
 
 class ProduceController:
+
     @staticmethod
     def add_produce(farm_id, upload_folder):
         errors = []
@@ -90,7 +91,6 @@ class ProduceController:
         if not results_filtered:
             results = Produce.query.order_by(Produce.farm_id).paginate(page, results_per_page, False)
         total = results.total
-        print(results.query.as_scalar())
         pagination = Pagination(results, page, results_per_page, total, results.items)
         return render_template('browse_produce.html', results=results.items, categories=categories,
                                pagination=pagination)
