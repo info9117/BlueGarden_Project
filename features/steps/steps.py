@@ -81,6 +81,25 @@ def step_impl(context):
     assert 'Success' in context.browser.page_source
 
 
+@given(u'I am logged in at the dashboard page')
+def step_impl(context):
+    login(context, 'singarisathwik007@gmail.com', 'dm08b048')
+    context.browser.get(context.address + "/dashboard")
+    assert 'Welcome to blue garden' in context.browser.page_source
+
+
+@when(u'I have looked at produce previously')
+def step_impl(context):
+    add_produce(context, 'Eggplant', 'Bright Eggplants', 'Vegetable', '1', '4.32', '/eggplant.jpeg')
+    assert context.browser.page_source
+
+
+@then(u'I will see the most recently viewed produce')
+def step_impl(context):
+    assert 'Eggplant' in context.browser.page_source
+
+
+
 def login(context, email, password):
     email_field = context.browser.find_element_by_id("email")
     password_field = context.browser.find_element_by_id("password")
@@ -113,5 +132,11 @@ def add_produce(context, name, description, category, units, price1, prod_image)
     price1_field.send_keys(price1)
     context.browser.find_element_by_id("prod_image").send_keys(prod_image)
     name_field.submit()
+
+
+
+
+
+
 
 
