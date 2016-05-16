@@ -114,9 +114,3 @@ def add_produce(context, name, description, category, units, price1, prod_image)
     context.browser.find_element_by_id("prod_image").send_keys(prod_image)
     name_field.submit()
 
-
-<<<<<<< HEAD
-=======
-
-
->>>>>>> parent of 1a2d134... Merge branch 'merge-sprint-2' into feature-browse_produce
