@@ -1,4 +1,0 @@
-add to dB (cart)
-
-TDD and BDD add to cart
-html (pull image & unit)
