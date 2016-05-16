@@ -31,15 +31,7 @@ class BaseTestCase(TestCase):
         db.session.add(Works(2, 1))
         db.session.add(Works(2, 2))
         db.session.flush()
-        db.session.add(User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins'))
-        db.session.add(Address('123 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
-        db.session.add(Address('126 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
-        db.session.add(Farm('Shire Farms', 1))
-        db.session.add(Farm('Mordor Farms', 2))
-        db.session.add(Image('eggplant.jpg','produce/1/eggplant.jpeg'))
-        db.session.add(Produce('Eggplant', 'Sweet organic eggplants', 'Vegetable', 1, 1))
-        db.session.add(Price(1, 1, 4.35))
-        db.session.add(Price(1, 2, 2.8))
+
         db.session.commit()
 
     def tearDown(self):
@@ -122,7 +114,6 @@ class BlueGardenTestCase(BaseTestCase):
 
     def logout(self):
         return self.client.get('/logout', follow_redirects=True)
-
 
     def addcrop(self, id, cropname, growstate, farmid):
         return self.client.post('/addcrop', data=dict(
@@ -240,27 +231,6 @@ class BlueGardenTestCase(BaseTestCase):
             country=country,
             postcode=postcode
         ), follow_redirects=True)
-        with self.client as c:
-            with c.session_transaction() as session:
-                session['logged_in'] = True
-                session['email'] = 'singarisathwik007@gmail.com'
-                session['firstname'] = 'Sathwik'
-                session['lastname'] = 'Singari'
-        response = self.client.get('/farm/1/produce/add', content_type='html/text')
-        self.assertIn(b'Shire Farms', response.data)
-
-    # Products details test
-    def test_view_produce_page_content(self):
-        print('\n## Testing produce details page content ##')
-        response = self.client.get('/produce/1', content_type='html/text')
-        self.assertIn(b'Eggplant', response.data)
-        self.assertIn(b'4.35', response.data)
-        self.assertIn(b'Shire Farms', response.data)
-
-    def test_add_to_cart(self):
-        response = self.client.post('/produce/1', data=dict(
-            amount='2'))
-        self.assertIn(b'8.7', response.data)
 
 
 if __name__ == '__main__':
