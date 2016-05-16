@@ -57,7 +57,7 @@ def step_impl(context):
     assert context.browser.page_source
 
 
-@then('I should be shown error')
+@then('I should be shown email already exists')
 def step_impl(context):
     assert 'Email Id already exists' in context.browser.page_source
 
@@ -71,25 +71,24 @@ def step_impl(context):
 
 @when('I enter my Email')
 def step_impl(context):
-    register(context,  email='fbaggins@lotr.com')
+    reset_password(context, email='fbaggins@lotr.com')
     assert context.browser.page_source
 
 
 @then('I will be redirected to "resetdone"')
 def step_impl(context):
-    context.browser.get(context.address + "/resetdone")
     assert 'An email has been sent' in context.browser.page_source
 
 
 @when('I enter an unregistered email')
 def step_impl(context):
-    register(context,  email='baberahamLincoln@freedom.com')
+    reset_password(context, email='baberahamLincoln@freedom.com')
     assert context.browser.page_source
 
 
-@then('I should be shown an error')
+@then(u'Email not registered error is shown')
 def step_impl(context):
-    assert 'email' in context.browser.page_source
+    assert 'This email is not registered' in context.browser.page_source
 
 
 def login(context, email, password):
@@ -112,7 +111,7 @@ def register(context, first_name, last_name, email, password):
     email_field.submit()
 
 
-def resetPassword(context, email):
+def reset_password(context, email):
     email_field = context.browser.find_element_by_id("email")
     email_field.send_keys(email)
     email_field.submit()

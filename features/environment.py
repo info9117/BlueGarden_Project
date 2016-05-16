@@ -1,5 +1,5 @@
 import main
-from main import app, address
+from main import app
 from selenium import webdriver
 from models import *
 import threading
@@ -9,11 +9,10 @@ def before_all(context):
     app.config.from_object('config.TestingConfig')
     # context.client = app.test_client()
     context.server = main
-    context.address = address
+    context.address = main.address
     context.thread = threading.Thread(target=context.server.serve_forever)
     context.thread.start()  # start flask app server
     context.browser = webdriver.Firefox()
-    context.address = address
     db.init_app(app)
     with app.app_context():
         # Extensions like Flask-SQLAlchemy now know what the "current" app

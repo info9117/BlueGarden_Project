@@ -8,4 +8,4 @@ Feature: As a System Owner, I want users to be able to reset their password if t
 	Scenario: Reset wrong
 		Given I am in reset password page
 		When I enter an unregistered email
-		Then I should be shown error
+		Then Email not registered error is shown

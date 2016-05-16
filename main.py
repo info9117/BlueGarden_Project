@@ -1,8 +1,6 @@
 from flask import Flask, render_template, url_for, request, redirect, session, flash
 from functools import wraps
-
 from models import *
-
 from controllers.userController import UserController as userController
 from shared import db, mail
 
@@ -20,6 +18,7 @@ db.init_app(app)
 mail.init_app(app)
 with app.app_context():
     db.create_all()
+
 
 def serve_forever():
     app.run()

@@ -1,6 +1,5 @@
 from flask import request, render_template, session, redirect, url_for, flash
 from models import *
-
 import datetime as DT
 from shared import mail
 from flask_mail import Message
