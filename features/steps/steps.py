@@ -85,7 +85,7 @@ def step_impl(context):
 def step_impl(context):
     login(context, 'singarisathwik007@gmail.com', 'dm08b048')
     context.browser.get(context.address + "/dashboard")
-    assert 'Welcome to blue garden' in context.browser.page_source
+    assert 'Hello Sathwik' in context.browser.page_source
 
 
 @when(u'I have looked at produce previously')
