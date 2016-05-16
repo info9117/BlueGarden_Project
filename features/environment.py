@@ -40,8 +40,8 @@ def before_all(context):
         db.session.add(Works(4,1))
         db.session.flush()
         db.session.add(User('Joe', 'Farmer', 'farmer_j01@gmail.com', 'louise1993'))
-        db.session.add(Works(3, 1))
-        db.session.add(Field('west block', 1))
+        #db.session.add(Works(4, 1))
+        db.session.add(Field('west block', 'Shire Farms', 1))
         db.session.add(Resource('fertiliser', 1))
         db.session.commit()
 

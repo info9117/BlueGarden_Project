@@ -220,11 +220,11 @@ class BlueGardenTestCase(BaseTestCase):
         print('\n## Testing that user can record activities to their farm ##')
         self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
         farm_id = 1
-        db.session.add(Field('west block', farm_id))
+        db.session.add(Field('west block', 'Shire Farms', farm_id))
         db.session.add(Resource('fertiliser',farm_id))
         db.session.commit()        
         field = Field.query.filter_by(farm_id=farm_id).first()
-        resource = Resource.query.filter_by(farm_id=farm_id).all()
+        resource = Resource.query.filter_by(farm_id=farm_id).first()
         date = '3 May, 2016'
         description = 'Mowing the lawn'
         response = self.add_activity(description,field,date,resource)

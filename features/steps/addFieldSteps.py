@@ -10,15 +10,17 @@ def step_impl(context):
 
 @when('a farmer submits new field name and valid farm name')
 def step_impl(context):
-    addTestField(context, "Addison Field","Shire Farms" )
+    addTestField(context, "Addison Field","Shire Farms")
 
 @then('the new field name is recorded with the parent farm')
 def step_impl(context):
     assert 'Addison Field'in context.browser.page_source
 
+
 @when('a farmer submits new field name for another farmers farm')
 def step_impl(context):
     addTestField(context, "Canterbury Field","Wayne Farms" )
+
 
 @when('a farmer submits new field name for nonexistant farm')
 def step_impl(context):
@@ -30,7 +32,7 @@ def step_impl(context):
 
 @when('I submit without a field name')
 def step_impl(context):
-    addTestField(context, "","Shire Farms" )
+    addTestField(context, "","Shire Farms")
 
 @then('I will be advised to enter a farm name')
 def step_impl(context):

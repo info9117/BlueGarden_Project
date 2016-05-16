@@ -1,4 +1,4 @@
-
+"""
 from shared import db
 
 class Field(db.Model):
@@ -23,11 +23,12 @@ class Field(db.Model):
 
     id = db.Column('id', db.Integer, primary_key=True)
     fieldName = db.Column('fieldName', db.String(255), nullable=False)
-    farmName = db.Column('farmName', db.String(255), nullable=False)
-
-    def __init__(self, name, farmname):
+    farmName = db.Column('farmName', db.String(255), db.ForeignKey('farms.name'), nullable=False)
+    farm_id = db.Column('farm_id', db.Integer, db.ForeignKey('farms.id'),nullable=False)
+    
+    def __init__(self, name, farmname, farm_id):
         self.fieldName = name
         self.farmName = farmname
+        self.farm_id = farm_id
 
 
-"""

@@ -44,8 +44,9 @@ class FieldController:
 
             if not errors:
                 #add field:
+                farm_id = Farm.query.filter_by(name=farmname).first().id
 
-                field = Field(fieldname,farmname)
+                field = Field(fieldname,farmname,farm_id)
                 db.session.add(field)
                 db.session.commit()
                 return redirect(url_for('field'))
