@@ -5,6 +5,8 @@ from models import *
 from controllers.userController import UserController as userController
 from controllers.farmController import FarmController as farmController
 from controllers.fieldController import FieldController as fieldController
+from controllers.cropController import CropController as cropController
+
 from shared import db
 
 # Creating application object
@@ -71,6 +73,18 @@ def logout():
 @login_required
 def addcrop():
     return userController.addcrop()
+
+
+    
+@app.route('/change_state/<int:crop_id>',methods=['GET', 'POST'])
+@login_required
+def change_state(crop_id):
+    return cropController.change_state(crop_id)
+
+
+
+
+
 
 @app.route('/dashboard')
 @login_required

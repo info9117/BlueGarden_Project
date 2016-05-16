@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Change The State{% endblock %}
+{% block content %}
+<div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white center-align"
+                 style="padding: 30px 15px;"
+                 >
+    <form class="change_state_form" action="{{ url_for('change_state', crop_id = crop_id) }}" method="post">
+      change state:<br>
+	  <input type="text" id="change_state" name="change_state"><br>
+	  <input type="submit" value="change_state">
+	  
+    </form>             
+             
+<div class = "trouble">
+	{% for message in get_flashed_messages() %}
+    {{ message }}
+    {% endfor %}
+</div>
+           
+                 
+                 
+                 
+                 
+</div>
+
+
+{% endblock %}

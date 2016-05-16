@@ -9,8 +9,6 @@ class Farm(db.Model):
 
 
 
-   
-
     def __init__(self, name, address_id):
         self.name = name
         self.address_id = address_id

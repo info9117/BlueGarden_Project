@@ -10,3 +10,4 @@ from .works import Works
 from .field import Field
 from .resource import Resource
 from .activity import Activity
+from .crop import Crop
