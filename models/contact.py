@@ -2,7 +2,11 @@ from flask import Flask, request, session, g, redirect, url_for, abort, render_t
 
 
 class Contact():
-    
+    # do we need to write contact form data into database?
+
+    # which part should be programmed, including that "submit" button?
+
+    #
 
 
     '''
