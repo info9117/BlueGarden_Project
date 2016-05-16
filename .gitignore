@@ -3,3 +3,5 @@
 /.idea
 /images/d/produce
 /images/t/produce
+*.db
+
