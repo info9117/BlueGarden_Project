@@ -1,9 +1,14 @@
-from flask import Flask, render_template, url_for, request, redirect, session, flash, send_from_directory, abort
+import os
+from flask import Flask, render_template, url_for, request, redirect, session, flash, send_from_directory
 from functools import wraps
-from controllers import ProduceController
+from werkzeug.security import safe_join
+from controllers.userController import UserController
+from werkzeug.utils import secure_filename
+import utilities
 from models import *
 from controllers.userController import UserController as userController
 from controllers.farmController import FarmController as farmController
+from controllers import ProduceController
 
 # Creating application object
 app = Flask(__name__)
@@ -54,12 +59,12 @@ def index():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    return userController.login()
+    return UserController.login()
 
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    return userController.register()
+    return UserController.register()
 
 
 @app.route('/logout')
@@ -85,21 +90,79 @@ def browse_produce(page):
     return ProduceController.browse_produce(page)
 
 
-@app.route('/sell', methods=['GET', 'POST'])
+@app.route('/sell')
 @login_required
 def sell():
-    return farmController.farms_view()
+    return render_template('sell.html')
 
 
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
 @login_required
 def add_produce_to_farm(farm_id):
-    return ProduceController.add_produce(farm_id, app.config['UPLOAD_FOLDER'])
+    errors = []
+    if request.method == 'POST':
+        name = request.form.get('name', '')
+        description = request.form.get('description', '')
+        category = request.form.get('category', '')
+        selected_units = request.form.get('units', '')
+        prices = {}
+        for unit in selected_units:
+            prices[unit] = request.form.get('price-'+selected_units)
+        file = request.files['prod_image']
+        if not name:
+            errors.append('Name cannot be empty')
+        if not description:
+            errors.append('Description cannot be empty')
+        if not category:
+            errors.append('Please choose a category for the produce')
+        if not selected_units:
+            errors.append('Please choose the units you wish to sell in')
+        if len(prices) < len(selected_units):
+            errors.append('Please enter the prices for the produce')
+        if not file or not utilities.allowed_file(file.filename):
+            errors.append("Please upload 'png', 'jpg', 'jpeg' or 'gif' image for produce")
+        if not errors:
+            directory = os.path.join(app.config['UPLOAD_FOLDER'], 'produce/' + str(farm_id) + '/')
+            os.makedirs(os.path.dirname(directory), exist_ok=True)
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(directory, filename))
+            image = Image('produce/' + str(farm_id)+'/'+filename)
+            db.session.add(image)
+            produce = Produce(name, description, category, image.id)
+            db.session.add(produce)
+            for price in prices:
+                db.session.add(Price(produce.id, price, prices[price]))
+            db.session.commit()
+            return 'Success'
+    units = Unit.query.all()
+    farm = Farm.query.get(farm_id)
+    farm_address = Address.query.get(farm.address_id)
+    return render_template('add_produce.html', units=units, farm=farm, address=farm_address, errors=errors)
+
+
+@app.route('/produce/<int:produce_id>', methods=['POST', 'GET'])
+def view_produce(produce_id):
+    produce1 = Produce.query.get(produce_id)
+    if request.method == 'POST':
+        amount = request.form.get('amount')
+        print('amount', type(amount))
+        print('produce', type(produce1.prices[0].price))
+        if amount:
+            amount = request.form.get('amount', '')
+            item1 = Item(produce1.prices[0].price, produce_id, amount)
+            db.session.add(item1)
+            db.session.commit()
+            return render_template('view_produce.html', produce=produce1, total=item1.total)
+        else:
+            return render_template('view_produce.html', produce=produce1, total="wrong value")
+    
+    return render_template('view_produce.html', produce=produce1)
 
 
 @app.route('/uploads/<int:farm_id>/<filename>', )
 def uploaded_image(farm_id, filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'] + 'produce/' + str(farm_id),
+    print(safe_join(app.config['UPLOAD_FOLDER']+'produce/' + str(farm_id), filename))
+    return send_from_directory(app.config['UPLOAD_FOLDER']+'produce/' + str(farm_id)+'/',
                                filename)
 
 
@@ -112,7 +175,14 @@ app.jinja_env.globals['url_for_browse_produce'] = url_for_browse_produce
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html'), 404
+    return render_template('404.html')
+
+
+def url_for_browse_produce(page):
+    args = dict(list(request.view_args.items()) + list(request.args.to_dict().items()))
+    args['page'] = page
+    return url_for('browse_produce', **args)
+app.jinja_env.globals['url_for_browse_produce'] = url_for_browse_produce
 
 
 @app.route('/shutdown')
