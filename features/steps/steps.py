@@ -81,26 +81,6 @@ def step_impl(context):
     assert 'Success' in context.browser.page_source
 
 
-@given(u'I am at home page')
-def step_impl(context):
-    context.browser.get(context.address + "/login")
-    login(context, 'singarisathwik007@gmail.com', 'dm08b048')
-    assert 'Hello Sathwik' in context.browser.page_source
-
-
-@when(u'I go to browse produce page')
-def step_impl(context):
-    context.browser.get(context.address + '/farm/1/produce/add')
-    add_produce(context, 'Eggplant', 'Bright Eggplants', 'Vegetable', '1', '4.32', '/eggplant.jpeg')
-    context.browser.get(context.address + "/search/produce")
-    assert 'Browse Produce' in context.browser.page_source
-
-
-@then(u'I see produce in the page')
-def step_impl(context):
-    assert 'Eggplant' in context.browser.page_source
-
-
 def login(context, email, password):
     email_field = context.browser.find_element_by_id("email")
     password_field = context.browser.find_element_by_id("password")
@@ -135,5 +115,8 @@ def add_produce(context, name, description, category, units, price1, prod_image)
     name_field.submit()
 
 
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> parent of 1a2d134... Merge branch 'merge-sprint-2' into feature-browse_produce
