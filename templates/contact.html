@@ -1,3 +1,4 @@
+<!--
 {% extends "base.html" %}
 
 {% block title %}Login{% endblock %}
@@ -6,6 +7,7 @@
 {% endblock %}
 
 {% block content %}
+-->
 <div class="ver-hor-align-parent grey darken-4">
     <div class="container ver-hor-align-child">
         <div class="row">
@@ -43,6 +45,7 @@
                 </div>
                 {% endif %}
                 {% endwith %}
+                <!--
                 <form class="contact_form" action="" method="post">
                     <textarea id="enquiry" name="enquiry" type="text" placeholder="Enquiry" class="validate" rows="5" cols="40"></textarea>
                     <br>
@@ -52,6 +55,32 @@
                     </button>
                     
                 </form>
+                -->
+                <form class="form">
+  
+  <p class="name">
+   <input type="text" name="name" id="name" placeholder="John Doe" />
+   <label for="name">Name</label>
+  </p>
+  
+  <p class="email">
+   <input type="text" name="email" id="email" placeholder="mail@example.com" />
+   <label for="email">Email</label>
+  </p>
+  
+  <p class="web">
+   <input type="text" name="web" id="web" placeholder="" />
+   <label for="web">Subject</label>
+  </p>  
+ 
+  <p class="text">
+   <textarea name="text" placeholder="Write something to us"></textarea>
+  </p>
+  
+  <p class="submit">
+   <input type="submit" value="Send" />
+  </p>
+ </form>
                 <p class="center-align">Don't have an account? <a href="/register">Register</a></p>
             </div>
         </div>

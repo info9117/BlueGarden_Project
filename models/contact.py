@@ -14,4 +14,4 @@ class Contact():
             if not errors:
                 flash('\nCongrats! You have sent us enquiry! We will reply to you shortly. ^_^')
                 return redirect(url_for('contact_form'))
-        return render_template("base.html", errors=errors)
+        return render_template("contact.html", errors=errors)
