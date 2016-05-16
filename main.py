@@ -4,7 +4,6 @@ from controllers import ProduceController
 from models import *
 from controllers.userController import UserController as userController
 from controllers.farmController import FarmController as farmController
-from shared import db
 
 # Creating application object
 app = Flask(__name__)
@@ -19,6 +18,7 @@ app.config.from_object('config.DevelopmentConfig')
 db.init_app(app)
 with app.app_context():
     db.create_all()
+
 
 def serve_forever():
     app.run()
@@ -65,24 +65,24 @@ def register():
 @app.route('/logout')
 def logout():
     return userController.logout()
-    
-@app.route('/addcrop',methods=['GET', 'POST'])
+
+
+@app.route('/addcrop', methods=['GET', 'POST'])
 @login_required
 def addcrop():
     return userController.addcrop()
+
 
 @app.route('/dashboard')
 @login_required
 def dashboard():
     return render_template('dashboard.html')
-    
 
 
-
-@app.route('/browse')
-@login_required
-def browse():
-    return render_template('browse.html')
+@app.route('/search/produce', defaults={'page': 1})
+@app.route('/search/produce/page/<int:page>')
+def browse_produce(page):
+    return ProduceController.browse_produce(page)
 
 
 @app.route('/sell', methods=['GET', 'POST'])
@@ -97,10 +97,17 @@ def add_produce_to_farm(farm_id):
     return ProduceController.add_produce(farm_id, app.config['UPLOAD_FOLDER'])
 
 
-@app.route('/uploads/<int:farm_id>/<filename>')
+@app.route('/uploads/<int:farm_id>/<filename>', )
 def uploaded_image(farm_id, filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'] + 'produce/' + str(farm_id),
                                filename)
+
+
+def url_for_browse_produce(page):
+    args = dict(list(request.view_args.items()) + list(request.args.to_dict().items()))
+    args['page'] = page
+    return url_for('browse_produce', **args)
+app.jinja_env.globals['url_for_browse_produce'] = url_for_browse_produce
 
 
 @app.errorhandler(404)
