@@ -1,5 +1,5 @@
 import os
-from models import Produce, Image, Farm, Address, Grows, Price, Unit, Works
+from models import Produce, Image, Farm, Address, Price, Unit, Works, Item
 from shared import db
 from flask import request, render_template, abort, session, redirect, flash, url_for
 from flask_sqlalchemy import Pagination
@@ -94,3 +94,21 @@ class ProduceController:
         pagination = Pagination(results, page, results_per_page, total, results.items)
         return render_template('browse_produce.html', results=results.items, categories=categories,
                                pagination=pagination)
+
+    @staticmethod
+    def view_produce(produce_id):
+        produce1 = Produce.query.get(produce_id)
+        if request.method == 'POST':
+            amount = request.form.get('amount')
+            print('amount', type(amount))
+            print('produce', type(produce1.prices[0].price))
+            if amount:
+                amount = request.form.get('amount', '')
+                item1 = Item(produce1.prices[0].price, produce_id, amount)
+                db.session.add(item1)
+                db.session.commit()
+                return render_template('view_produce.html', produce=produce1, total=item1.total)
+            else:
+                return render_template('view_produce.html', produce=produce1, total="wrong value")
+
+        return render_template('view_produce.html', produce=produce1)

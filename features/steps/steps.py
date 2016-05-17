@@ -145,3 +145,28 @@ def add_produce(context, name, description, category, units, price1, prod_image)
     context.browser.find_element_by_id("prod_image").send_keys(prod_image)
     name_field.submit()
 
+
+@given(u'the product details page and produce price')
+def step_impl(context):
+    context.browser.get(context.address + "/produce/1")
+
+
+@when(u'the user selects the {amount} of the product')
+def step_impl(context, amount):
+    """
+    :type context:  behave,runner.context
+    :type amount: int
+    """
+    amount_field = context.browser.find_element_by_id("amount")
+    amount_field.send_keys(str(amount))
+    amount_field.submit()
+
+
+@then(u'the system shows the total is {total}')
+def step_impl(context, total):
+    """
+    :type context:  behave,runner.context
+    :type total: float
+    """
+    assert str(total) in context.browser.page_source
+

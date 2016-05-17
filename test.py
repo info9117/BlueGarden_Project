@@ -1,4 +1,3 @@
-import shutil
 from main import app
 from models import *
 from flask_testing import TestCase
@@ -30,8 +29,8 @@ class BaseTestCase(TestCase):
         db.session.add(Produce('corn', 'vegetable', 'tasty', 1, 1))
         db.session.add(Produce('milk', 'dairy', 'yum', 2, 2))
         db.session.flush()
-        db.session.add(Price(1,1,2.2))
-        db.session.add(Price(2,1,4.4))
+        db.session.add(Price(1, 1, 2.2))
+        db.session.add(Price(2, 1, 4.4))
         db.session.add(RecentProduce(1, 1))
         db.session.flush()
         db.session.add(Works(2, 1))
@@ -212,20 +211,18 @@ class BlueGardenTestCase(BaseTestCase):
         user.type = 'B'
         assert not User.query.filter_by(email='singarisathwik007@gmail.com').first().type == 'C'
 
-    #Testing new farmer user has no farms yet
+    # Testing new farmer user has no farms yet
     def test_farm_page_content(self):
         print('\n## Testing new farmer user has no farms yet ##')
         self.login('singarisathwik007@gmail.com', 'dm08b048')
         response = self.client.get('/sell', follow_redirects=True)
         self.assertIn(b"You dont have any farms yet.",response.data)
 
-
-    #Testing that user can add farms that they work on
+    # Testing that user can add farms that they work on
     def test_add_farms(self):
         print('\n## Testing that user can add farms that they work on ##')
         response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
         self.assertIn(b"Community Farm",response.data)
-
 
     def test_add_duplicate_farms(self):
         print('\n## Testing that user cannot add duplicate farms that they work on ##')
@@ -244,6 +241,11 @@ class BlueGardenTestCase(BaseTestCase):
             country=country,
             postcode=postcode
         ), follow_redirects=True)
+
+    def test_add_to_cart(self):
+        response = self.client.post('/produce/1', data=dict(
+            amount='2'))
+        self.assertIn(b'4.4', response.data)
 
 if __name__ == '__main__':
     unittest.main()

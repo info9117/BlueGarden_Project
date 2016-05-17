@@ -98,6 +98,11 @@ def add_produce_to_farm(farm_id):
     return ProduceController.add_produce(farm_id, app.config['UPLOAD_FOLDER'])
 
 
+@app.route('/produce/<int:produce_id>', methods=['POST', 'GET'])
+def view_produce(produce_id):
+    return ProduceController.view_produce(produce_id)
+
+
 @app.route('/uploads/<int:farm_id>/<filename>', )
 def uploaded_image(farm_id, filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'] + 'produce/' + str(farm_id),
