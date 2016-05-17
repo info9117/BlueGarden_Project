@@ -23,7 +23,7 @@ class UserController:
                     if not user.check_password(password):
                         errors.append("Email Id/Password do not match")
                 else:
-                    errors.append('User doesnt exist')
+                    errors.append("User doesn't exist")
             if not errors:
                 user.add_user_to_session()
                 if request.args.get('redirect'):

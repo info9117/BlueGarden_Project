@@ -56,7 +56,7 @@ class ProduceController:
         units = Unit.query.all()
         current_farm = Farm.query.get(farm_id)
         if not current_farm:
-            abort(404)
+            return abort(404)
         return render_template('add_produce.html', units=units, farm=current_farm, address=current_farm.address,
                                errors=errors)
 

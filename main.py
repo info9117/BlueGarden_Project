@@ -20,7 +20,6 @@ with app.app_context():
     db.create_all()
 
 
-
 def serve_forever():
     app.run()
 
@@ -113,12 +112,13 @@ def url_for_browse_produce(page):
     args = dict(list(request.view_args.items()) + list(request.args.to_dict().items()))
     args['page'] = page
     return url_for('browse_produce', **args)
+
 app.jinja_env.globals['url_for_browse_produce'] = url_for_browse_produce
 
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html'), 404
+    return render_template('404.html')
 
 
 @app.route('/shutdown')
