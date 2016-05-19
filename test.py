@@ -29,6 +29,7 @@ class BaseTestCase(TestCase):
         db.session.add(Farm('Shire Farms', 1))
         db.session.add(Farm('Mordor Farms', 1))
         db.session.add(Produce('corn', 'vegetable', 'tasty', 1, 1))
+        db.session.add(Produce('Broccoli', 'vegetable', 'tasty', 1, 1))
         db.session.add(Produce('milk', 'dairy', 'yum', 2, 2))
         db.session.flush()
         db.session.add(Price(1, 1, 2.2))
