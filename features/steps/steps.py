@@ -81,6 +81,37 @@ def step_impl(context):
     assert 'Success' in context.browser.page_source
 
 
+@given(u'I am logged in at the dashboard page')
+def step_impl(context):
+    context.browser.get(context.address + "/login")
+    login(context, 'singarisathwik007@gmail.com', 'dm08b048')
+    assert 'Hello Sathwik' in context.browser.page_source
+
+
+@then(u'I will see the most recently viewed produce')
+def step_impl(context):
+    assert 'corn' in context.browser.page_source
+
+
+@given(u'I am at home page')
+def step_impl(context):
+    context.browser.get(context.address + "/login")
+    login(context, 'singarisathwik007@gmail.com', 'dm08b048')
+    assert 'Hello Sathwik' in context.browser.page_source
+
+@when(u'I go to browse produce page')
+def step_impl(context):
+    context.browser.get(context.address + '/farm/1/produce/add')
+    add_produce(context, 'Eggplant', 'Bright Eggplants', 'Vegetable', '1', '4.32', '/eggplant.jpeg')
+    context.browser.get(context.address + "/search/produce")
+    assert 'Browse Produce' in context.browser.page_source
+
+
+@then(u'I see produce in the page')
+def step_impl(context):
+    assert 'Eggplant' in context.browser.page_source
+
+
 def login(context, email, password):
     email_field = context.browser.find_element_by_id("email")
     password_field = context.browser.find_element_by_id("password")
@@ -114,4 +145,28 @@ def add_produce(context, name, description, category, units, price1, prod_image)
     context.browser.find_element_by_id("prod_image").send_keys(prod_image)
     name_field.submit()
 
+
+@given(u'the product details page and produce price')
+def step_impl(context):
+    context.browser.get(context.address + "/produce/1")
+
+
+@when(u'the user selects the {amount} of the product')
+def step_impl(context, amount):
+    """
+    :type context:  behave,runner.context
+    :type amount: int
+    """
+    amount_field = context.browser.find_element_by_id("amount")
+    amount_field.send_keys(str(amount))
+    amount_field.submit()
+
+
+@then(u'the system shows the total is {total}')
+def step_impl(context, total):
+    """
+    :type context:  behave,runner.context
+    :type total: float
+    """
+    assert str(total) in context.browser.page_source
 

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Blue Garden Product Details</title>
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/cover.css') }}" rel="stylesheet">
+
+</head>
+<body>
+<div class="row"></div>
+<img src="{{ url_for('static', filename='images/logo.png') }}" width="200"/>
+<div class="site-wrapper">
+    <div class="site-wrapper-inner">
+        <div class="cover-container">
+            <div class="masthead clearfix">
+                <div class="inner">
+                    <nav>
+                        <ul class="nav masthead-nav">
+                            <li class="active">
+                                <div align="center">
+                                    <a href="/">Home</a>
+                                </div>
+                            </li>
+                            <li></li>
+                            <li>
+                                <a href="#">Contact</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="inner cover">
+                <p class="lead"></p>
+            </div>
+            <div class="mastfoot">
+                <div class="inner">
+                    <img src="{{ url_for('static', filename='images/favicon.ico') }}" width="30"/>
+                    <p>Provided By&nbsp;</a>Blue Garden</a>&nbsp;</p>
+                </div>
+            </div>
+        </div>
+        <div data-position="title-vendor"><h1 class="page-title" itemprop="name">{{ produce.name }}</h1>
+            <p style="font-size: small">{{ produce.farm.name }}</p>
+            <p style="font-size: small">Product of Australia</p><span class="price" name="price" id="amonut"
+                                                                      type="number">${{ produce.prices[0].price }}</span>
+            <small>per kg {{ produce.prices[0].unit.name }}</small>
+            </p>
+        </div>
+        <div align="center">
+            {#            <img src="{{ url_for('static', filename='images/eggplant.jpg') }}" style="height: 500px; width: 500px;">#}
+            {#            <img src="{{ url_for('uploaded_image', farm_id=produce.farm_id, filename=produce.image.filename) }}">#}
+        </div>
+        <label for="amount" class="sr-only"> </label>
+        <form method="POST">
+            <input type="number" name="amount" id="amount" class="form-control" placeholder="amount">
+            <button id="btncart" class="btn btn-lg btn-primary btn-block" type="submit">Add to cart</button>
+        </form>
+
+        <div class="jumbotron">
+            {% if total %}
+                <h1>Total is ${{ total }}</h1>
+            {% endif %}
+        </div>
+
+
+        <!--core JavaScript
+    ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <script src="{{ url_for('static', filename='js/ie10-viewport-bug-workaround.js') }}"></script>
+    </div>
+</div>
+<img src="{{ url_for('uploaded_image', farm_id=produce.farm_id, filename=produce.image.filename) }}">
+</body>
+</html>
