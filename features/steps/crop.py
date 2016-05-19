@@ -54,21 +54,16 @@ def step_impl(context):
 @then('this crop can be changed to produce')
 def step_impl(context):
     context.browser.get(context.address + '/farm/1/produce/add')
-    assert context.browser.page_source
+    assert '' in context.browser.page_source
 
 
-
-    
-    
-    
-    
-    
     
     
 def change_state(context, growstate):
     newGrowState_field = context.browser.find_element_by_id("change_state")
-    newGrowState_field.send_keys(change_state)
+    newGrowState_field.send_keys(growstate)
     newGrowState_field.submit()
+    context.response = context.browser.page_source
 
 
 
@@ -88,7 +83,7 @@ def addcrop(context, id, cropname, growstate, farmid):
     context.browser.find_element_by_name('growstate').send_keys(growstate)
     context.browser.find_element_by_name('farmid').send_keys(farmid)
     context.browser.find_element_by_name(id).submit()'''
-    #context.response = context.browser.page_source
+    context.response = context.browser.page_source
 
     
     
