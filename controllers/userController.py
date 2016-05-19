@@ -1,7 +1,6 @@
 from flask import request, render_template, session, redirect, url_for, flash
+
 from models.user import *
-from models.crop import *
-from models.address import *
 
 
 class UserController:
@@ -21,10 +20,11 @@ class UserController:
                 if user:
                     if not user.check_password(password):
                         errors.append("Email Id/Password do not match")
-                else:
-                    errors.append('User doesnt exist')
             if not errors:
-                user.add_user_to_session()
+                session['logged_in'] = True
+                session['email'] = email
+                session['firstname'] = user.first_name
+                session['lastname'] = user.last_name
                 if request.args.get('redirect'):
                     return redirect(request.args.get('redirect'))
                 return redirect(url_for('dashboard'))
@@ -57,11 +57,10 @@ class UserController:
                 user = User(first_name, last_name, email, password)
                 db.session.add(user)
                 db.session.commit()
-                user.add_user_to_session()
-                # session['logged_in'] = True
-                # session['email'] = user.email
-                # session['firstname'] = user.first_name
-                # session['lastname'] = user.last_name
+                session['logged_in'] = True
+                session['email'] = user.email
+                session['firstname'] = user.first_name
+                session['lastname'] = user.last_name
                 return redirect(url_for('dashboard'))
         return render_template("register.html", errors=errors)
 
@@ -87,5 +86,3 @@ class UserController:
             db.session.commit()
             flash('You have added crop successfully')
         return render_template("addcrop.html", errors=errors)
-
-
