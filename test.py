@@ -15,9 +15,8 @@ class BaseTestCase(TestCase):
         user2 = User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins')
         user2.set_user_farmer()
         db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
-        db.session.add(User('Master', 'Farmer', 'mrmf@gmail.com', 'shazza'))
-        #db.session.add(User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins'))
         db.session.add(user2)
+        db.session.add(User('Master', 'Farmer', 'mrmf@gmail.com', 'shazza'))
         db.session.add(Unit('Kg'))
         db.session.add(Unit('gm'))
         db.session.add(Unit('l'))
@@ -29,7 +28,6 @@ class BaseTestCase(TestCase):
         db.session.add(Farm('Shire Farms', 1))
         db.session.add(Farm('Mordor Farms', 1))
         db.session.add(Produce('corn', 'vegetable', 'tasty', 1, 1))
-        db.session.add(Produce('Broccoli', 'vegetable', 'tasty', 1, 1))
         db.session.add(Produce('milk', 'dairy', 'yum', 2, 2))
         db.session.flush()
         db.session.add(Price(1, 1, 2.2))
@@ -37,7 +35,6 @@ class BaseTestCase(TestCase):
         db.session.add(RecentProduce(1, 1))
         db.session.flush()
         db.session.add(Works(2, 1))
-        db.session.add(Works(3, 1))
         db.session.add(Works(2, 2))
         db.session.flush()
 
@@ -232,9 +229,9 @@ class BlueGardenTestCase(BaseTestCase):
         print('\n## Testing the flag for farmer user type ##')
         user = User.query.filter_by(email='mrmf@gmail.com').first()
         User.set_user_farmer(user)
-        assert User.query.filter_by(type='C').first().first_name == 'Master'
+        assert 'Master' in [farmer.first_name for farmer in User.query.filter_by(type='C').all()]
         user.type = 'B'
-        assert not User.query.filter_by(email='mrmf@gmail.com').first().type == 'C'
+        assert 'Master' not in [farmer.first_name for farmer in User.query.filter_by(type='C').all()]
 
     # Testing new farmer user has no farms yet
     def test_farm_page_content(self):
