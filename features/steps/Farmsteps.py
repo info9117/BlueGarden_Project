@@ -77,37 +77,28 @@ def step_impl(context):
     context.browser.get(context.address + "/login")
     login(context, 'farmer_j01@gmail.com', 'louise1993')
     context.browser.get(context.address + "/activity")
-    assert 'Record Farm Activity' in context.browser.page_source
+    assert 'Record Activity' in context.browser.page_source
 
-@when('a farmer selects their farm, resource and enters a description and date')
+@when('a farmer enters a resource and enters a description')
 def step_impl(context):
-    farm = "1"
-    field = "1"
+
     resource = "1"
-    date = '30 May, 2016'
     description = "Activity on farm"
-    record_activity(context, farm, field,description,date,resource)
+    record_activity(context, resource,description)
 
 
-@then('the activity is reistered for that farm')
+@then('the new activity is recorded')
 def step_impl(context):
     print(context.browser.page_source)
     assert 'Activity was recorded' in context.browser.page_source
 
 import time
-def record_activity(context, farm, field,description,date,resource):
+def record_activity(context, resource,description):
 
     c=context.browser
-    c.execute_script('$(function() { $("#farm").val("'+farm+'"); });')
-    #c.find_element_by_id("farm").send_keys(farm)
-    c.find_element_by_id("form").submit() 
-    #c.find_element_by_id("field").send_keys(field)
     time.sleep(1)
-    c.execute_script('$(function() { $("#field").val("'+field+'"); });')
+
     c.find_element_by_id("description").send_keys(description)
-    #c.find_element_by_id("resource").send_keys(resource)
     c.execute_script('$(function() { $("#resource").val("'+resource+'"); });')
-    c.execute_script('$(function() { $("#date").val("'+date+'"); });')
-    #c.find_element_by_id("date").send_keys(date)
-    time.sleep(10)
+    
     c.find_element_by_id("form").submit()

@@ -7,7 +7,7 @@ class Activity_List(db.Model):
 
     id = db.Column('id', db.Integer, primary_key=True)
     activity_description = db.Column('activity_description', db.String(255), nullable=False)
-    req_resource_id = db.Column('req_resource_id', db.String(255), db.ForeignKey('Resource_List.id'), nullable=False)
+    req_resource_id = db.Column('req_resource_id', db.Integer, db.ForeignKey('Resource_List.id'), nullable=False)
 
     def __init__(self, activity_description, req_resource_id):
         self.activity_description = activity_description

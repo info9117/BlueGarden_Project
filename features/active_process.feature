@@ -6,6 +6,7 @@ Feature: Farmers can register a new active process selected from the process tem
     
     Scenario: Record a new active process
     Given at the Process page
-    When
-    Then
+    When something  
+    
+    Then something
     

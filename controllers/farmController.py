@@ -1,13 +1,6 @@
 from flask import request, render_template, redirect, url_for, flash, session
-from models.user import *
-from models.works import *
-from models.farm import *
-#from models.produce import *
-from models.address import *
-from models.crop import *
-from models.field import *
-from models.activity import *
-from models.resource import *
+from models import *
+
 from datetime import datetime
 
 
@@ -85,40 +78,23 @@ class FarmController:
         
     @staticmethod
     def activity():
-        myfarms = []
         resources = []
-        fields = []
+        errors = []
         
-        for farm in FarmController.get_user_farms():
-            myfarms.append(Farm.query.get(farm.farm_id))
-            
-        farm_id = request.form.get('farm', '')
-        resource = request.form.get('resource', '')
-        field = request.form.get('field', '')
-        description = request.form.get('description', '')
-        date = request.form.get('date', '')
-        if resource == '' and request.method == 'POST':
-            selectedfarm = Farm.query.get(farm_id)
-            for resource in FarmController.get_farm_resources(farm_id):
+        for resource in db.session.query(Resource_List).order_by(Resource_List.id.asc()).all():
                 resources.append(resource)
-            for field in FarmController.get_farm_fields(farm_id):
-                fields.append(field)
-            return render_template('activity.html', selectedfarm=selectedfarm, 
-                                                        myfarms=myfarms, resources=resources, fields=fields)
-           
-        if request.method == 'POST' and resource != '':
-            if field =='' or date =='' or description =='':
-                flash("You must fill out all the forms") 
-                return render_template('activity.html', myfarms=myfarms, resources=resources, fields=fields)
-            
-            date_obj = datetime.strptime(date, '%d %b, %Y')#.date()
-            if request.form.get('harvest', '') == 'on':
-                sendto="add produce with args?"
-                #crop = Crop.query.filter_by(farm_id=farm_id).first()
-                #Crop.delete(crop)
-                #add crop to produce??
-            db.session.add(Activity(description,field,date,resource))
-            db.session.commit()
-            flash("Activity was recorded")       
-        return render_template('activity.html', myfarms=myfarms)
-
+        if request.method == 'POST':
+            req_resource_id = request.form.get('resource', '')
+            activity_description = request.form.get('description', '')
+            if not resources:
+                errors.append("add some resources first!")
+            if not activity_description:
+                errors.append("add an activity description")
+            if not errors:
+                db.session.add(Activity_List(activity_description, req_resource_id))
+                db.session.commit()
+                flash("Activity was recorded")
+                #return to process creation page?      
+        return render_template('activity.html', resources=resources, errors=errors)
+    
+    

@@ -36,6 +36,7 @@ class BaseTestCase(TestCase):
         db.session.flush()
         db.session.add(Works(2, 1))
         db.session.add(Works(2, 2))
+        db.session.add(Resource_List('fertiliser'))
         db.session.flush()
 
         db.session.commit()
@@ -264,28 +265,19 @@ class BlueGardenTestCase(BaseTestCase):
             postcode=postcode
         ), follow_redirects=True)
         
-    def add_activity(self, description,field,date,resource):
+    def add_activity(self, description,resource):
         self.login('mrmf@gmail.com', 'shazza')
         return self.client.post('/activity', data=dict(
             description=description,
-            field=field,
-            date=date,
             resource=resource
         ), follow_redirects=True)
         
-    #Testing that user can record activities to their farm
+    #Testing that user can record activities 
     def test_add_activity(self):
-        print('\n## Testing that user can record activities to their farm ##')
-        self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
-        farm_id = 1
-        db.session.add(Field('west block', 'Shire Farms', farm_id))
-        db.session.add(Resource('fertiliser',farm_id))
-        db.session.commit()        
-        field = Field.query.filter_by(farm_id=farm_id).first()
-        resource = Resource.query.filter_by(farm_id=farm_id).first()
-        date = '3 May, 2016'
+        print('\n## Testing that user can record activities ##')  
+        resource =1
         description = 'Mowing the lawn'
-        response = self.add_activity(description,field,date,resource)
+        response = self.add_activity(description,resource)
         self.assertIn(b"Activity was recorded",response.data)        
 
     def test_add_to_cart(self):

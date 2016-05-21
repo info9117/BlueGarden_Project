@@ -14,4 +14,6 @@ from .resource import Resource
 from .activity import Activity
 from .crop import Crop
 from .recent_produce import RecentProduce
+from .Activity_List import Activity_List
+from .Resource_List import Resource_List
 

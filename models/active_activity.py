@@ -8,7 +8,7 @@ class Active_Activity(db.Model):
     
     id = db.Column('id', db.Integer, primary_key=True)
     Active_Process_ID = db.Column('Active_Process_ID', db.Integer), db.ForeignKey('Active_Process.id'), nullable=False)
-    Activity_ID = db.Column('user_id', db.Integer), db.ForeignKey('Process_Steps.Activity_ID'), nullable=False)
+    Activity_ID = db.Column('user_id', db.Integer), db.ForeignKey('Process_Steps.activity_id'), nullable=False)
     Action_Completed = db.Column('Start_Date', db.Boolean, nullable=False)
 
     
