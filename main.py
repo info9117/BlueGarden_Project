@@ -6,6 +6,7 @@ from controllers.userController import UserController as userController
 from controllers.farmController import FarmController as farmController
 from controllers.fieldController import FieldController as fieldController
 from controllers.cropController import CropController as cropController
+from controllers.templateController import TemplateController as templateController
 
 from shared import db
 
@@ -128,6 +129,11 @@ def view_produce(produce_id):
 def uploaded_image(farm_id, filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'] + 'produce/' + str(farm_id),
                                filename)
+
+@app.route('/process', methods=['GET', 'POST'])
+@login_required
+def process():
+    return templateController.add_process()
 
 
 def url_for_browse_produce(page):
