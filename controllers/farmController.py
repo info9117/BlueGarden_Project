@@ -80,21 +80,36 @@ class FarmController:
     def activity():
         resources = []
         errors = []
-        
+        processes = []
+        for process in db.session.query(Process_List).order_by(Process_List.id.asc()).all():
+                processes.append(process)
         for resource in db.session.query(Resource_List).order_by(Resource_List.id.asc()).all():
                 resources.append(resource)
         if request.method == 'POST':
+            db.session.add(Process_Steps(process, newactivity))
+            db.session.commit()
             req_resource_id = request.form.get('resource', '')
             activity_description = request.form.get('description', '')
+            process = request.form.get('process', '')
+            activity = request.form.get('activity', '')
+            if activity:
+                db.session.add(Process_Steps(process, activity))
+                db.session.commit()
+                flash("Activity was recorded")
+                return render_template('activity.html', resources=resources, errors=errors, processes=processes)
             if not resources:
                 errors.append("add some resources first!")
+            if not process:
+                errors.append("select a process")
             if not activity_description:
                 errors.append("add an activity description")
             if not errors:
                 db.session.add(Activity_List(activity_description, req_resource_id))
+                newactivity = db.session.query(Activity_List).order_by(Activity_List.id.desc()).first().id
+                db.session.add(Process_Steps(process, newactivity))
                 db.session.commit()
                 flash("Activity was recorded")
-                #return to process creation page?      
-        return render_template('activity.html', resources=resources, errors=errors)
+                #return render_template('process.html', process=Process_List.query.get(process))
+        return render_template('activity.html', resources=resources, errors=errors, processes=processes)
     
     

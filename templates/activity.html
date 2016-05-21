@@ -7,21 +7,31 @@
     <div class="section">
         <div class="container white">
             <h5>Record Activity</h5>
-            <a href="/activity" class="right-align"><p right-align>RESET FORM   </p></a>
             
             <form class="activity" id="form" name="form" action="" method="post">
              
-            
-       
+            <div class="input-field col s6"> 
+            {% if process %}<select id="process" name="process">
+                            <option value="{{ process.id }}">{{ process.process_name }}</option>
+                            {% else %}
+                            <select id="process" name="process">
+                            <option value="" disabled selected>Select a process</option>
+                            {% for process in processes %}
+                            <option value="{{ process.id }}">{{ process.process_name }}</option>
+                            {% endfor %}
+                            
+                            {% endif %}
+                        
+                      
                 <div class="input-field col s6">
                   
                     <select id="resource" name="resource">
-                    <option value="" disabled selected>Choose your Resource</option>
+                    <option value="" disabled selected>Choose a Resource</option>
                     {% for resource in resources %}
                     <option value="{{ resource.id }}">{{ resource.resource_description }}</option>
                     {% endfor %}
                     </select>
-                    <label>Resource</label></div>
+                    </div>
                     
                     
                     
@@ -36,6 +46,14 @@
   
             <button class="btn waves-effect waves-light moderate-pink darken-1" id="submit" type="submit" >Record Activity</button>
         </div>       
+        
+        <div class="input-field col s2">
+                  
+                    <select id="activity" name="activity">
+                    <option value="" disabled selected>Or select existing Activity</option>
+                    {% for activity in activities %}
+                    <option value="{{ activity.id }}">{{ activity.activity_description }}</option>
+                    {% endfor %}</div>
     </form>
                     <div id="errors" class="red lighten-3">
                     {% for error in errors %}
