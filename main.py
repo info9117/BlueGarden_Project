@@ -134,6 +134,11 @@ def uploaded_image(farm_id, filename):
 @login_required
 def process():
     return templateController.add_process()
+    
+@app.route('/active_process', methods=['GET', 'POST'])
+@login_required
+def active_process():
+    return farmController.active_process()
 
 
 def url_for_browse_produce(page):

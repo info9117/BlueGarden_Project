@@ -16,7 +16,7 @@ class Active_Process(db.Model):
     Target_ID = db.Column('Target_ID', db.Integer, nullable=True)
     
 
-    def __init__(self, Process_Template_ID, user_id, Start_Date, Progress):
+    def __init__(self, Process_Template_ID, user_id, Start_Date, Progress,Finish_Date,Target_Type,Target_ID):
         self.Process_Template_ID = Process_Template_ID
         self.user_id = user_id
         self.date = date

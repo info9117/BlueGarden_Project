@@ -13,7 +13,7 @@ class Active_Activity(db.Model):
 
     
 
-    def __init__(self, Active_Process_ID, user_id, Start_Date, Progress):
+    def __init__(self, Active_Process_ID, Activity_ID, Action_Completed):
         self.Active_Process_ID = Active_Process_ID
         self.Activity_ID = Activity_ID
         self.Action_Completed = Action_Completed

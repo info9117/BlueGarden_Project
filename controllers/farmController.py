@@ -15,6 +15,20 @@ class FarmController:
         fields = Field.query.filter_by(farm_id=farm_id).all()
         return fields
         
+    @staticmethod
+    def get_user_fields():
+        fields = []
+        farms = FarmController.get_user_farms
+        for farm in farms:
+            for field in FarmController.get_farm_fields(farm.id):
+                fields.append(field)
+        return fields
+        
+    
+    @staticmethod
+    def get_user():
+        
+        return User.query.get(User.query.filter_by(email=session['email']).first().id)        
 
     @staticmethod
     def get_user_farms():
@@ -96,7 +110,7 @@ class FarmController:
                 db.session.add(Process_Steps(process, activity))
                 db.session.commit()
                 flash("Activity was recorded")
-                return render_template('activity.html', resources=resources, errors=errors, processes=processes)
+                return render_template('activity.html', resources=resources, errors=errors, processes=processes, process=process)
             if not resources:
                 errors.append("add some resources first!")
             if not process:
@@ -110,6 +124,69 @@ class FarmController:
                 db.session.commit()
                 flash("Activity was recorded")
                 #return render_template('process.html', process=Process_List.query.get(process))
-        return render_template('activity.html', resources=resources, errors=errors, processes=processes)
+        return render_template('activity.html', resources=resources, errors=errors, processes=processes, process=process)
     
+    @staticmethod
+    def init_process(Active_Process_ID,Process_Template_ID):
+        process_steps = Process_Steps.query.filter_by(procedure_id=Process_Template_ID).all()
+        for step in process_steps:
+            Action_Completed=False
+            Activity_ID = step.activity_id
+            db.session.add(Active_Activity(Active_Process_ID, Activity_ID, Action_Completed)
+            db.session.commit()
     
+    @staticmethod
+    def get_processes():
+        return db.session.query(Process_List).order_by(Process_List.id.asc()).all()
+    
+    @staticmethod
+    def active_process():
+        processes=[]
+        for process in FarmController.get_processes():
+            processes.append(process)
+
+        if request.method == 'POST':
+            Process_Template_ID = request.form.get('process','')
+            target = request.form.get('target','')
+            farm = request.form.get('farm',False)
+            field = request.form.get('field',False)
+            Start_Date = request.form.get('date', '')
+            Start_Date = datetime.strptime(Start_Date, '%d %b, %Y')
+            user_id = FarmController.get_user().id
+            if not target:
+                
+                db.session.add(Active_Process(Process_Template_ID, user_id, Start_Date, null,null,null,null))
+                db.commit()
+                Active_Process_ID = db.session.query(Active_Process).order_by(Active_Process.id.desc()).first().id
+                FarmController.init_process(Active_Process_ID, Process_Template_ID)
+                
+                return render_template('/active_process.html', processes=processes)
+            if field or farm:
+                if field:
+                    Target_Type = "field"
+                    Target_ID = field
+                if farm:
+                    Target_Type = "farm"
+                    Target_ID = farm
+                db.session.add(Active_Process(Process_Template_ID, user_id, Start_Date, null,null,Target_Type,Target_ID))
+                db.commit()
+                Active_Process_ID = db.session.query(Active_Process).order_by(Active_Process.id.desc()).first().id
+                FarmController.init_process(Active_Process_ID, Process_Template_ID)
+            return render_template('/active_process.html', processes=processes)
+            
+            other=False
+            fields=[]
+            farms=[]
+            if target=='other':
+                other=True
+            elif target=='field':
+                for field in FarmController.get_user_fields():
+                    fields.append(field)
+            elif target=='farm':
+                for farm in FarmController.get_user_farms():
+                    farms.append(farm)
+            return render_template('/active_process.html', target=target, fields=fields,farms=farms, process=process, other=other)
+            
+            
+        return render_template('/active_process.html', processes=processes)
+         
