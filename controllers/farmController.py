@@ -95,6 +95,7 @@ class FarmController:
         resources = []
         errors = []
         processes = []
+        process = request.form.get('process', '')
         for process in db.session.query(Process_List).order_by(Process_List.id.asc()).all():
                 processes.append(process)
         for resource in db.session.query(Resource_List).order_by(Resource_List.id.asc()).all():
@@ -132,7 +133,7 @@ class FarmController:
         for step in process_steps:
             Action_Completed=False
             Activity_ID = step.activity_id
-            db.session.add(Active_Activity(Active_Process_ID, Activity_ID, Action_Completed)
+            db.session.add(Active_Activity(Active_Process_ID, Activity_ID, Action_Completed))
             db.session.commit()
     
     @staticmethod
@@ -150,6 +151,7 @@ class FarmController:
             target = request.form.get('target','')
             farm = request.form.get('farm',False)
             field = request.form.get('field',False)
+            crop = request.form.get('crop',False)
             Start_Date = request.form.get('date', '')
             Start_Date = datetime.strptime(Start_Date, '%d %b, %Y')
             user_id = FarmController.get_user().id
@@ -161,13 +163,16 @@ class FarmController:
                 FarmController.init_process(Active_Process_ID, Process_Template_ID)
                 
                 return render_template('/active_process.html', processes=processes)
-            if field or farm:
+            if field or farm or crop:
                 if field:
                     Target_Type = "field"
                     Target_ID = field
                 if farm:
                     Target_Type = "farm"
                     Target_ID = farm
+                if crop:
+                    Target_Type = "crop"
+                    Target_ID = crop
                 db.session.add(Active_Process(Process_Template_ID, user_id, Start_Date, null,null,Target_Type,Target_ID))
                 db.commit()
                 Active_Process_ID = db.session.query(Active_Process).order_by(Active_Process.id.desc()).first().id
@@ -185,6 +190,7 @@ class FarmController:
             elif target=='farm':
                 for farm in FarmController.get_user_farms():
                     farms.append(farm)
+               
             return render_template('/active_process.html', target=target, fields=fields,farms=farms, process=process, other=other)
             
             
