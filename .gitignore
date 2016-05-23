@@ -4,3 +4,7 @@
 /images/d/produce
 /images/t/produce
 *.db
+/.db
+back.txt
+
+*.py~
