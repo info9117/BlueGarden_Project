@@ -12,8 +12,10 @@ class BaseTestCase(TestCase):
 
     def setUp(self):
         db.create_all()
-        db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
-        db.session.add(User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins'))
+        db.session.add(User('Hayate', 'Yagami', 'hayate@microsoft.com', 'hayate1234'))  # This one is a normal user
+        db.session.add(User('Nanoha', 'Takamachi', 'nanoha@microsoft.com', 'nanoha1234')) # This one is company manager
+        db.session.add(Contact('Shirasaki', 'shirasaki@microsoft.com', 'Hey', 'I want to share something to you. '))
+        db.session.add(Contact('Honoka', 'honoka@microsoft.com', 'Hello', 'I dont like something and I want to complain'))
         db.session.commit()
 
     def tearDown(self):
@@ -22,54 +24,6 @@ class BaseTestCase(TestCase):
 
 
 class BlueGardenTestCase(BaseTestCase):
-
-    # Testing the home page content
-    def test_index_content(self):
-        print('\n## Testing Home page for welcome message ##')
-        response = self.client.get('/', content_type='html/text')
-        self.assertIn(b'Welcome to Blue Garden', response.data)
-
-    # Testing Login page content
-    def test_login_page_content(self):
-        response = self.client.get('/login', content_type='html/text')
-        print('\n## Testing Login page for content ##')
-        self.assertIn(b"""Don't have an account? <a href="/register">Register</a>""", response.data)
-
-    # Testing Login with valid credentials
-    def test_login_valid_credentials(self):
-        print('\n## Testing Login page with valid credentials ##')
-        response = self.login('singarisathwik007@gmail.com', 'dm08b048')
-        self.assertIn(b'Hello Sathwik', response.data)
-
-    # Testing Login with invalid credentials
-    def test_login_invalid_credentials(self):
-        print('\n## Testing Login page with invalid credentials ##')
-        response = self.login('singarisathwik007@gmail.com', 'dm08b48')
-        self.assertIn(b'Email Id/Password do not match', response.data)
-
-    # Testing Logout
-    def test_logout(self):
-        print('\n## Testing logout ##')
-        response = self.logout()
-        self.assertIn(b'You successfully logged out', response.data)
-
-    # Testing Registration Page content
-    def test_register_page_content(self):
-        response = self.client.get('/register', content_type='html/text')
-        print('\n## Testing Registration page for content ##')
-        self.assertIn(b"""Already have an account? <a href="/login">Log In</a>""", response.data)
-
-    # Testing Registration with existing credentials
-    def test_register_existing_credentials(self):
-        print('\n## Testing Register page with existing credentials ##')
-        response = self.register('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048')
-        self.assertIn(b'Email Id already exists', response.data)
-
-    # Testing Registration with valid credentials
-    def test_register_valid_credentials(self):
-        print('\n## Testing Register page with valid credentials ##')
-        response = self.register('Frodo', 'Baggins', 'fbaggins@lotr.com', 'frodobaggins')
-        self.assertIn(b'Hello Frodo', response.data)
 
     def login(self, email, password):
         return self.client.post('/login', data=dict(
@@ -118,6 +72,48 @@ class BlueGardenTestCase(BaseTestCase):
         self.assertIn(b'Eggplant', response.data)
         self.assertIn(b'4.35', response.data)
         self.assertIn(b'Shire Farms', response.data)
+
+    # Test if feedback form can be viewed properly. Case 1. Only manager can view content
+    def test_view_feedback_page_content_case1(self):
+        print('\n## Testing viewing feedback page content from authorised user##')
+        with self.client as c:
+            with c.session_view_feedback() as session:
+                session['logged_in'] = True
+                session['email'] = 'nanoha@microsoft.com'
+                session['firstname'] = 'Nanoha'
+                session['lastname'] = 'Takamachi'
+
+        response = self.client.get('/feedback/portal', content_type='html/text')
+        self.assertIn(b'Shirasaki', response.data)
+        self.assertIn(b'shirasaki@microsoft.com', response.data)
+        self.assertIn(b'Hey', response.data)
+        self.assertIn(b'I want to share something to you. ', response.data)
+
+    # Test if feedback form can be viewed properly. Case 2. Only manager can view content
+    def test_view_feedback_page_content_case2(self):
+        print('\n## Testing viewing feedback page content from authorised user##')
+        with self.client as c:
+            with c.session_view_feedback() as session:
+                session['logged_in'] = True
+                session['email'] = 'nanoha@microsoft.com'
+                session['firstname'] = 'Nanoha'
+                session['lastname'] = 'Takamachi'
+        response = self.client.get('/feedback/portal', content_type='html/text')
+        self.assertIn(b'Honoka', response.data)
+        self.assertIn(b'honoka@microsoft.com', response.data)
+        self.assertIn(b'Hello', response.data)
+        self.assertIn(b'I dont like something and I want to complain', response.data)
+
+    # Test if feedback can be viewed by non-manager user.
+    def test_unauthorised_feedback_page_content_view(self):
+        print('\n## Testing viewing feedback page content from unauthorised user##')
+        with self.client as c:
+            with c.session_view_feedback() as session:
+                session['logged_in'] = True
+                session['email'] = 'hayate@microsoft.com'
+                session['firstname'] = 'Hayate'
+                session['lastname'] = 'Yagami'
+        response = self.client.get('login')
 
     def test_add_to_cart(self):
         response = self.client.post('/produce/1', data=dict(
