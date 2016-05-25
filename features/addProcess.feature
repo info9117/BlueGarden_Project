@@ -1,4 +1,3 @@
-addProcess.feature
 Feature: Farmer can create a new process
     As a farmer
     I want to add new processes
@@ -8,3 +7,13 @@ Feature: Farmer can create a new process
     Given at the process page
     When a farmer creates a new process
     Then the new process is recorded
+
+    Scenario: Linke from process to activity
+    Given at the process page
+    When I select an exting process
+    Then I  will be directed to the Activity page and the process will be selected
+
+    Scenario: Add a new activity to a process
+    Given at the activity page
+    When I select an exting process and add an activity
+    Then I will be shown the activity added to the process
