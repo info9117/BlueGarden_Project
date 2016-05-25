@@ -193,8 +193,6 @@ class FarmController:
         errors = []
         processes = []
         process = Process_List.query.filter_by(id=id).first()
-        #for process in db.session.query(Process_List).order_by(Process_List.id.asc()).all():
-         #       processes.append(process)
         for resource in db.session.query(Resource_List).order_by(Resource_List.id.asc()).all():
                 resources.append(resource)
         if request.method == 'POST':
