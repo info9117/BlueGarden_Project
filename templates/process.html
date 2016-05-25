@@ -52,7 +52,9 @@
                 {% if myProcesses %}
                     <ul class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white left-align"><p>Existing Processes</p>
                 {% for process in myProcesses %}
-                    <a href="Update Process">{{ process }} <br></a>
+                    <a href="/activity/{{ process.id }}/add">Add Activity to {{ process.process_name }}<br></a>
+
+
                 {% endfor %}
                     </ul>
                 {% endif %}

@@ -83,11 +83,6 @@ def addcrop():
 def change_state(crop_id):
     return cropController.change_state(crop_id)
 
-
-
-
-
-
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -139,6 +134,11 @@ def process():
 @login_required
 def active_process():
     return farmController.active_process()
+
+@app.route('/activity/<int:process_id>/add', methods=['GET', 'POST'])
+@login_required
+def add_activity_to_process(process_id):
+    return farmController.linkToActivity(process_id)
 
 
 def url_for_browse_produce(page):

@@ -12,17 +12,12 @@
              
             <div class="input-field col s6"> 
             {% if process %}<select id="process" name="process">
-                            <option value="{{ process.id }}">{{ process.process_name }}</option>
-                            {% else %}
-                            <select id="process" name="process">
-                            <option value="" disabled selected>Select a process</option>
-                            {% for process in processes %}
-                            <option value="{{ process.id }}">{{ process.process_name }}</option>
-                            {% endfor %}
-                            
+                            <option value="{{ process.process_name }}">{{ process.process_name }}</option>
+
+
                             {% endif %}
-                        
-                      
+
+
                 <div class="input-field col s6">
                   
                     <select id="resource" name="resource">
@@ -32,10 +27,10 @@
                     {% endfor %}
                     </select>
                     </div>
-                    
-                    
-                    
-            
+
+
+
+
         <div class="row">
             <div class="section">
                 <div class="input-field col s6">
@@ -43,7 +38,7 @@
                     <label>Activity Description</label></div></div>
 
 
-  
+
             <button class="btn waves-effect waves-light moderate-pink darken-1" id="submit" type="submit" >Record Activity</button>
         </div>       
         
@@ -71,7 +66,7 @@
 
 {% block scripts %}
 <script>
-        
+
 
   $(document).ready(function() {
     $('select').material_select();
@@ -80,7 +75,7 @@
   $('#textarea1').val('New Text');
   $('#textarea1').trigger('autoresize');
   
-  
+
 </script>
 {% endblock %}
 % endif %}
