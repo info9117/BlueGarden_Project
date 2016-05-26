@@ -12,11 +12,17 @@
              
             <div class="input-field col s6"> 
             {% if process %}<select id="process" name="process">
-                            <option value="{{ process.process_name }}">{{ process.process_name }}</option>
 
-
-                            {% endif %}
-
+                            <option value="{{ process.id }}">{{ process.process_name }}</option>
+                            {% else %}
+                            <select id="process" name="process">
+                            <option value="" disabled selected>Select a process</option>
+                            {% for process in processes %}
+                            <option value="{{ process.id }}">{{ process.process_name }}</option>
+                            {% endfor %}
+                            
+                            {% endif %}</select></div>
+                        
 
                 <div class="input-field col s6">
                   

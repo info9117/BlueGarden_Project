@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="ver-hor-align-parent grey darken-4">
-    <div class="container ver-hor-align-child">
+
         <div class="row">
             <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4">
                 <a href="{{ url_for('index') }}" class="brand-logo">
@@ -27,7 +27,7 @@
             {% endfor %}</div>    
             
             
-                <form id="form" class="start_process" action="" method="post">
+                <div id="form" class="start_process" action="" method="post">
                     <p>Start a new Process</p>
                     
                     <div class="input-field col s6"> 
@@ -40,28 +40,36 @@
                             <option value="{{ process.id }}">{{ process.process_name }}</option>
                             {% endfor %}
                             
-                            {% endif %}</div>
-                    
-                    <input type="date" class="datepicker" name="date" id="date">Start Date</input>
+                            {% endif %}
+                            </select></div>
+
+
+                    <div class="section">
+                        <div class="input-field col s6">
+                    <input type="date" class="datepicker" name="date" id="date"><label>Start Date</label>
+                            </input></div>
                     
                     <div class="input-field col s6"> 
                             {% if target %}<select id="target" name="target">
-                            <option value="{{ target }}">{{ target }}</option>
+                            <option value="{{ target }}">{{ target }}</option></select>
                             {% else %}
                             <select id="target" name="target">
                             <option value="" disabled selected>Apply process to?</option>
                             <option value="field">field</option>
                             <option value="farm">farm</option>
+                            <option value="crop">crop</option>
                             <option value="other">other</option>
                             {% endif %}
-                            <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="action">
-                        See farms/fields
+                                </select></div>
+
+                        <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="action">
+                        View farms/fields/crops
                     </button>
                             
                             
                             {% if other %}
                     <input id="other_target" name="other_target" type="text" placeholder="other_target" class="validate">Other</input>                      {% elif field %}
-                    <select id="field" name="field">
+                    <select id="field" name="field"></select>
                     <option value="" disabled selected>Select field</option>
                             {% for field in fields %}
                             <option value="{{ field.id }}">{{ field.name }}</option>{% endfor %}
@@ -71,6 +79,7 @@
                             {% for farm in farms %}
                             <option value="{{ farm.id }}">{{ farm.name }}</option>{% endfor %}
                             {% endif %}
+                        </select>
                     
                     
                     
