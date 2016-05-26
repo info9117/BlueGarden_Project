@@ -76,6 +76,11 @@ def dashboard():
     return render_template('dashboard.html')
 
 
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+
 @app.route('/browse')
 @login_required
 def browse():
@@ -147,7 +152,7 @@ def view_produce(produce_id):
             return render_template('view_produce.html', produce=produce1, total=item1.total)
         else:
             return render_template('view_produce.html', produce=produce1, total="wrong value")
-    
+
     return render_template('view_produce.html', produce=produce1)
 
 

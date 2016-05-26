@@ -38,6 +38,7 @@ class UserController:
             last_name = request.form.get('lastname', '')
             email = request.form.get('email', '')
             password = request.form.get('password', '')
+            conf_pswd = request.form.get('confirm password', '')
             if not first_name:
                 errors.append('First Name cannot be empty')
             if not last_name:
@@ -50,6 +51,8 @@ class UserController:
                     errors.append("Email Id already exists")
             if not password:
                 errors.append('Password cannot be empty')
+            if conf_pswd != password:
+                errors.append('Password mismatch! ')
             if not errors:
                 user = User(first_name, last_name, email, password)
                 db.session.add(user)
@@ -67,5 +70,19 @@ class UserController:
         session.pop('email', None)
         session.pop('firstname', None)
         session.pop('lastname', None)
-        flash('You successfully logged out', 'success')
+        flash('You are successfully logged out', 'success')
         return redirect(url_for('login'))
+
+    @staticmethod
+    def addcrop():
+        errors = []
+        if request.method == 'POST':
+            id = request.form.get('id', '')
+            crop_name = request.form.get('cropname', '')
+            grow_state = request.form.get('growstate', '')
+            farm_id = request.form.get('farmid', '')
+            crop = Crop(id, crop_name, grow_state, farm_id)
+            db.session.add(crop)
+            db.session.commit()
+            flash('You have added crop successfully')
+        return render_template("addcrop.html", errors=errors)
