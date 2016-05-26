@@ -114,6 +114,8 @@ def activity():
 def field():
     return fieldController.addField()
 
+@app.route('addresource',methods=)
+
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
 @login_required
 def add_produce_to_farm(farm_id):

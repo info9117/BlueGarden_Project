@@ -44,6 +44,11 @@ class FarmController:
         #db.session.commit()
         resources = Resource.query.filter_by(farm_id=farm_id).all()
         return resources
+
+    '''@staticmethod
+    def get_farm_crop():'''
+
+
  
     @staticmethod
     def add_farm():
@@ -132,7 +137,7 @@ class FarmController:
         for step in process_steps:
             Action_Completed=False
             Activity_ID = step.activity_id
-            db.session.add(Active_Activity(Active_Process_ID, Activity_ID, Action_Completed)
+            db.session.add(Active_Activity(Active_Process_ID, Activity_ID, Action_Completed))
             db.session.commit()
     
     @staticmethod
