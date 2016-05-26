@@ -31,7 +31,10 @@ class FarmController:
 
     @staticmethod
     def get_crops():
-        return ["crop1","crop2"]
+        db.session.add(Crop(9,"test crop","labile",1))
+        db.session.add(Crop(8,"test crop","labile",2))
+        db.session.commit()
+        return db.session.query(Crop).order_by(Crop.crop_name).all()
 
     @staticmethod
     def get_user_farms():
@@ -153,22 +156,43 @@ class FarmController:
     @staticmethod
     def active_process():
         processes=[]
+        other=False
+        fields=[]
+        farms=[]
+        crops = []
         for process in FarmController.get_processes():
             processes.append(process)
+        target = request.form.get('target',"")
+        farm = request.form.get('farm',False)
+        field = request.form.get('field',False)
+        crop = request.form.get('crop',False)
+        Start_Date = request.form.get('date', '')
+        user_id = FarmController.get_user().id
+        process = request.form.get('process','')
+
+        print("target is:"+target)
+        if target=='other':
+            other=True
+            print("target other selected")
+        elif target=='field':
+            for field in FarmController.get_user_fields():
+                fields.append(field)
+        elif target=='farm':
+            for farm in FarmController.get_user_farms():
+                farms.append(farm)
+        elif target=='crop':
+            for crop in FarmController.get_crops():
+                crops.append(crop)
 
         if request.method == 'POST':
             Process_Template_ID = request.form.get('process','')
-            target = request.form.get('target','')
-            farm = request.form.get('farm',False)
-            field = request.form.get('field',False)
-            crop = request.form.get('crop',False)
-            Start_Date = request.form.get('date', '')
+
             Start_Date = datetime.strptime(Start_Date, '%d %b, %Y')
-            user_id = FarmController.get_user().id
-            if not target:
+
+            if target=='':
                 
-                db.session.add(Active_Process(Process_Template_ID, user_id, Start_Date, null,null,null,null))
-                db.commit()
+                db.session.add(Active_Process(Process_Template_ID, user_id, Start_Date, None,None,None,None))
+                db.session.commit()
                 Active_Process_ID = db.session.query(Active_Process).order_by(Active_Process.id.desc()).first().id
                 FarmController.init_process(Active_Process_ID, Process_Template_ID)
                 
@@ -183,29 +207,18 @@ class FarmController:
                 if crop:
                     Target_Type = "crop"
                     Target_ID = crop
-                db.session.add(Active_Process(Process_Template_ID, user_id, Start_Date, null,null,Target_Type,Target_ID))
-                db.commit()
+                #db.session.add(Active_Process(int(Process_Template_ID), user_id, Start_Date, None,None,Target_Type,Target_ID))
+                db.session.add(Active_Process(int(Process_Template_ID), user_id, Start_Date, None,None,Target_Type,1))
+                db.session.commit()
                 Active_Process_ID = db.session.query(Active_Process).order_by(Active_Process.id.desc()).first().id
                 FarmController.init_process(Active_Process_ID, Process_Template_ID)
-            return render_template('/active_process.html', processes=processes)
+            return render_template('/active_process.html', processes=processes, process=process, target=target, other=other, field=field, fields=fields, farm=farm, farms=farms, crop=crop, crops=crops)
+
             
-            other=False
-            fields=[]
-            farms=[]
-            crops = []
-            if target=='other':
-                other=True
-            elif target=='field':
-                for field in FarmController.get_user_fields():
-                    fields.append(field)
-            elif target=='farm':
-                for farm in FarmController.get_user_farms():
-                    farms.append(farm)
-            elif target=='crop':
-                for crop in FarmController.get_crops():
-                    crops.append(crop)
-            return render_template('/active_process.html', target=target, crops=crops,  fields=fields,farms=farms, process=process, other=other, processes=processes)
+
+
+        #return render_template('/active_process.html', target=target, crops=crops,  fields=fields,farms=farms, process=process, other=other, processes=processes)
             
             
-        return render_template('/active_process.html', processes=processes)
+        return render_template('/active_process.html', processes=processes, process=process, target=target, other=other, field=field, fields=fields, farm=farm, farms=farms, crop=crop, crops=crops)
          
