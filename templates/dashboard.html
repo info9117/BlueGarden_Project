@@ -1,10 +1,68 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %} Dashboard{% endblock %}
+{% block styles %}
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/browse_produce.css') }}"
+          media="screen,projection"/>
+{% endblock %}
 {% block content %}
-<div class="intro">
-    <div class="welcome-message">
-	    <h1 class="grey-text text-lighten-5">Hello {{ session['firstname'] }}</h1>
-        <h1 class="grey-text text-lighten-5">Welcome to Blue Garden</h1>
+    <div class="intro">
+        <div class="welcome-message">
+            <h1 class="grey-text text-lighten-5">Hello {{ session['firstname'] }}</h1>
+            <h1 class="grey-text text-lighten-5">Welcome to Blue Garden</h1>
+        </div>
     </div>
-</div>
+    {% if items.count() > 0 %}
+        <div class="row">
+        <div class="col s12 hide-on-med-and-up">
+            {% for item in items %}
+                                <div class="result-item col s6 no-padding">
+                                        <img class='result-img'
+                                             src="{{ url_for('uploaded_image', farm_id=item.produce.farm_id, filename=item.produce.image.filename) }}">
+                                        <div class="result-details">
+                                            <a href="#"><h6 class="result-name strong">{{ item.produce.name }}</h6></a>
+                                            <p class="result-caption">{{ item.produce.farm.name }}, {{ item.produce.farm.address.city }}</p>
+                                            <h5 class="result-price">$ {{ item.produce.prices[0].price }}/{{ item.produce.prices[0].unit.name }}</h5>
+                                            <a id="produce{{ item.produce.id }}" class="waves-effect waves-light moderate-pink darken-1 btn add-to-cart"
+                                               href="{{ url_for('register') }}">Add to cart</a>
+                                        </div>
+
+                                </div>
+            {% endfor %}
+        </div>
+        <div class="col m12 hide-on-small-only hide-on-large-only">
+            {% for item in items %}
+                                <div class="result-item col m4 no-padding">
+                                        <img class='result-img'
+                                             src="{{ url_for('uploaded_image', farm_id=item.produce.farm_id, filename=item.produce.image.filename) }}">
+                                        <div class="result-details">
+                                            <a href="#"><h6 class="result-name strong">{{ item.produce.name }}</h6></a>
+                                            <p class="result-caption">{{ item.produce.farm.name }}, {{ item.produce.farm.address.city }}</p>
+                                            <h5 class="result-price">$ {{ item.produce.prices[0].price }}/{{ item.produce.prices[0].unit.name }}</h5>
+                                            <a id="produce{{ item.produce.id }}" class="waves-effect waves-light moderate-pink darken-1 btn add-to-cart"
+                                               href="{{ url_for('register') }}">Add to cart</a>
+                                        </div>
+
+                                </div>
+            {% endfor %}
+        </div>
+        <div class="col l12 hide-on-med-and-down">
+            {% for item in items %}
+                <div class="result-item col l3 no-padding">
+                    <img class='result-img'
+                         src="{{ url_for('uploaded_image', farm_id=item.produce.farm_id, filename=item.produce.image.filename) }}">
+                    <div class="result-details">
+                        <a href="#"><h6 class="result-name strong">{{ item.produce.name }}</h6></a>
+                        <p class="result-caption">{{ item.produce.farm.name }}, {{ item.produce.farm.address.city }}</p>
+                        <h5 class="result-price">
+                            $ {{ item.produce.prices[0].price }}/{{ item.produce.prices[0].unit.name }}</h5>
+                        <a id="produce{{ item.produce.id }}"
+                           class="waves-effect waves-light moderate-pink darken-1 btn add-to-cart"
+                           href="{{ url_for('register') }}">Add to cart</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
 {% endblock %}

@@ -6,6 +6,7 @@ class Farm(db.Model):
     id = db.Column('id', db.Integer, primary_key=True)
     name = db.Column('name', db.String(255), nullable=False)
     address_id = db.Column('address_id', db.Integer, db.ForeignKey('addresses.id'), nullable=False)
+
     address = db.relationship("Address", foreign_keys=[address_id])
 
     def __init__(self, name, address_id):

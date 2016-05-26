@@ -7,9 +7,68 @@
     {% for message in get_flashed_messages() %}
     {{ message }}
     {% endfor %}
-    </div 
+    </div>
     <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white center-align"
                  style="padding: 30px 15px;">
+    {% for crop in crop_m %}
+    {% if crop.grow_state!="harvest" %}
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+        }
+    </style>
+    <table style="width:100%" color="red" border="1">
+      <tr>
+        <td>{{crop.id}}</td>
+        <td>{{crop.crop_name}}</td>
+        <td>{{crop.grow_state}}<a href="{{ url_for('.change_state', crop_id=crop.id) }}">   change the state</a></td>  
+        <td>{{crop.farm_id}}</td>
+      </tr>
+     
+    </table> 
+    {% endif %}
+
+    {% endfor %}
+
+
+    <br><br>
+    <h1>harvested plant</h1>
+    {% for crop in crop_m %}
+    {% if crop.grow_state=="harvest" %}
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+        }
+    </style>
+    <table style="width:100%" color="red" border="1">
+      <tr>
+        <td>{{crop.id}}</td>
+        <td>{{crop.crop_name}}</td>
+        <td>{{crop.grow_state}}<a href="{{ url_for('.change_state', crop_id=crop.id) }}">   change the state</a><a href="{{ url_for('add_produce_to_farm', farm_id=crop.farm_id) }}">Add Produce<br></a></td>  
+        <td>{{crop.farm_id}}</td>
+      </tr>
+     
+    </table> 
+    {% endif %}
+    
+    {% endfor %}
+    
+    
+    
+    
+    
+    </div>
+    <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white center-align"
+                 style="padding: 30px 15px;"
+                 >
     
     <form class="addcrop_form" action="{{ url_for('addcrop') }}" method="post">
                     

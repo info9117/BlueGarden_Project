@@ -73,6 +73,57 @@ def step_impl(context):
     assert 'Email Id already exists' in context.browser.page_source
 
 
+@given('I am in the add produce page')
+def step_impl(context):
+    context.browser.get(context.address + "/login")
+    login(context, 'singarisathwik007@gmail.com', 'dm08b048')
+    context.browser.get(context.address + '/farm/1/produce/add')
+    assert 'Add Produce' in context.browser.page_source
+
+
+@when(u'I enter the produce details')
+def step_impl(context):
+    add_produce(context, 'Eggplant', 'Bright Eggplants', 'Vegetable', '1', '4.32', '/eggplant.jpeg')
+    assert context.browser.page_source
+
+
+@then(u'I will receive a success message')
+def step_impl(context):
+    assert 'Success' in context.browser.page_source
+
+
+@given(u'I am logged in at the dashboard page')
+def step_impl(context):
+    context.browser.get(context.address + "/login")
+    login(context, 'singarisathwik007@gmail.com', 'dm08b048')
+    assert 'Hello Sathwik' in context.browser.page_source
+
+
+@then(u'I will see the most recently viewed produce')
+def step_impl(context):
+    assert 'corn' in context.browser.page_source
+
+
+@given(u'I am at home page')
+def step_impl(context):
+    context.browser.get(context.address + "/login")
+    login(context, 'singarisathwik007@gmail.com', 'dm08b048')
+    assert 'Hello Sathwik' in context.browser.page_source
+
+@when(u'I go to browse produce page')
+def step_impl(context):
+    context.browser.get(context.address + '/farm/1/produce/add')
+    add_produce(context, 'Eggplant', 'Bright Eggplants', 'Vegetable', '1', '4.32', '/eggplant.jpeg')
+    context.browser.get(context.address + "/search/produce")
+    assert 'Browse Produce' in context.browser.page_source
+
+
+@then(u'I see produce in the page')
+def step_impl(context):
+    assert 'Eggplant' in context.browser.page_source
+
+
+
 def login(context, email, password):
     email_field = context.browser.find_element_by_id("email")
     password_field = context.browser.find_element_by_id("password")
@@ -116,8 +167,6 @@ def step_impl(context, total):
     :type total: float
     """
     assert str(total) in context.browser.page_source
-
-
 
 
 

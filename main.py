@@ -6,6 +6,11 @@ from controllers.userController import UserController
 from werkzeug.utils import secure_filename
 import utilities
 from models import *
+from controllers.userController import UserController as userController
+from controllers.farmController import FarmController as farmController
+from controllers.fieldController import FieldController as fieldController
+from controllers.cropController import CropController as cropController
+from controllers import ProduceController
 from shared import db
 
 # Creating application object
@@ -67,71 +72,58 @@ def register():
 
 @app.route('/logout')
 def logout():
-    return UserController.logout()
+    return userController.logout()
+
+
+@app.route('/addcrop', methods=['GET', 'POST'])
+@login_required
+def addcrop():
+    return userController.addcrop()
+
+    
+@app.route('/change_state/<int:crop_id>',methods=['GET', 'POST'])
+@login_required
+def change_state(crop_id):
+    return cropController.change_state(crop_id)
+
+
+
+
 
 
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    return userController.show_dashboard()
 
 
-@app.route('/browse')
-@login_required
-def browse():
-    return render_template('browse.html')
+@app.route('/search/produce', defaults={'page': 1})
+@app.route('/search/produce/page/<int:page>')
+def browse_produce(page):
+    return ProduceController.browse_produce(page)
 
-
-@app.route('/sell')
+@app.route('/sell', methods=['GET','POST'])
 @login_required
 def sell():
-    return render_template('sell.html')
 
+    return farmController.add_farm()
+    
+@app.route('/activity', methods=['GET', 'POST'])
+@login_required
+def activity():
+    return farmController.activity()
+
+@app.route('/field', methods=['GET', 'POST'])
+@login_required
+def field():
+    return fieldController.addField()
 
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
 @login_required
 def add_produce_to_farm(farm_id):
-    errors = []
-    if request.method == 'POST':
-        name = request.form.get('name', '')
-        description = request.form.get('description', '')
-        category = request.form.get('category', '')
-        selected_units = request.form.get('units', '')
-        prices = {}
-        for unit in selected_units:
-            prices[unit] = request.form.get('price-'+selected_units)
-        file = request.files['prod_image']
-        if not name:
-            errors.append('Name cannot be empty')
-        if not description:
-            errors.append('Description cannot be empty')
-        if not category:
-            errors.append('Please choose a category for the produce')
-        if not selected_units:
-            errors.append('Please choose the units you wish to sell in')
-        if len(prices) < len(selected_units):
-            errors.append('Please enter the prices for the produce')
-        if not file or not utilities.allowed_file(file.filename):
-            errors.append("Please upload 'png', 'jpg', 'jpeg' or 'gif' image for produce")
-        if not errors:
-            directory = os.path.join(app.config['UPLOAD_FOLDER'], 'produce/' + str(farm_id) + '/')
-            os.makedirs(os.path.dirname(directory), exist_ok=True)
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(directory, filename))
-            image = Image('produce/' + str(farm_id)+'/'+filename)
-            db.session.add(image)
-            produce = Produce(name, description, category, image.id)
-            db.session.add(produce)
-            for price in prices:
-                db.session.add(Price(produce.id, price, prices[price]))
-            db.session.commit()
-            return 'Success'
-    units = Unit.query.all()
-    farm = Farm.query.get(farm_id)
-    farm_address = Address.query.get(farm.address_id)
-    return render_template('add_produce.html', units=units, farm=farm, address=farm_address, errors=errors)
+    return ProduceController.add_produce(farm_id, app.config['UPLOAD_FOLDER'])
 
-
+"""
 @app.route('/produce/<int:produce_id>', methods=['POST', 'GET'])
 def view_produce(produce_id):
     produce1 = Produce.query.get(produce_id)
@@ -150,24 +142,31 @@ def view_produce(produce_id):
     
     return render_template('view_produce.html', produce=produce1)
 
+"""
+@app.route('/produce/<int:produce_id>', methods=['POST', 'GET'])
+def view_produce(produce_id):
+    return ProduceController.view_produce(produce_id)
 
-@app.route('/uploads/<int:farm_id>/<filename>')
+
+@app.route('/uploads/<int:farm_id>/<filename>', )
 def uploaded_image(farm_id, filename):
     print(safe_join(app.config['UPLOAD_FOLDER']+'produce/' + str(farm_id), filename))
     return send_from_directory(app.config['UPLOAD_FOLDER']+'produce/' + str(farm_id)+'/',
                                filename)
 
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html')
-
-
 def url_for_browse_produce(page):
     args = dict(list(request.view_args.items()) + list(request.args.to_dict().items()))
     args['page'] = page
     return url_for('browse_produce', **args)
+
 app.jinja_env.globals['url_for_browse_produce'] = url_for_browse_produce
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html')
+
 
 
 @app.route('/shutdown')

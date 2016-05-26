@@ -1,0 +1,129 @@
+{% from "macros.html" import render_pagination %}
+{% if session['logged_in'] %}
+    {% extends "base.html" %}
+{% else %}
+    {% extends "home.html" %}
+{% endif %}
+{% block title %}Browse Produce{% endblock %}
+{% block styles %}
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/browse_produce.css') }}"
+      media="screen,projection"/>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col s12 left-align moderate-pink-text text-darken-1">
+            <h3 class="hide-on-med-and-down">Browse</h3>
+            <h4 class="hide-on-large-only">Browse</h4>
+        </div>
+    </div>
+    <div class="row white z-depth-1">
+        <ul class="collapsible col s12 hide-on-med-and-up z-depth-0" data-collapsible="accordion">
+            <li>
+                <div class="collapsible-header"><h5>Filter</h5><i class="material-icons">arrow_drop_down</i></div>
+                <div class="collapsible-body">
+                    <form id="filter-form-small" method="GET" action="">
+                        <div id="category-container-small">
+                            <h5>Category</h5>
+                            <div id="category-items-small">
+                                {% for category in categories %}
+                                <p>
+                                    <input name="{{ category.lower() }}" type="checkbox"
+                                           class="filled-in checkbox-default"
+                                           id="{{ category.lower() }}-small" {% if request.args.get(category.lower()) %}
+                                           checked="checked"
+                                           {% endif %}/>
+                                    <label for="{{ category.lower() }}-small">{{ category }}</label>
+                                </p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div id="location-container-small">
+                            <h5>Location</h5>
+                            <input name="location" id="location-small" type="text" placeholder="Sydney">
+                        </div>
+                        <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit">Apply</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+        <div id="filter-column" class="col m3 l3 hide-on-small-only">
+            <form id="filter-form" method="GET" action="">
+                <div id="category-container">
+                    <h5>Category</h5>
+                    <div id="category-items">
+                        {% for category in categories %}
+                        <p>
+                            <input name="{{ category.lower() }}" type="checkbox" class="filled-in checkbox-default"
+                                   id="{{ category.lower() }}" {% if request.args.get(category.lower()) %}
+                                   checked="checked"
+                                   {% endif %}/>
+                            <label for="{{ category.lower() }}">{{ category }}</label>
+                        </p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div id="location-container">
+                    <h5>Location</h5>
+                    <input name="location" id="location" type="text" placeholder="Sydney">
+                </div>
+                <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit">Apply</button>
+            </form>
+        </div>
+        <div id="results-column" class="col m9 l9 s12 no-padding">
+            {% for produce in results %}
+            <div class="result-item col s12 m6 l4 no-padding">
+                <img class='result-img'
+                     src="{{ url_for('uploaded_image', farm_id=produce.farm_id, filename=produce.image.filename) }}">
+                <div class="result-details">
+                    <a href="#"><h6 class="result-name strong">{{ produce.name }}</h6></a>
+                    <p class="result-caption">{{ produce.farm.name }}, {{ produce.farm.address.city }}</p>
+                    <h5 class="result-price">$ {{ produce.prices[0].price }}/{{ produce.prices[0].unit.name }}</h5>
+                    <a id="produce{{ produce.id }}" class="waves-effect waves-light moderate-pink darken-1 btn add-to-cart"
+                       href="{{ url_for('register') }}">Add to cart</a>
+                </div>
+            </div>
+            {% endfor %}
+            <div id="pagination-row" class="col m9 l9 s12">
+                {{ render_pagination(pagination) }}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('select').material_select();
+
+        $("#filter-form").submit(function() {
+		    $(this).find(":input").filter(function(){ return !this.value; }).attr("disabled", "disabled");
+		    return true; // ensure form still submits
+	    });
+
+        // Un-disable form fields when page loads, in case they click back after submission
+        $( "#filter-form" ).find( ":input" ).prop( "disabled", false );
+
+        $("#filter-form-small").submit(function() {
+		    $(this).find(":input").filter(function(){ return !this.value; }).attr("disabled", "disabled");
+		    return true; // ensure form still submits
+	    });
+
+        // Un-disable form fields when page loads, in case they click back after submission
+        $( "#filter-form-small" ).find( ":input" ).prop( "disabled", false );
+
+    });
+
+    if ($('#filter-column').height() <  $('#results-column').height()) {
+        $('#filter-column').height($('#results-column').height())
+    }
+
+
+
+
+
+</script>
+{% endblock %}
