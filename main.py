@@ -7,6 +7,7 @@ from controllers.farmController import FarmController as farmController
 from controllers.fieldController import FieldController as fieldController
 from controllers.cropController import CropController as cropController
 from controllers.templateController import TemplateController as templateController
+from controllers.resourceController import ResourceController as resourceController
 
 from shared import db
 
@@ -114,7 +115,11 @@ def activity():
 def field():
     return fieldController.addField()
 
-@app.route('addresource',methods=)
+@app.route('/addresource',methods=['GET', 'POST'])
+@login_required
+def resource():
+    return resourceController.add_resource()
+
 
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
 @login_required

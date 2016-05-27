@@ -9,4 +9,4 @@ class ResourceController:
             resource_id = request.form.get('resourceid', '')
             resource_description = request.form.get('resourcedescription','')
             Resource_List(resource_description, resource_id)
-        render_template("addresource",errors)
+        render_template("resource.html")
