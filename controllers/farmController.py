@@ -55,9 +55,11 @@ class FarmController:
         db.session.commit()
         resources = Resource.query.filter_by(farm_id=farm_id).all()
         return resources
+
     @staticmethod
     def get_resources():
         return db.session.query(Resource_List).order_by(Resource_List.id.asc()).all()
+
  
     @staticmethod
     def add_farm():
@@ -106,7 +108,7 @@ class FarmController:
         
     @staticmethod
     def activity(process_id):
-        #to create an activity not assigned to process send process_id=0
+        #to create an activity not assigned to process: GET ../activity/0
 
         resources = []
         activities = []

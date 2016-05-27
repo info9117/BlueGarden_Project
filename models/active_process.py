@@ -7,6 +7,7 @@ class Active_Process(db.Model):
     __tablename__ = 'Active_Process'
     
     id = db.Column('id', db.Integer, primary_key=True)
+
     Process_Template_ID = db.Column('Process_Template_ID', db.Integer, db.ForeignKey('Process_List.id'), nullable=False)
     user_id = db.Column('user_id', db.Integer, db.ForeignKey('users.id'), nullable=False)
     Start_Date = db.Column('Start_Date', db.Date, nullable=False)

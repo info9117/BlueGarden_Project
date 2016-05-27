@@ -22,5 +22,11 @@ class CropController:
             
         return render_template('change_state.html',errors = errors,crop_id=crop_id)
         
+    '''@staticmethod
+    def add_active_process():
+        erros=[]
+        if request.method == 'POST':'''
+
+
 
     
