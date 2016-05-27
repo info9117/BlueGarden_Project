@@ -20,7 +20,7 @@ class TemplateController:
         user = User.query.get(User.query.filter_by(email=session['email']).first().id)
 
         for process in Process_List.query.all():
-            myProcesses.append(process.process_name)
+            myProcesses.append(process)
 
         if request.method == 'POST':
             process_name = request.form.get('process_name', '')

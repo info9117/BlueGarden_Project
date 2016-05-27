@@ -22,7 +22,13 @@ class FarmController:
             for field in FarmController.get_farm_fields(farm.id):
                 fields.append(field)
         return fields
-        
+
+    @staticmethod
+    def get_processes():
+        return db.session.query(Process_List).order_by(Process_List.id.asc()).all()
+    @staticmethod
+    def get_activities():
+        return db.session.query(Activity_List).order_by(Activity_List.id.asc()).all()
     
     @staticmethod
     def get_user():
@@ -49,6 +55,9 @@ class FarmController:
         db.session.commit()
         resources = Resource.query.filter_by(farm_id=farm_id).all()
         return resources
+    @staticmethod
+    def get_resources():
+        return db.session.query(Resource_List).order_by(Resource_List.id.asc()).all()
  
     @staticmethod
     def add_farm():
@@ -58,8 +67,8 @@ class FarmController:
         user = User.query.get(User.query.filter_by(email=session['email']).first().id)
         if user.type == 'C':
             for farm in FarmController.get_user_farms():
-                myfarms.append(Farm.query.get(farm.farm_id))
-                names.append(Farm.query.get(farm.farm_id).name)
+                myfarms.append(farm)
+                names.append(farm.name)
         else:
             errors.append("You dont have any farms yet. Please add a farm.")
 
@@ -96,15 +105,17 @@ class FarmController:
         return render_template("sell.html", errors=errors, myfarms=myfarms)  
         
     @staticmethod
-    def activity():
+    def activity(process_id):
+        #to create an activity not assigned to process send process_id=0
+
         resources = []
         activities = []
         errors = []
         processes = []
 
-        [processes.append(process) for process in db.session.query(Process_List).order_by(Process_List.id.asc()).all()]
-        [activities.append(activity) for activity in db.session.query(Activity_List).order_by(Activity_List.id.asc()).all()]
-        [resources.append(resource) for resource in db.session.query(Resource_List).order_by(Resource_List.id.asc()).all()]
+        [processes.append(process) for process in FarmController.get_processes()]
+        [activities.append(activity) for activity in FarmController.get_activities()]
+        [resources.append(resource) for resource in FarmController.get_resources()]
 
         if request.method == 'POST':
 
@@ -116,6 +127,7 @@ class FarmController:
                 db.session.add(Process_Steps(process, activity))
                 db.session.commit()
                 flash("Activity was recorded")
+                process = Process_List.query.get(process)
                 return render_template('activity.html', resources=resources, errors=errors, processes=processes, process=process, activities=activities)
             if not resources:
                 errors.append("add some resources first!")
@@ -129,8 +141,10 @@ class FarmController:
                 db.session.add(Process_Steps(process, newactivity))
                 db.session.commit()
                 flash("Activity was recorded")
-                process = Process_List.query.get(process)
-        return render_template('activity.html', resources=resources, errors=errors, processes=processes, activities=activities)
+        process=''
+        if process_id:
+            process = Process_List.query.get(process_id)
+        return render_template('activity.html', process=process, resources=resources, errors=errors, processes=processes, activities=activities)
     
     @staticmethod
     def init_process(Active_Process_ID,Process_Template_ID):
@@ -140,13 +154,10 @@ class FarmController:
             Activity_ID = step.activity_id
             db.session.add(Active_Activity(Active_Process_ID, Activity_ID, Action_Completed))
             db.session.commit()
+
     
     @staticmethod
-    def get_processes():
-        return db.session.query(Process_List).order_by(Process_List.id.asc()).all()
-    
-    @staticmethod
-    def active_process():
+    def active_process(process_or_crop,id):
         errors=[]
         processes=[]
         other=False
@@ -162,6 +173,12 @@ class FarmController:
         user_id = FarmController.get_user().id
         process = request.form.get('process',False)
         other_target = request.form.get('other_target',False)
+
+        if process_or_crop=="process":
+            process = Process_List.query.get(id)
+        elif process_or_crop=="crop":
+            target="crop"
+            crop=Crop.query.get(id)
 
         if target=='other':
             other=True
@@ -180,11 +197,11 @@ class FarmController:
                 errors.append("A process and start date must be selected")
             if target == '' and not errors:
                 
-                db.session.add(Active_Process(process, user_id, datetime.strptime(Start_Date, '%d %b, %Y'), None,None,None,None))
+                db.session.add(Active_Process(process.id, user_id, datetime.strptime(Start_Date, '%d %b, %Y'), None,None,None,None))
                 db.session.commit()
                 Active_Process_ID = db.session.query(Active_Process).order_by(Active_Process.id.desc()).first().id
-                FarmController.init_process(Active_Process_ID, process)
-                flash("New active process \""+Process_List.query.get(process).process_name+"\" commences on the "+Start_Date)
+                FarmController.init_process(Active_Process_ID, process.id)
+                flash("New active process \""+Process_List.query.get(process.id).process_name+"\" commences on the "+Start_Date)
                 return render_template('/active_process.html', processes=processes)
 
             if field or farm or crop or other_target and not errors:
@@ -197,18 +214,19 @@ class FarmController:
                 if crop:
                     Target_Type = "crop"
                     Target_ID = crop
+                    if process_or_crop=="crop":
+                        Target_ID = crop.id
                 if other_target:
                     Target_Type = "other"
                     Target_ID = other_target
                 pydate = datetime.strptime(Start_Date, '%d %b, %Y')
-                #db.session.add(Active_Process(int(Process_Template_ID), user_id, Start_Date, None,None,Target_Type,Target_ID))
-                db.session.add(Active_Process(int(process), user_id, pydate, None,None,Target_Type,Target_ID))
+                db.session.add(Active_Process(process.id, user_id, pydate, None,None,Target_Type,Target_ID))
                 db.session.commit()
                 Active_Process_ID = db.session.query(Active_Process).order_by(Active_Process.id.desc()).first().id
-                FarmController.init_process(Active_Process_ID, process)
-                flash("New active process \""+Process_List.query.get(process).process_name+"\" commences on the "+Start_Date+" for your "+Target_Type)
+                FarmController.init_process(Active_Process_ID, process.id)
+                flash("New active process \""+Process_List.query.get(process.id).process_name+"\" commences on the "+Start_Date+" for your "+Target_Type)
                 return render_template('/active_process.html', processes=processes)
-            process = Process_List.query.get(process)
+            #process = Process_List.query.get(process)
             return render_template('/active_process.html', errors=errors, processes=processes, date=Start_Date, process=process, target=target, other=other,  fields=fields,  farms=farms,  crops=crops)
 
         return render_template('/active_process.html',errors=errors, processes=processes, process=process, target=target, other=other, field=field, fields=fields, farm=farm, farms=farms, crop=crop, crops=crops)
