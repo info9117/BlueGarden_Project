@@ -7,7 +7,7 @@ from controllers.farmController import FarmController as farmController
 from controllers.fieldController import FieldController as fieldController
 from controllers.cropController import CropController as cropController
 from controllers.templateController import TemplateController as templateController
-from controllers.resourceController import ResourceController as resourceController
+from controllers.resourcelistController import ResourceController as resourceController
 
 from shared import db
 

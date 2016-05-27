@@ -40,8 +40,9 @@
                 {% endif %}
                 {% endwith %}
                 <form id="form" class="add_resource" action="" method="post">
-                    <p>Add a Field</p>
-                    <input id="resourcename" name="resourcename" type="text" placeholder="Resource name" class="validate">
+                    <p>Add Resource</p>
+                    <!input id="resourcename" name="resourcename" type="text" placeholder="Resource name" class="validate">
+                    <input id="resourcedescription" name="resourcedescription" type="text" placeholder="Resource description" class="validate">
                                         <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="action">
                         ADD Field
                     </button>
@@ -55,10 +56,10 @@
                 {% endfor %}
                     </ul>
                 {% endif %}
-                {% if myfields %}
+                {% if resourcefull !="" %}
                     <ul class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 yellow left-align"><p>My Fields</p>
-                {% for field in myfields %}
-                    <a href="That's one heck of a field">{{ field }} <br></a>
+                {% for resource in resourcefull %}
+                    <a href="That's one heck of a field">{{ resource }} <br></a>
                 {% endfor %}
                     </ul>
                 {% endif %}
