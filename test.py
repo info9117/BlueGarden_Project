@@ -79,6 +79,14 @@ class BlueGardenTestCase(BaseTestCase):
         print('\n## Testing logout ##')
         response = self.logout()
         self.assertIn(b'You successfully logged out', response.data)
+    #Testing resource list
+    def test_login_resourcelist(self):
+        print('\n## Testing add resource ##')
+        self.login('bbaggins@lotr.com', 'bilbobaggins')
+        response = self.add_resourcelist('this is your resource')
+        #self.assertIn(b'this is your resource',response.data)
+        #assert b'added resource successfully' in response.data
+
 
     # Testing Registration Page content
     def test_register_page_content(self):
@@ -264,7 +272,14 @@ class BlueGardenTestCase(BaseTestCase):
             country=country,
             postcode=postcode
         ), follow_redirects=True)
-        
+
+    def add_resourcelist(self, decription):
+        self.login('mrmf@gmail.com', 'shazza')
+        return self.client.post('/addresource', data = dict(
+            decription = decription
+        ), follow_redirects = True)
+
+
     def add_activity(self, description,resource):
         self.login('mrmf@gmail.com', 'shazza')
         return self.client.post('/activity', data=dict(
