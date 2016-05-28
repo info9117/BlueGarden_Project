@@ -6,6 +6,14 @@ from controllers.userController import UserController
 from werkzeug.utils import secure_filename
 import utilities
 from models import *
+<<<<<<< HEAD
+=======
+from controllers.userController import UserController as userController
+from controllers.farmController import FarmController as farmController
+from controllers.fieldController import FieldController as fieldController
+from controllers.cropController import CropController as cropController
+from controllers import ProduceController
+>>>>>>> test-sprint-2
 from shared import db
 
 # Creating application object
@@ -67,6 +75,7 @@ def register():
 
 @app.route('/logout')
 def logout():
+<<<<<<< HEAD
     return UserController.logout()
 
 
@@ -74,6 +83,22 @@ def logout():
 @login_required
 def dashboard():
     return render_template('dashboard.html')
+=======
+    return userController.logout()
+
+
+@app.route('/addcrop', methods=['GET', 'POST'])
+@login_required
+def addcrop():
+    return userController.addcrop()
+
+    
+@app.route('/change_state/<int:crop_id>',methods=['GET', 'POST'])
+@login_required
+def change_state(crop_id):
+    return cropController.change_state(crop_id)
+
+>>>>>>> test-sprint-2
 
 
 @app.route('/contact')
@@ -81,17 +106,41 @@ def contact():
     return render_template('contact.html')
 
 
-@app.route('/browse')
+
+
+@app.route('/dashboard')
 @login_required
-def browse():
-    return render_template('browse.html')
+def dashboard():
+    return userController.show_dashboard()
 
 
+@app.route('/search/produce', defaults={'page': 1})
+@app.route('/search/produce/page/<int:page>')
+def browse_produce(page):
+    return ProduceController.browse_produce(page)
+
+<<<<<<< HEAD
 @app.route('/sell')
 @login_required
 def sell():
     return render_template('sell.html')
+=======
+@app.route('/sell', methods=['GET','POST'])
+@login_required
+def sell():
+>>>>>>> test-sprint-2
 
+    return farmController.add_farm()
+    
+@app.route('/activity', methods=['GET', 'POST'])
+@login_required
+def activity():
+    return farmController.activity()
+
+@app.route('/field', methods=['GET', 'POST'])
+@login_required
+def field():
+    return fieldController.addField()
 
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
 @login_required
@@ -155,24 +204,59 @@ def view_produce(produce_id):
 
     return render_template('view_produce.html', produce=produce1)
 
+"""
+@app.route('/produce/<int:produce_id>', methods=['POST', 'GET'])
+def view_produce(produce_id):
+    produce1 = Produce.query.get(produce_id)
+    if request.method == 'POST':
+        amount = request.form.get('amount')
+        print('amount', type(amount))
+        print('produce', type(produce1.prices[0].price))
+        if amount:
+            amount = request.form.get('amount', '')
+            item1 = Item(produce1.prices[0].price, produce_id, amount)
+            db.session.add(item1)
+            db.session.commit()
+            return render_template('view_produce.html', produce=produce1, total=item1.total)
+        else:
+            return render_template('view_produce.html', produce=produce1, total="wrong value")
+    
+    return render_template('view_produce.html', produce=produce1)
 
-@app.route('/uploads/<int:farm_id>/<filename>')
+"""
+@app.route('/produce/<int:produce_id>', methods=['POST', 'GET'])
+def view_produce(produce_id):
+    return ProduceController.view_produce(produce_id)
+
+
+@app.route('/uploads/<int:farm_id>/<filename>', )
 def uploaded_image(farm_id, filename):
     print(safe_join(app.config['UPLOAD_FOLDER']+'produce/' + str(farm_id), filename))
     return send_from_directory(app.config['UPLOAD_FOLDER']+'produce/' + str(farm_id)+'/',
                                filename)
 
 
+def url_for_browse_produce(page):
+    args = dict(list(request.view_args.items()) + list(request.args.to_dict().items()))
+    args['page'] = page
+    return url_for('browse_produce', **args)
+
+app.jinja_env.globals['url_for_browse_produce'] = url_for_browse_produce
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html')
 
+<<<<<<< HEAD
 
 def url_for_browse_produce(page):
     args = dict(list(request.view_args.items()) + list(request.args.to_dict().items()))
     args['page'] = page
     return url_for('browse_produce', **args)
 app.jinja_env.globals['url_for_browse_produce'] = url_for_browse_produce
+=======
+>>>>>>> test-sprint-2
 
 
 @app.route('/shutdown')

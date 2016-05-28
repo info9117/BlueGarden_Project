@@ -4,4 +4,8 @@
 /images/d/produce
 /images/t/produce
 *.db
+<<<<<<< HEAD
 
+=======
+/.db
+>>>>>>> test-sprint-2

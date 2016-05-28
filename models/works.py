@@ -7,7 +7,6 @@ class Works(db.Model):
     __table_args__ = (
         db.PrimaryKeyConstraint('user_id', 'farm_id', name='OneFarmerOneFarmOneEntry_CK'),
     )
-    #id = db.Column('id', db.Integer, primary_key=True)
     user_id = db.Column('user_id', db.Integer, db.ForeignKey("users.id"), nullable=False)
     farm_id = db.Column('farm_id',  db.Integer, db.ForeignKey("farms.id"), nullable=False)
 
