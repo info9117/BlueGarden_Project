@@ -2,11 +2,10 @@ from main import app
 from models import *
 from flask_testing import TestCase
 import unittest
-<<<<<<< HEAD
-=======
+
 
 from io import BytesIO
->>>>>>> test-sprint-2
+
 
 
 class BaseTestCase(TestCase):
@@ -19,7 +18,7 @@ class BaseTestCase(TestCase):
         user2 = User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins')
         user2.set_user_farmer()
         db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
-<<<<<<< HEAD
+
         db.session.add(User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins'))
         db.session.add(Address('123 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
         db.session.add(Address('126 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
@@ -29,7 +28,7 @@ class BaseTestCase(TestCase):
         db.session.add(Produce('Eggplant', 'Sweet organic eggplants', 'Vegetable', 1, 1))
         db.session.add(Price(1, 1, 4.35))
         db.session.add(Price(1, 2, 2.8))
-=======
+
         db.session.add(user2)
         db.session.add(User('Master', 'Farmer', 'mrmf@gmail.com', 'shazza'))
         db.session.add(Unit('Kg'))
@@ -53,7 +52,7 @@ class BaseTestCase(TestCase):
         db.session.add(Works(2, 2))
         db.session.flush()
 
->>>>>>> test-sprint-2
+
         db.session.commit()
         # add a manager account and a random contact form entry
 
@@ -64,11 +63,9 @@ class BaseTestCase(TestCase):
 
 class BlueGardenTestCase(BaseTestCase):
 
-<<<<<<< HEAD
-=======
     produce_added = False
 
->>>>>>> test-sprint-2
+
     # Testing the home page content
     def test_index_content(self):
         print('\n## Testing Home page for welcome message ##')
@@ -116,9 +113,6 @@ class BlueGardenTestCase(BaseTestCase):
         print('\n## Testing Register page with valid credentials ##')
         response = self.register('Frodo', 'Baggins', 'fbaggins@lotr.com', 'frodobaggins')
         self.assertIn(b'Hello Frodo', response.data)
-<<<<<<< HEAD
-=======
-
 
     #Testing add crop with new crop
     def test_login_addcrop(self):
@@ -131,8 +125,6 @@ class BlueGardenTestCase(BaseTestCase):
         rv = self.addcrop('563', 'corn', 'harvest', '892')
 
         assert b'You success added crop' in rv.data
->>>>>>> test-sprint-2
-
 
     def test_dashboard_recently_viewed(self):
         print('\n## Testing viewing recently viewed on the dashboard')
@@ -156,8 +148,6 @@ class BlueGardenTestCase(BaseTestCase):
     def logout(self):
         return self.client.get('/logout', follow_redirects=True)
 
-<<<<<<< HEAD
-=======
 
 
     # Test add crop function    
@@ -183,8 +173,6 @@ class BlueGardenTestCase(BaseTestCase):
         rv=self.change_state('1','harvest')
         assert b'you successfully change the state' in rv.data'''
 
-
->>>>>>> test-sprint-2
     def test_dashboard_for_content(self):
         with self.client as c:
             with c.session_transaction() as session:
@@ -199,7 +187,7 @@ class BlueGardenTestCase(BaseTestCase):
 
     def test_add_produce_page_content(self):
         print('\n## Testing Add produce page content ##')
-<<<<<<< HEAD
+
         with self.client as c:
             with c.session_transaction() as session:
                 session['logged_in'] = True
@@ -207,10 +195,10 @@ class BlueGardenTestCase(BaseTestCase):
                 session['firstname'] = 'Sathwik'
                 session['lastname'] = 'Singari'
         response = self.client.get('/farm/1/produce/add', content_type='html/text')
-=======
+
         self.login('bbaggins@lotr.com', 'bilbobaggins')
         response = self.client.get('/farm/1/produce/add', content_type='html/text', follow_redirects=True)
->>>>>>> test-sprint-2
+
         self.assertIn(b'Shire Farms', response.data)
        
 
@@ -264,9 +252,9 @@ class BlueGardenTestCase(BaseTestCase):
         response = self.client.get('/search/produce?vegetable=on&location=Sydney', follow_redirects=True)
         self.assertNotIn(b'Apple', response.data)
 
-<<<<<<< HEAD
+
     #Testing the flag for farmer user type
-=======
+
     def add_test_produce(self):
         self.add_produce('Apple', 'Big Apples', 'Fruit', 1, 4.38, 'static/images/apples.jpg', 1)
         self.add_produce('Banana', 'Big Bananas', 'Fruit', 1, 4.38, 'static/images/banana.jpg', 1)
@@ -277,7 +265,7 @@ class BlueGardenTestCase(BaseTestCase):
         self.produce_added = True
 
     # Testing the flag for farmer user type
->>>>>>> test-sprint-2
+
     def test_farmer_type(self):
         print('\n## Testing the flag for farmer user type ##')
         user = User.query.filter_by(email='mrmf@gmail.com').first()
@@ -293,20 +281,16 @@ class BlueGardenTestCase(BaseTestCase):
         response = self.client.get('/sell', follow_redirects=True)
         self.assertIn(b"You dont have any farms yet.",response.data)
 
-<<<<<<< HEAD
-    #Testing that user can add farms that they work on
-=======
     # Testing that user can add farms that they work on
->>>>>>> test-sprint-2
+
     def test_add_farms(self):
         print('\n## Testing that user can add farms that they work on ##')
         response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
         self.assertIn(b"Community Farm",response.data)
 
-<<<<<<< HEAD
+
     #Testing that user cannot add duplicate farms that they work on
-=======
->>>>>>> test-sprint-2
+
     def test_add_duplicate_farms(self):
         print('\n## Testing that user cannot add duplicate farms that they work on ##')
         self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
@@ -324,7 +308,7 @@ class BlueGardenTestCase(BaseTestCase):
             country=country,
             postcode=postcode
         ), follow_redirects=True)
-<<<<<<< HEAD
+
 
     # Products details test
     def test_view_produce_page_content(self):
@@ -333,7 +317,7 @@ class BlueGardenTestCase(BaseTestCase):
         self.assertIn(b'Eggplant', response.data)
         self.assertIn(b'4.35', response.data)
         self.assertIn(b'Shire Farms', response.data)
-=======
+
         
     def add_activity(self, description,field,date,resource):
         self.login('mrmf@gmail.com', 'shazza')
@@ -359,16 +343,12 @@ class BlueGardenTestCase(BaseTestCase):
         response = self.add_activity(description,field,date,resource)
         self.assertIn(b"Activity was recorded",response.data)        
 
->>>>>>> test-sprint-2
-
     def test_add_to_cart(self):
         response = self.client.post('/produce/1', data=dict(
             amount='2'))
-<<<<<<< HEAD
+
         self.assertIn(b'8.7', response.data)
-=======
         self.assertIn(b'4.4', response.data)
->>>>>>> test-sprint-2
 
 
 if __name__ == '__main__':

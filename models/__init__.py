@@ -9,9 +9,8 @@ from .user import User
 from .item import Item
 from .unit import db
 from .works import Works
-<<<<<<< HEAD
 from .item import Item
-=======
+
 
 from .item import Item
 
@@ -21,4 +20,4 @@ from .activity import Activity
 from .crop import Crop
 from .recent_produce import RecentProduce
 
->>>>>>> test-sprint-2
+
