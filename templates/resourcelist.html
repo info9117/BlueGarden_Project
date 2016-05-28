@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Processs{% endblock %}
+{% block title %}Field{% endblock %}
 {% block content %}
 
 <div class="ver-hor-align-parent grey darken-4">
@@ -39,21 +39,27 @@
                 </div>
                 {% endif %}
                 {% endwith %}
-                <form id="form" class="add_process" action="" method="post">
-                    <p>Add a new Process</p>
-                    <input id="name" name="process_name" type="text" placeholder="process_name" class="validate">
-                    <input id="description" name="process_description" type="text" placeholder="process_description" class="validate">
-                    <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="action">
-                        Create Process
+                <form id="form" class="add_resource" action="" method="post">
+                    <p>Add Resource</p>
+                    <!input id="resourcename" name="resourcename" type="text" placeholder="Resource name" class="validate">
+                    <input id="resourcedescription" name="resourcedescription" type="text" placeholder="Resource description" class="validate">
+                                        <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="action">
+                        ADD Field
                     </button>
                 </form>
             </div>
             <div>
-                {% if myProcesses %}
-                    <ul class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white left-align"><p>Existing Processes</p>
-                {% for process in myProcesses %}
-                    <a href="/active_process/process/{{ process.id }}">Begin: {{ process.process_name }} </a>|
-                        <a href="/activity/{{ process.id }}"> *Add procedure <br></a>
+                {% if myfarms %}
+                    <ul class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white left-align"><p>My Farms</p>
+                {% for myfarm in myfarms %}
+                    <a href="send me to add produce to my farm">{{ myfarm }} <br></a>
+                {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if resourcefull !="" %}
+                    <ul class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 yellow left-align"><p>My Fields</p>
+                {% for resource in resourcefull %}
+                    <a href="That's one heck of a field">{{ resource }} <br></a>
                 {% endfor %}
                     </ul>
                 {% endif %}

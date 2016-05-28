@@ -51,6 +51,7 @@ def before_all(context):
         db.session.add(Resource_List('Fertiliser'))
         db.session.add(Resource_List('Seeds'))
         db.session.add(Process_List( 'Grow Spaghetti','How to grow a spaghetti tree' ))
+        db.session.add(Process_List('making cheese','Cheese making process'))
         db.session.commit()
 
 

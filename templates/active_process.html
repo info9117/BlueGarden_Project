@@ -27,12 +27,13 @@
             {% endfor %}</div>    
             
             
-                <div id="form" class="start_process" action="" method="post">
+                <form id="form" name="form" class="start_process" action="" method="post">
+
                     <p>Start a new Process</p>
                     
                     <div class="input-field col s6"> 
                             {% if process %}<select id="process" name="process">
-                            <option value="{{ process.id }}">{{ process.process_name }}</option>
+                            <option value="{{ process.id }}">{{ process.process_name }}</option></select>
                             {% else %}
                             <select id="process" name="process">
                             <option value="" disabled selected>Select a process</option>
@@ -44,9 +45,9 @@
                             </select></div>
 
 
-                    <div class="section">
+
                         <div class="input-field col s6">
-                    <input type="date" class="datepicker" name="date" id="date"><label>Start Date</label>
+                    <input type="date" class="datepicker" name="date" id="date" value="{{ date }}"><label>Start Date</label>
                             </input></div>
                     
                     <div class="input-field col s6"> 
@@ -59,35 +60,45 @@
                             <option value="farm">farm</option>
                             <option value="crop">crop</option>
                             <option value="other">other</option>
+                                <option value="">None</option>
                             {% endif %}
                                 </select></div>
 
-                        <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="action">
-                        View farms/fields/crops
+                        <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="submit" id="reveal">
+                        Specify target
                     </button>
                             
                             
                             {% if other %}
-                    <input id="other_target" name="other_target" type="text" placeholder="other_target" class="validate">Other</input>                      {% elif field %}
-                    <select id="field" name="field"></select>
+                    <input id="other_target" name="other_target" type="text" placeholder="other_target" class="validate">Other</input>
+                        {% elif fields %}
+                    <select id="field" name="field">
                     <option value="" disabled selected>Select field</option>
                             {% for field in fields %}
-                            <option value="{{ field.id }}">{{ field.name }}</option>{% endfor %}
-                            {% elif farm %}
+                            <option value="{{ field.id }}">{{ field.fieldName }}</option>{% endfor %}
+                        </select>
+                            {% elif farms %}
                     <select id="farm" name="farm">
                     <option value="" disabled selected>Select farm</option>
                             {% for farm in farms %}
                             <option value="{{ farm.id }}">{{ farm.name }}</option>{% endfor %}
+
+                        </select>
+                        {% elif crops %}
+                    <select id="crop" name="crop">
+                    <option value="" disabled selected>Select crop</option>
+                            {% for crop in crops %}
+                            <option value="{{ crop.id }}">{{ crop.crop_name }}</option>{% endfor %}
                             {% endif %}
                         </select>
                     
                     
-                    
-                    <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="action">
+                    <div class="section">
+                    <button class="btn waves-effect waves-light moderate-pink darken-1" id=submit type="submit" name="submit">
                         Submit
-                    </button>
+                    </button></div>
                 </form>
-            </div>
+
             <div>
                 {% if my_processes %}
                     <ul class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white left-align"><p>Current Processes</p>
@@ -96,9 +107,8 @@
                 {% endfor %}
                     </ul>
                 {% endif %}
-{% block body %}
-{% endblock %}
-    </div>
+        </div>
+
 
 </div>
 {% endblock %}
@@ -123,7 +133,7 @@
     selectYears: 15 
   });
 
-  
+
 </script>
 
 

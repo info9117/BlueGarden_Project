@@ -38,7 +38,7 @@ class BaseTestCase(TestCase):
         db.session.add(Works(2, 2))
         db.session.add(Resource_List('fertiliser'))
         db.session.flush()
-
+        db.session.add(Process_List('making cheese','Cheese making process'))
         db.session.commit()
 
     def tearDown(self):
@@ -265,19 +265,21 @@ class BlueGardenTestCase(BaseTestCase):
             postcode=postcode
         ), follow_redirects=True)
         
-    def add_activity(self, description,resource):
+    def add_activity(self,process, description,resource):
         self.login('mrmf@gmail.com', 'shazza')
-        return self.client.post('/activity', data=dict(
+        return self.client.post('/activity/0', data=dict(
+            process=process,
             description=description,
             resource=resource
         ), follow_redirects=True)
         
     #Testing that user can record activities 
     def test_add_activity(self):
-        print('\n## Testing that user can record activities ##')  
-        resource =1
+        print('\n## Testing that user can record activities ##')
+        process = db.session.query(Process_List).order_by(Process_List.id.asc()).first().id
+        resource = db.session.query(Resource_List).order_by(Resource_List.id.asc()).first().id
         description = 'Mowing the lawn'
-        response = self.add_activity(description,resource)
+        response = self.add_activity(process, description,resource)
         self.assertIn(b"Activity was recorded",response.data)        
 
     def test_add_to_cart(self):
