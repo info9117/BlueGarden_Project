@@ -18,7 +18,6 @@ class FieldController:
 
         if user.type == 'C':  # Display users previously added farms
             for farm in Works.query.filter_by(user_id=user.id).all():
-                #myfarms[farm] = db.session.query(Field.fielme).dNafilter(Field.farmName == farm).all()
                 myfarms.append(Farm.query.get(farm.farm_id).name)
         else:
             errors.append("You dont have any farms yet. Please add a farm.")
@@ -27,8 +26,6 @@ class FieldController:
             for field in (Field.query.filter_by(farmName = farm)):
                 fullfield = (field.fieldName + ' at ' + field.farmName)
                 myfields.append(fullfield)
-#                myfields.append(field.fieldName )
-                #myfields.append(field)
 
 
 

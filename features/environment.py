@@ -53,8 +53,15 @@ def before_all(context):
         db.session.add(User('Joe', 'Farmer', 'farmer_j01@gmail.com', 'louise1993'))
         #db.session.add(Works(4, 1))
         db.session.add(Field('west block', 'Shire Farms', 1))
+<<<<<<< HEAD
         db.session.add(Resource('fertiliser', 1))
 
+=======
+        db.session.add(Resource_List('Fertiliser'))
+        db.session.add(Resource_List('Seeds'))
+        db.session.add(Process_List( 'Grow Spaghetti','How to grow a spaghetti tree' ))
+        db.session.add(Process_List('making cheese','Cheese making process'))
+>>>>>>> origin/sprint-3-gardeners
         db.session.commit()
 
 

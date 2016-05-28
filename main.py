@@ -10,7 +10,13 @@ from controllers.userController import UserController as userController
 from controllers.farmController import FarmController as farmController
 from controllers.fieldController import FieldController as fieldController
 from controllers.cropController import CropController as cropController
+<<<<<<< HEAD
 from controllers import ProduceController
+=======
+from controllers.templateController import TemplateController as templateController
+from controllers.resourcelistController import ResourceController as resourceController
+
+>>>>>>> origin/sprint-3-gardeners
 from shared import db
 
 # Creating application object
@@ -89,7 +95,10 @@ def addcrop():
 def change_state(crop_id):
     return cropController.change_state(crop_id)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/sprint-3-gardeners
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -106,12 +115,17 @@ def browse_produce(page):
 @login_required
 def sell():
     return farmController.add_farm()
+<<<<<<< HEAD
 
 
 @app.route('/activity', methods=['GET', 'POST'])
+=======
+    
+@app.route('/activity/<int:process_id>', methods=['GET', 'POST'])
+>>>>>>> origin/sprint-3-gardeners
 @login_required
-def activity():
-    return farmController.activity()
+def activity(process_id):
+    return farmController.activity(process_id)
 
 
 @app.route('/field', methods=['GET', 'POST'])
@@ -119,6 +133,14 @@ def activity():
 def field():
     return fieldController.addField()
 
+<<<<<<< HEAD
+=======
+@app.route('/addresource',methods=['GET', 'POST'])
+@login_required
+def resource():
+    return resourceController.add_resource()
+
+>>>>>>> origin/sprint-3-gardeners
 
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
 @login_required
@@ -158,6 +180,22 @@ def uploaded_image(farm_id, filename):
     print(safe_join(app.config['UPLOAD_FOLDER'] + 'produce/' + str(farm_id), filename))
     return send_from_directory(app.config['UPLOAD_FOLDER'] + 'produce/' + str(farm_id) + '/',
                                filename)
+
+@app.route('/process', methods=['GET', 'POST'])
+@login_required
+def process():
+    return templateController.add_process()
+    
+@app.route('/active_process/<process_or_crop>/<int:id>', methods=['GET', 'POST'])
+@login_required
+def active_process(process_or_crop,id):
+
+    return farmController.active_process(process_or_crop,id)
+
+@app.route('/activity/<int:process_id>/add', methods=['GET', 'POST'])
+@login_required
+def add_activity_to_process(process_id):
+    return farmController.linkToActivity(process_id)
 
 
 def url_for_browse_produce(page):

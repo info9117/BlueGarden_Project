@@ -75,38 +75,51 @@ def register(context, first_name, last_name, email, password):
 def step_impl(context):
     context.browser.get(context.address + "/login")
     login(context, 'farmer_j01@gmail.com', 'louise1993')
-    context.browser.get(context.address + "/activity")
-    assert 'Record Farm Activity' in context.browser.page_source
+    context.browser.get(context.address + "/activity/0")
+    assert 'Add Activity to Process' in context.browser.page_source
 
-@when('a farmer selects their farm, resource and enters a description and date')
+@when('a farmer enters a resource and enters a description')
 def step_impl(context):
-    farm = "1"
-    field = "1"
+
     resource = "1"
-    date = '30 May, 2016'
+    process = "1"
     description = "Activity on farm"
-    record_activity(context, farm, field,description,date,resource)
+    record_activity(context,process, resource,description)
 
-
-@then('the activity is reistered for that farm')
+@then('the new activity is recorded')
 def step_impl(context):
     print(context.browser.page_source)
     assert 'Activity was recorded' in context.browser.page_source
 
-import time
-def record_activity(context, farm, field,description,date,resource):
-
+def record_activity(context,process, resource,description):
     c=context.browser
-    c.execute_script('$(function() { $("#farm").val("'+farm+'"); });')
-    #c.find_element_by_id("farm").send_keys(farm)
-    c.find_element_by_id("form").submit() 
-    #c.find_element_by_id("field").send_keys(field)
-    time.sleep(1)
-    c.execute_script('$(function() { $("#field").val("'+field+'"); });')
     c.find_element_by_id("description").send_keys(description)
-    #c.find_element_by_id("resource").send_keys(resource)
     c.execute_script('$(function() { $("#resource").val("'+resource+'"); });')
+    c.execute_script('$(function() { $("#process").val("'+process+'"); });')
+    c.find_element_by_id("form").submit()
+
+@given('at the Active_Process page')
+def step_impl(context):
+    context.browser.get(context.address + "/login")
+    login(context, 'farmer_j01@gmail.com', 'louise1993')
+    context.browser.get(context.address + "/active_process/process/1")
+    assert 'Start a new Process' in context.browser.page_source
+
+@when('a process, start date, target type and target are selected')
+def step_impl(context):
+    c=context.browser
+    target="other"
+    c.execute_script('$(function() { $("#target").val("'+target+'"); });')
+    c.find_element_by_id("form").submit()
+    c.find_element_by_id("other_target").send_keys("On the roof!")
+    date="10 Sep, 2016"
     c.execute_script('$(function() { $("#date").val("'+date+'"); });')
+<<<<<<< HEAD
     #c.find_element_by_id("date").send_keys(date)
     #time.sleep(10)
+=======
+>>>>>>> origin/sprint-3-gardeners
     c.find_element_by_id("form").submit()
+@then('the process new active process is initialised and steps populated from the process template')
+def step_impl(context):
+    assert 'New active process' in context.browser.page_source
