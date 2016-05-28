@@ -19,11 +19,11 @@ Feature: Farmer can create a new process
     Then I will be shown the activity added to the process
 
     Scenario: Cannot add an blank process
-    Given at the activity page for sathwick user
+    Given at the process page
     When a farmer creates a new process with no name
-    Then I will be shown error
+    Then I will be shown an error message
 
     Scenario: Cannot add an blank process description
-    Given at the activity page for sathwick user
+    Given at the process page
     When a farmer creates a new process with no description
-    Then I will be shown error
+    Then I will be shown an error message

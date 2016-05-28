@@ -27,9 +27,9 @@ class TemplateController:
             process_name = request.form.get('process_name', '')
             process_description = request.form.get('process_description', '')
             if not process_name:
-                    errors.append("You must enter a Process name")
+                    errors.append("Error - You must enter a Process name")
             if not process_description:
-                    errors.append("You must enter a Process description")
+                    errors.append("Error - You must enter a Process description")
             if not errors:
                     process = Process_List(process_name, process_description)
                     db.session.add(process)

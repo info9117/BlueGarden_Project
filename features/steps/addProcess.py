@@ -13,7 +13,7 @@ def step_impl(context):
 def step_impl(context):
     context.browser.get(context.address + "/login")
     login(context, 'singarisathwik007@gmail.com', 'dm08b048')
-    context.browser.get(context.address + '/activity')
+    context.browser.get(context.address + '/activity/1')
     assert "Record Activity" in context.browser.page_source
 
 @when('I select an exting process and add an activity')
@@ -43,14 +43,15 @@ def step_impl(context):
 
 @then('I will be shown the activity added to the process')
 def step_impl(context):
-    assert "Dig a hole" in context.browser.page_source
+    assert "Activity was recorded" in context.browser.page_source
 
 @then('the new process is recorded')
 def step_impl(context):
     assert 'Grow Beef'in context.browser.page_source
 
-
-
+@then('I will be shown an error message')
+def step_impl(context):
+    assert 'Error -' in context.browser.page_source
 
 def login(context, email, password):
     email_field = context.browser.find_element_by_id("email")
