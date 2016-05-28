@@ -74,6 +74,9 @@ def register():
 def logout():
     return userController.logout()
 
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
 
 @app.route('/addcrop', methods=['GET', 'POST'])
 @login_required
