@@ -6,12 +6,13 @@
 <div class="ver-hor-align-parent grey darken-4">
     <div class="section">
         <div class="container white">
-            <h5>Record Activity</h5>
+            <h5>Add Activity to Process {% if process %}"{{ process.process_name }}"{% endif %}</h5>
             
             <form class="activity" id="form" name="form" action="" method="post">
              
             <div class="input-field col s6"> 
             {% if process %}<select id="process" name="process">
+
                             <option value="{{ process.id }}">{{ process.process_name }}</option>
                             {% else %}
                             <select id="process" name="process">
@@ -22,7 +23,7 @@
                             
                             {% endif %}</select></div>
                         
-                      
+
                 <div class="input-field col s6">
                   
                     <select id="resource" name="resource">
@@ -32,10 +33,10 @@
                     {% endfor %}
                     </select>
                     </div>
-                    
-                    
-                    
-            
+
+
+
+
         <div class="row">
             <div class="section">
                 <div class="input-field col s6">
@@ -43,8 +44,9 @@
                     <label>Activity Description</label></div></div>
 
 
-  
+
             <button class="btn waves-effect waves-light moderate-pink darken-1" id="submit" type="submit" >Record Activity</button>
+
         </div>       
         
         <div class="input-field col s2">
@@ -53,7 +55,7 @@
                     <option value="" disabled selected>Or select existing Activity</option>
                     {% for activity in activities %}
                     <option value="{{ activity.id }}">{{ activity.activity_description }}</option>
-                    {% endfor %}</div>
+                    {% endfor %}</select></div>
     </form>
                     <div id="errors" class="red lighten-3">
                     {% for error in errors %}
@@ -71,7 +73,7 @@
 
 {% block scripts %}
 <script>
-        
+
 
   $(document).ready(function() {
     $('select').material_select();
@@ -80,7 +82,7 @@
   $('#textarea1').val('New Text');
   $('#textarea1').trigger('autoresize');
   
-  
+
 </script>
 {% endblock %}
 % endif %}

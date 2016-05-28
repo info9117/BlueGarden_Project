@@ -8,10 +8,4 @@ Feature: Farmer user can record activities
     Given at the activity page
     When a farmer enters a resource and enters a description
     Then the new activity is recorded
-"""    
-    Scenario not yet implemented: Record a duplicate activity
-    Given at the activity page
-    When a farmer enters a resource and enters a description that matches an existing entry
-    Then the an error "already exists" is displayed
 
-"""    

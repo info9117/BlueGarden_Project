@@ -33,7 +33,7 @@
                     
                     <div class="input-field col s6"> 
                             {% if process %}<select id="process" name="process">
-                            <option value="{{ process.id }}">{{ process.process_name }}</option>
+                            <option value="{{ process.id }}">{{ process.process_name }}</option></select>
                             {% else %}
                             <select id="process" name="process">
                             <option value="" disabled selected>Select a process</option>
@@ -47,7 +47,7 @@
 
 
                         <div class="input-field col s6">
-                    <input type="date" class="datepicker" name="date" id="date"><label>Start Date</label>
+                    <input type="date" class="datepicker" name="date" id="date" value="{{ date }}"><label>Start Date</label>
                             </input></div>
                     
                     <div class="input-field col s6"> 
@@ -60,21 +60,23 @@
                             <option value="farm">farm</option>
                             <option value="crop">crop</option>
                             <option value="other">other</option>
+                                <option value="">None</option>
                             {% endif %}
                                 </select></div>
 
-                        <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="submit" id="submit">
-                        View farms/fields/crops
+                        <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="submit" id="reveal">
+                        Specify target
                     </button>
                             
                             
                             {% if other %}
                     <input id="other_target" name="other_target" type="text" placeholder="other_target" class="validate">Other</input>
                         {% elif fields %}
-                    <select id="field" name="field"></select>
+                    <select id="field" name="field">
                     <option value="" disabled selected>Select field</option>
                             {% for field in fields %}
-                            <option value="{{ field.id }}">{{ field.name }}</option>{% endfor %}
+                            <option value="{{ field.id }}">{{ field.fieldName }}</option>{% endfor %}
+                        </select>
                             {% elif farms %}
                     <select id="farm" name="farm">
                     <option value="" disabled selected>Select farm</option>
@@ -91,10 +93,10 @@
                         </select>
                     
                     
-                    
+                    <div class="section">
                     <button class="btn waves-effect waves-light moderate-pink darken-1" id=submit type="submit" name="submit">
                         Submit
-                    </button>
+                    </button></div>
                 </form>
 
             <div>
@@ -106,7 +108,7 @@
                     </ul>
                 {% endif %}
         </div>
-    </form>
+
 
 </div>
 {% endblock %}
@@ -131,7 +133,7 @@
     selectYears: 15 
   });
 
-  
+
 </script>
 
 
