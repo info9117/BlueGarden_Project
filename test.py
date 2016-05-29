@@ -272,6 +272,19 @@ class BlueGardenTestCase(BaseTestCase):
             description=description,
             resource=resource
         ), follow_redirects=True)
+
+    def start_process(self, target, farm, field, crop, date, user_id, process, other_target):
+        return self.client.post('/active_process/process/1', data=dict(
+            target = target,
+            farm = farm,
+            field = field,
+            crop = crop,
+            date = date,
+            user_id = user_id,
+            process = process,
+            other_target = other_target
+        ), follow_redirects=True)
+
         
     #Testing that user can record activities 
     def test_add_activity(self):
@@ -280,7 +293,39 @@ class BlueGardenTestCase(BaseTestCase):
         resource = db.session.query(Resource_List).order_by(Resource_List.id.asc()).first().id
         description = 'Mowing the lawn'
         response = self.add_activity(process, description,resource)
-        self.assertIn(b"Activity was recorded",response.data)        
+        self.assertIn(b"was added to",response.data)
+
+    #Testing that farmer can initiate new process on target <X>
+    def test_start_process(self):
+        self.login('mrmf@gmail.com', 'shazza')
+        user = User.query.get(User.query.filter_by(email='mrmf@gmail.com').first().id)
+        print('\n## Test-- Farmer starts process for: Farm ##')
+        response = self.start_process("farm", 1,'','',"10 Sep, 2016",user.id,1,'')
+        self.assertIn(b"for your farm", response.data)
+        print('\n## Test-- Farmer starts process for: Other ##')
+        response = self.start_process("other", '','','',"10 Sep, 2016",user.id,1,'On the roof!')
+        self.assertIn(b"for your other", response.data)
+        print('\n## Test-- Farmer starts process for: None ##')
+        response = self.start_process('', '','','',"10 Sep, 2016",user.id,1,'')
+        self.assertIn(b"commences on the ", response.data)
+        print('\n## Test-- Farmer starts process for: Field ##')
+        response = self.start_process("field", '',1,'',"10 Sep, 2016",user.id,1,'')
+        self.assertIn(b"for your field", response.data)
+        print('\n## Test-- Farmer starts process for: Crop ##')
+        response = self.start_process("crop", '','',1,"10 Sep, 2016",user.id,1,'')
+        self.assertIn(b"for your crop", response.data)
+
+    #testing farmer can add activity to process template
+    def test_process_template_build(self):
+        self.login('mrmf@gmail.com', 'shazza')
+        print('\n## Testing that user can record steps in process ##')
+        response = self.client.post('/activity/1', data=dict(
+            process=1,
+            description="step1",
+            resource=1
+        ), follow_redirects=True)
+        self.assertIn(b"was added to making cheese",response.data)
+
 
     def test_add_to_cart(self):
         response = self.client.post('/produce/1', data=dict(
