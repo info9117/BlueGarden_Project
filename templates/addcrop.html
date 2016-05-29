@@ -25,7 +25,7 @@
       <tr>
         <td>{{crop.id}}</td>
         <td>{{crop.crop_name}}</td>
-        <td>{{crop.grow_state}}<a href="{{ url_for('.change_state', crop_id=crop.id) }}">   change the state</a></td>  
+        <td>{{crop.grow_state}}<a href="{{ url_for('.change_state', crop_id=crop.id) }}">   change the state</a><a href="{{ url_for('.update_active_process', crop_id=crop.id) }}">  update process<br></a></td>
         <td>{{crop.farm_id}}</td>
       </tr>
      
@@ -52,7 +52,7 @@
       <tr>
         <td>{{crop.id}}</td>
         <td>{{crop.crop_name}}</td>
-        <td>{{crop.grow_state}}<a href="{{ url_for('.change_state', crop_id=crop.id) }}">   change the state</a><a href="{{ url_for('add_produce_to_farm', farm_id=crop.farm_id) }}">Add Produce<br></a></td>  
+        <td>{{crop.grow_state}}<a href="{{ url_for('.change_state', crop_id=crop.id) }}">   change the state</a><a href="{{ url_for('add_produce_to_farm', farm_id=crop.farm_id) }}">  Add Produce<br></a></td>
         <td>{{crop.farm_id}}</td>
       </tr>
      

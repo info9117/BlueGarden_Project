@@ -84,6 +84,11 @@ def addcrop():
 def change_state(crop_id):
     return cropController.change_state(crop_id)
 
+@app.route('/update_active_process/<int:crop_id>', methods = ['GET', 'POST'])
+@login_required
+def update_active_process(crop_id):
+    return cropController.update_active_process(crop_id)
+
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -116,10 +121,13 @@ def resource():
     return resourceController.add_resource()
 
 
+
+
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
 @login_required
 def add_produce_to_farm(farm_id):
     return ProduceController.add_produce(farm_id, app.config['UPLOAD_FOLDER'])
+
 
 
 @app.route('/produce/<int:produce_id>', methods=['POST', 'GET'])

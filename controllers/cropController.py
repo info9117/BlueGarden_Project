@@ -21,6 +21,20 @@ class CropController:
             return redirect(url_for('addcrop'))
             
         return render_template('change_state.html',errors = errors,crop_id=crop_id)
+
+    @staticmethod
+    def update_active_process(crop_id):
+        errors = []
+        if request.method == 'POST':
+            update_crop_process = request.form.get('update_active_process','')
+        return render_template('change_state.html',errors = errors, crop_id = crop_id)
+
+
+
+
+
+
+
         
     '''@staticmethod
     def add_active_process():
