@@ -50,9 +50,9 @@ def step_impl(context):
     assert register_found
 
 
-@when('I register with First name, Last name, Email Id & Password')
+@when('I register with First name, Last name, Email Id , Password & ConfirmPassword')
 def step_impl(context):
-    register(context,  first_name='Frodo', last_name='Baggins', email='fbaggins@lotr.com', password='frodobaggins')
+    register(context,  first_name='Frodo', last_name='Baggins', email='fbaggins@lotr.com', password='frodobaggins', confirmpassword='frodobaggins')
     assert context.browser.page_source
 
 
@@ -62,9 +62,9 @@ def step_impl(context):
     assert 'Hello Frodo' in context.browser.page_source
 
 
-@when('I register with First name, Last name, existing Email Id & Password')
+@when('I register with First name, Last name, existing Email Id , Password & ConfirmPassword')
 def step_impl(context):
-    register(context, first_name='Frodo', last_name='Baggins', email='fbaggins@lotr.com', password='frodobaggins')
+    register(context, first_name='Frodo', last_name='Baggins', email='fbaggins@lotr.com', password='frodobaggins',confirmpassword='frodobaggins')
     assert context.browser.page_source
 
 
@@ -72,7 +72,19 @@ def step_impl(context):
 def step_impl(context):
     assert 'Email Id already exists' in context.browser.page_source
 
+<<<<<<< HEAD
 # begin of add_produce feature
+=======
+@when('I register with First name, Last name, Email Id , Password & ConfirmPassword(Password and ConfirmPassword is not equal)')
+def step_impl(context):
+    register(context, first_name='Frodo', last_name='Baggins', email='fbaggins@lotr.com', password='frodobaggins',confirmpassword='fefefefe')
+    assert context.browser.page_source
+
+@then('I should be shown the error')
+def step_impl(context):
+    assert 'Password and ConfirmPassword is not equal' in context.browser.page_source
+
+>>>>>>> sprint-3-nanoha
 @given('I am in the add produce page')
 def step_impl(context):
     context.browser.get(context.address + "/login")
@@ -133,15 +145,17 @@ def login(context, email, password):
     email_field.submit()
 
 
-def register(context, first_name, last_name, email, password):
+def register(context, first_name, last_name, email, password,confirmpassword):
     firstname_field = context.browser.find_element_by_id("firstname")
     lastname_field = context.browser.find_element_by_id("lastname")
     email_field = context.browser.find_element_by_id("email")
     password_field = context.browser.find_element_by_id("password")
+    confirmpassword_field = context.browser.find_element_by_id("confirmpassword")
     firstname_field.send_keys(first_name)
     lastname_field.send_keys(last_name)
     email_field.send_keys(email)
     password_field.send_keys(password)
+    confirmpassword_field.send_keys(confirmpassword)
     email_field.submit()
 
 
