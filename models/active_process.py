@@ -13,7 +13,7 @@ class Active_Process(db.Model):
     Start_Date = db.Column('Start_Date', db.Date, nullable=False)
     Progress = db.Column('progress', db.Integer, db.ForeignKey('Active_Activity.id', use_alter=True), nullable=True)
     Finish_Date = db.Column('Finish_Date', db.Date, nullable=True)
-    Target_Type = db.Column('Target_Type', db.String(255), nullable=False)
+    Target_Type = db.Column('Target_Type', db.String(255), nullable=True)
     Target_ID = db.Column('Target_ID', db.String, nullable=True)
     
 

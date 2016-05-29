@@ -133,6 +133,8 @@ class FarmController:
                 return render_template('activity.html', resources=resources, errors=errors, processes=processes, process=process, activities=activities)
             if not resources:
                 errors.append("add some resources first!")
+            if not req_resource_id:
+                errors.append("select a resource this time")
             if not process:
                 errors.append("select a process")
             if not activity_description:
@@ -142,7 +144,8 @@ class FarmController:
                 newactivity = db.session.query(Activity_List).order_by(Activity_List.id.desc()).first().id
                 db.session.add(Process_Steps(process, newactivity))
                 db.session.commit()
-                flash("Activity was recorded")
+                process=Process_List.query.get(process)
+                flash("Activity \""+activity_description+"\" was added to "+process.process_name)
         process=''
         if process_id:
             process = Process_List.query.get(process_id)
