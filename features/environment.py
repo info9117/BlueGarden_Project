@@ -23,6 +23,7 @@ def before_all(context):
         user1.set_user_farmer()
         db.session.add(user1)
         db.session.add(User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins'))
+        db.session.add(User('Billy', 'Bogan','email@email.com','password'))
         db.session.add(Unit('Kg'))
         db.session.add(Unit('gm'))
         db.session.add(Unit('l'))
@@ -42,10 +43,22 @@ def before_all(context):
         db.session.flush()
         db.session.add(Works(1, 1))
         db.session.add(Works(1, 2))
+        db.session.add(Works(4,1))
         db.session.flush()
         db.session.add(User('Joe', 'Farmer', 'farmer_j01@gmail.com', 'louise1993'))
+
         db.session.add(Item(amount=2, price=2.2, produce_id=1, unit_id=1))
+
+        #db.session.add(Works(4, 1))
+        db.session.add(Field('west block', 'Shire Farms', 1))
+        db.session.add(Resource_List('Fertiliser'))
+        db.session.add(Resource_List('Seeds'))
+        db.session.add(Process_List('making cheese','Cheese making process'))
+        db.session.add(Process_List( 'Grow Spaghetti','How to grow a spaghetti tree' ))
+
+
         db.session.commit()
+
 
 
 def after_all(context):

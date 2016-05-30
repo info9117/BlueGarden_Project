@@ -16,6 +16,7 @@ class BaseTestCase(TestCase):
         user2.set_user_farmer()
         db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
         db.session.add(user2)
+        db.session.add(User('Master', 'Farmer', 'mrmf@gmail.com', 'shazza'))
         db.session.add(Unit('Kg'))
         db.session.add(Unit('gm'))
         db.session.add(Unit('l'))
@@ -35,8 +36,14 @@ class BaseTestCase(TestCase):
         db.session.flush()
         db.session.add(Works(2, 1))
         db.session.add(Works(2, 2))
+
         db.session.add(Item(amount=2, price=2.2, produce_id=1, unit_id=1))
         db.session.flush()
+
+        db.session.add(Resource_List('fertiliser'))
+        db.session.flush()
+        db.session.add(Process_List('making cheese','Cheese making process'))
+
         db.session.commit()
 
     def tearDown(self):
@@ -99,8 +106,13 @@ class BlueGardenTestCase(BaseTestCase):
     #Testing add crop with new crop
     def test_login_addcrop(self):
         print('\n## Testing add crop with new crop')
+
+        #rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
+        #rv=self.addcrop('1', 'corn', 'plant', '1')
+
         rv = self.login('singarisathwik007@gmail.com', 'dm08b048')
         rv = self.addcrop('563', 'corn', 'harvest', '892')
+
         assert b'You success added crop' in rv.data
 
     def test_dashboard_recently_viewed(self):
@@ -125,14 +137,30 @@ class BlueGardenTestCase(BaseTestCase):
     def logout(self):
         return self.client.get('/logout', follow_redirects=True)
 
-        
+
+    # Test add crop function    
+
     def addcrop(self,id, cropname, growstate, farmid):
+        
         return self.client.post('/addcrop',data=dict(
             id = id,
             crop_name = cropname,
             grow_state = growstate,
             farm_id = farmid
             ),follow_redirects=True)
+
+    '''#Test change crop state
+    def change_state(self, cropid, changestate):
+        return self.client.post('/change_state/1',data=dict(
+            oristate = Crop.query.get(cropid), 
+            new_state=changestate), follow_redirects=True)
+
+    #Test change crop state       
+    def test_change_state(self):
+        rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
+        rv=self.change_state('1','harvest')
+        assert b'you successfully change the state' in rv.data'''
+
 
     def test_dashboard_for_content(self):
         with self.client as c:
@@ -205,16 +233,16 @@ class BlueGardenTestCase(BaseTestCase):
     # Testing the flag for farmer user type
     def test_farmer_type(self):
         print('\n## Testing the flag for farmer user type ##')
-        user = User.query.filter_by(email='singarisathwik007@gmail.com').first()
+        user = User.query.filter_by(email='mrmf@gmail.com').first()
         User.set_user_farmer(user)
-        assert User.query.filter_by(type='C').first().first_name == 'Sathwik'
+        assert 'Master' in [farmer.first_name for farmer in User.query.filter_by(type='C').all()]
         user.type = 'B'
-        assert not User.query.filter_by(email='singarisathwik007@gmail.com').first().type == 'C'
+        assert 'Master' not in [farmer.first_name for farmer in User.query.filter_by(type='C').all()]
 
     # Testing new farmer user has no farms yet
     def test_farm_page_content(self):
         print('\n## Testing new farmer user has no farms yet ##')
-        self.login('singarisathwik007@gmail.com', 'dm08b048')
+        self.login('mrmf@gmail.com', 'shazza')
         response = self.client.get('/sell', follow_redirects=True)
         self.assertIn(b"You dont have any farms yet.",response.data)
 
@@ -231,7 +259,7 @@ class BlueGardenTestCase(BaseTestCase):
         self.assertIn(b"Already Exists",response.data)
 
     def add_farm(self, name, address1, address2, city, state, country, postcode):
-        self.login('singarisathwik007@gmail.com', 'dm08b048')
+        self.login('mrmf@gmail.com', 'shazza')
         return self.client.post('/sell', data=dict(
             name=name,
             address1=address1,
@@ -241,6 +269,68 @@ class BlueGardenTestCase(BaseTestCase):
             country=country,
             postcode=postcode
         ), follow_redirects=True)
+        
+    def add_activity(self,process, description,resource):
+        self.login('mrmf@gmail.com', 'shazza')
+        return self.client.post('/activity/0', data=dict(
+            process=process,
+            description=description,
+            resource=resource
+        ), follow_redirects=True)
+
+    def start_process(self, target, farm, field, crop, date, user_id, process, other_target):
+        return self.client.post('/active_process/process/1', data=dict(
+            target = target,
+            farm = farm,
+            field = field,
+            crop = crop,
+            date = date,
+            user_id = user_id,
+            process = process,
+            other_target = other_target
+        ), follow_redirects=True)
+
+        
+    #Testing that user can record activities 
+    def test_add_activity(self):
+        print('\n## Testing that user can record activities ##')
+        process = db.session.query(Process_List).order_by(Process_List.id.asc()).first().id
+        resource = db.session.query(Resource_List).order_by(Resource_List.id.asc()).first().id
+        description = 'Mowing the lawn'
+        response = self.add_activity(process, description,resource)
+        self.assertIn(b"was added to",response.data)
+
+    #Testing that farmer can initiate new process on target <X>
+    def test_start_process(self):
+        self.login('mrmf@gmail.com', 'shazza')
+        user = User.query.get(User.query.filter_by(email='mrmf@gmail.com').first().id)
+        print('\n## Test-- Farmer starts process for: Farm ##')
+        response = self.start_process("farm", 1,'','',"10 Sep, 2016",user.id,1,'')
+        self.assertIn(b"for your farm", response.data)
+        print('\n## Test-- Farmer starts process for: Other ##')
+        response = self.start_process("other", '','','',"10 Sep, 2016",user.id,1,'On the roof!')
+        self.assertIn(b"for your other", response.data)
+        print('\n## Test-- Farmer starts process for: None ##')
+        response = self.start_process('', '','','',"10 Sep, 2016",user.id,1,'')
+        self.assertIn(b"commences on the ", response.data)
+        print('\n## Test-- Farmer starts process for: Field ##')
+        response = self.start_process("field", '',1,'',"10 Sep, 2016",user.id,1,'')
+        self.assertIn(b"for your field", response.data)
+        print('\n## Test-- Farmer starts process for: Crop ##')
+        response = self.start_process("crop", '','',1,"10 Sep, 2016",user.id,1,'')
+        self.assertIn(b"for your crop", response.data)
+
+    #testing farmer can add activity to process template
+    def test_process_template_build(self):
+        self.login('mrmf@gmail.com', 'shazza')
+        print('\n## Testing that user can record steps in process ##')
+        response = self.client.post('/activity/1', data=dict(
+            process=1,
+            description="step1",
+            resource=1
+        ), follow_redirects=True)
+        self.assertIn(b"was added to making cheese",response.data)
+
 
     def test_add_to_cart(self):
         response = self.client.post('/produce/1', data=dict(

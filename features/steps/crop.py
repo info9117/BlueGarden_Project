@@ -1,3 +1,4 @@
+
 from behave import *
 import re
 
@@ -14,12 +15,62 @@ def step_impl(context):
 
 @when('a farmer submit the id cropname, growstate and farm_id')
 def step_impl(context):
-    addcrop(context,"3",  "corn", "plant", "1")
+    addcrop(context,"1",  "corn", "plant", "1")
     assert context.browser.page_source
 
 @then('the system should return "You success added crop"')
 def step_impl(context):
     assert 'You success added crop' in context.browser.page_source
+
+#change state    
+@given('at the change state screen')
+def step_impl(context):
+    context.browser.get(context.address + "/login")
+    login(context, 'singarisathwik007@gmail.com', 'dm08b048')
+
+    context.browser.get(context.address + "/change_state/1")
+    assert "change_state" in context.browser.page_source
+
+@when('a famer choose a crop')
+def step_impl(context):
+    change_state(context, "need some water")
+    assert context.browser.page_source
+
+@then ('he could change the state of that crop harvested')
+def step_impl(context):
+    assert 'you successfully change the state' in context.browser.page_source
+
+@given('at the added crop screen')
+def step_impl(context):
+    context.browser.get(context.address + "/login")
+    login(context, 'singarisathwik007@gmail.com', 'dm08b048')
+    assert context.browser.page_source
+
+@when('the state of a crop is harvested')
+def step_impl(context):
+    context.browser.get(context.address + "/change_state/1")
+    change_state(context, "harvest")
+    assert context.browser.page_source
+
+@then('this crop can be changed to produce')
+def step_impl(context):
+    context.browser.get(context.address + '/farm/1/produce/add')
+    assert context.browser.page_source
+
+
+
+    
+    
+    
+    
+    
+    
+    
+def change_state(context, growstate):
+    newGrowState_field = context.browser.find_element_by_id("change_state")
+    newGrowState_field.send_keys(change_state)
+    newGrowState_field.submit()
+
 
 
 
@@ -40,6 +91,8 @@ def addcrop(context, id, cropname, growstate, farmid):
     context.browser.find_element_by_name(id).submit()'''
     #context.response = context.browser.page_source
 
+    
+    
 
 
 def login(context, email, password):
@@ -48,3 +101,7 @@ def login(context, email, password):
     email_field.send_keys(email)
     password_field.send_keys(password)
     email_field.submit()
+
+
+
+
