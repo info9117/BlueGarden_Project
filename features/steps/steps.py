@@ -110,6 +110,7 @@ def step_impl(context):
     login(context, 'singarisathwik007@gmail.com', 'dm08b048')
     assert 'Hello Sathwik' in context.browser.page_source
 
+
 @when(u'I go to browse produce page')
 def step_impl(context):
     context.browser.get(context.address + '/farm/1/produce/add')
@@ -121,7 +122,6 @@ def step_impl(context):
 @then(u'I see produce in the page')
 def step_impl(context):
     assert 'Eggplant' in context.browser.page_source
-
 
 
 def login(context, email, password):
@@ -142,6 +142,21 @@ def register(context, first_name, last_name, email, password):
     email_field.send_keys(email)
     password_field.send_keys(password)
     email_field.submit()
+
+
+def add_produce(context, name, description, category, units, price1, prod_image):
+    name_field = context.browser.find_element_by_id("name")
+    description_field = context.browser.find_element_by_id("description")
+    name_field.send_keys(name)
+    description_field.send_keys(description)
+    context.browser.execute_script('$(function() { $("#category").val("'+category+'"); });')
+    context.browser.execute_script('$(function() { $("#unit").val("'+units+'"); });')
+    context.browser.execute_script('addItem()')
+    price1_field = context.browser.find_element_by_id("price1")
+    price1_field.send_keys(price1)
+    context.browser.find_element_by_id("prod_image").send_keys(prod_image)
+    name_field.submit()
+
 
 
 @given(u'the product details page and produce price')
