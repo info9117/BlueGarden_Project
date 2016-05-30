@@ -27,10 +27,7 @@ class UserController:
                 else:
                     errors.append("User doesn't exist")
             if not errors:
-                session['logged_in'] = True
-                session['email'] = email
-                session['firstname'] = user.first_name
-                session['lastname'] = user.last_name
+                user.add_user_to_session()
                 if request.args.get('redirect'):
                     return redirect(request.args.get('redirect'))
                 return redirect(url_for('dashboard'))
@@ -60,15 +57,14 @@ class UserController:
                 user = User(first_name, last_name, email, password)
                 db.session.add(user)
                 db.session.commit()
-
                 user.add_user_to_session()
-
                 return redirect(url_for('dashboard'))
         return render_template("register.html", errors=errors)
 
     @staticmethod
     def logout():
         session.pop('logged_in', None)
+        session.pop('id', None)
         session.pop('email', None)
         session.pop('firstname', None)
         session.pop('lastname', None)

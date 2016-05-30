@@ -88,9 +88,6 @@ def change_state(crop_id):
 
 
 
-
-
-
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -113,10 +110,12 @@ def sell():
 def activity():
     return farmController.activity()
 
+
 @app.route('/field', methods=['GET', 'POST'])
 @login_required
 def field():
     return fieldController.addField()
+
 
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
 @login_required

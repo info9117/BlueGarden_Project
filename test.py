@@ -183,8 +183,8 @@ class BlueGardenTestCase(BaseTestCase):
     def test_view_produce_page_content(self):
         print('\n## Testing produce details page content ##')
         response = self.client.get('/produce/1', content_type='html/text')
-        self.assertIn(b'Eggplant', response.data)
-        self.assertIn(b'4.35', response.data)
+        self.assertIn(b'corn', response.data)
+        self.assertIn(b'2.2', response.data)
         self.assertIn(b'Shire Farms', response.data)
         
 
@@ -286,7 +286,8 @@ class BlueGardenTestCase(BaseTestCase):
             date=date,
             resource=resource
         ), follow_redirects=True)
-        
+
+
     #Testing that user can record activities to their farm
     def test_add_activity(self):
         print('\n## Testing that user can record activities to their farm ##')
