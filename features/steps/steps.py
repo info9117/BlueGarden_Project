@@ -99,6 +99,7 @@ def step_impl(context):
     login(context, 'singarisathwik007@gmail.com', 'dm08b048')
     assert 'Hello Sathwik' in context.browser.page_source
 
+
 @when(u'I go to browse produce page')
 def step_impl(context):
     context.browser.get(context.address + '/farm/1/produce/add')
@@ -107,9 +108,22 @@ def step_impl(context):
     assert 'Browse Produce' in context.browser.page_source
 
 
+@when(u'I go to browse produce page and apply filters')
+def step_impl(context):
+    context.browser.get(context.address + '/farm/1/produce/add')
+    add_produce(context, 'Corn', 'Amazing Corn', 'Vegetable', '1', '2.25', '/eggplant.jpeg')
+    context.browser.get(context.address + "/search/produce?search=Cor&location=sydney")
+    assert True
+
+
 @then(u'I see produce in the page')
 def step_impl(context):
     assert 'Eggplant' in context.browser.page_source
+
+
+@then(u'I see filtered produce in the page')
+def step_impl(context):
+    assert 'Corn' in context.browser.page_source
 
 
 def login(context, email, password):
