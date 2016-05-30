@@ -5,3 +5,8 @@ Feature: Browse Produce
     Given I am at home page
     When I go to browse produce page
     Then I see produce in the page
+
+  Scenario: Browse produce with filters
+    Given I am at home page
+    When I go to browse produce page and apply filters
+    Then I see filtered produce in the page

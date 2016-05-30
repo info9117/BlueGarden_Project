@@ -248,6 +248,7 @@ class BlueGardenTestCase(BaseTestCase):
         self.assertIn(b'4.4', response.data)
 
 
+
     # Testing purchase page
 
     def test_purchase_page(self):
@@ -263,7 +264,13 @@ class BlueGardenTestCase(BaseTestCase):
         response = self.client.get('/purchase', content_type='html/text')
         self.assertIn(b'Amount:', response.data)
 
-
+    def test_search_produce(self):
+        print('\n## Testing browse produce page content with filters ##')
+        self.login('bbaggins@lotr.com', 'bilbobaggins')
+        if not self.produce_added:
+            self.add_test_produce()
+        response = self.client.get('/search/produce?search=Apple', follow_redirects=True)
+        self.assertIn(b'Apple', response.data)
 
 
 if __name__ == '__main__':
