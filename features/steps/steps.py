@@ -143,7 +143,19 @@ def register(context, first_name, last_name, email, password):
     password_field.send_keys(password)
     email_field.submit()
 
+@given('at the product details page')
+def step_impl(context):
+    context.browser.get(context.address + "/produce/1")
 
+
+
+@then('the system shows product details product name, farm name, price, unit and image')
+def step_impl(context):
+    """
+    :type context: behave.runner.Context
+    """
+    assert context.browser.page_source
+    
 @given(u'the product details page and produce price')
 def step_impl(context):
     context.browser.get(context.address + "/produce/1")
