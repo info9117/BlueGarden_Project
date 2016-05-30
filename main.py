@@ -1,4 +1,6 @@
 from flask import Flask, render_template, url_for, request, redirect, session, flash, send_from_directory, abort
+from flask import request
+import stripe
 from functools import wraps
 from controllers import ProduceController
 from models import *
@@ -29,6 +31,13 @@ def shutdown_server():
     if func is None:
         raise RuntimeError("Not running with Werkzeug server")
     func()
+
+#keyes for payment
+stripe_keys = {
+  'secret_key': 'sk_test_BQokikJOvBiI2HlWgH4olfQ2',
+  'publishable_key': 'pk_test_6pRNASCoBOKtIshFeQd4XMUh'
+}
+stripe.api_key = stripe_keys['secret_key']
 
 
 # Login Required wrap
@@ -114,6 +123,29 @@ def url_for_browse_produce(page):
     return url_for('browse_produce', **args)
 
 app.jinja_env.globals['url_for_browse_produce'] = url_for_browse_produce
+
+@app.route('/purchase')
+def reference():
+    return render_template('reference.html', key=stripe_keys['publishable_key'])
+
+@app.route('/charge', methods=['POST'])
+def charge():
+  amount = 500
+
+  # customer = stripe.Customer.create(
+  #       email=request.form['stripeEmail'],
+  #       card=request.form['stripeToken']
+  #     )
+
+
+  # charge = stripe.Charge.create(
+  #       customer=customer.id,
+  #       amount=amount,
+  #       currency='AUD',
+  #       description='Flask Charge'
+  #   )
+  return render_template('charge.html', amount=amount)
+
 
 
 @app.errorhandler(404)

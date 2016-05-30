@@ -247,5 +247,24 @@ class BlueGardenTestCase(BaseTestCase):
             amount='2'))
         self.assertIn(b'4.4', response.data)
 
+
+    # Testing purchase page
+
+    def test_purchase_page(self):
+        print('\n## Testing purchase page ##')
+        self.login('bbaggins@lotr.com', 'bilbobaggins')
+        response = self.client.get('/purchase', content_type='html/text')
+        self.assertIn(b'Amount:', response.data)
+
+    def test_purchase(self):
+        print('\n## Testing purchase page ##')
+        self.login('bbaggins@lotr.com', 'bilbobaggins')
+
+        response = self.client.get('/purchase', content_type='html/text')
+        self.assertIn(b'Amount:', response.data)
+
+
+
+
 if __name__ == '__main__':
     unittest.main()

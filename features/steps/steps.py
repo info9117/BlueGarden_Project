@@ -1,3 +1,4 @@
+import time
 from behave import *
 import re
 
@@ -169,4 +170,28 @@ def step_impl(context, total):
     :type total: float
     """
     assert str(total) in context.browser.page_source
+
+@given(u'I am in purchase page')
+def step_impl(context):
+    context.browser.get(context.address + "/login")
+    login(context, 'singarisathwik007@gmail.com', 'dm08b048')
+    context.browser.get(context.address + "/purchase")
+    assert 'Amount:' in context.browser.page_source
+
+@when(u'I click the payment button')
+def step_impl(context):
+    time.sleep(5)
+    context.browser.execute_script('$(".stripe-button").click();')
+    time.sleep(5)
+    assert True
+
+@then(u'I can enter my credit card details to pay')
+def step_impl(context):
+    time.sleep(5)
+    context.browser.execute_script('$("#email").val( "jbhewitt12@gmail.com" );')
+    context.browser.execute_script('$("#card_number").val( "4242424242424242" );')
+    context.browser.execute_script('$("#cc-exp").val( "1122" );')
+    context.browser.execute_script('$("#cc-csc").val( "2222" );')
+    context.browser.execute_script('$("#submitButton").click();')
+    assert True
 
