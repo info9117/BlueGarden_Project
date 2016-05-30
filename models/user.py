@@ -29,8 +29,14 @@ class User(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
+    def set_user_buyer(self):
+        self.type = 'B'
+
     def set_user_farmer(self):
         self.type = 'C'
+
+    def set_user_manager(self):
+        self.type = 'M'
 
     def add_user_to_session(self):
         session['logged_in'] = True

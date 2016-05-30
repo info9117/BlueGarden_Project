@@ -10,13 +10,12 @@ from controllers.userController import UserController as userController
 from controllers.farmController import FarmController as farmController
 from controllers.fieldController import FieldController as fieldController
 from controllers.cropController import CropController as cropController
-<<<<<<< HEAD
+
 from controllers import ProduceController
-=======
+
 from controllers.templateController import TemplateController as templateController
 from controllers.resourcelistController import ResourceController as resourceController
 
->>>>>>> origin/sprint-3-gardeners
 from shared import db
 
 # Creating application object
@@ -95,10 +94,6 @@ def addcrop():
 def change_state(crop_id):
     return cropController.change_state(crop_id)
 
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/sprint-3-gardeners
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -115,14 +110,13 @@ def browse_produce(page):
 @login_required
 def sell():
     return farmController.add_farm()
-<<<<<<< HEAD
 
 
 @app.route('/activity', methods=['GET', 'POST'])
-=======
+
     
 @app.route('/activity/<int:process_id>', methods=['GET', 'POST'])
->>>>>>> origin/sprint-3-gardeners
+
 @login_required
 def activity(process_id):
     return farmController.activity(process_id)
@@ -133,14 +127,13 @@ def activity(process_id):
 def field():
     return fieldController.addField()
 
-<<<<<<< HEAD
-=======
+
 @app.route('/addresource',methods=['GET', 'POST'])
 @login_required
 def resource():
     return resourceController.add_resource()
 
->>>>>>> origin/sprint-3-gardeners
+
 
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
 @login_required
