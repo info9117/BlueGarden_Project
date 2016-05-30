@@ -10,9 +10,8 @@ class Manager(db.Model):
     last_name = db.Column('last_name', db.String(255), nullable=False)
     email = db.Column('email', db.String(255), unique=True)
     password = db.Column('password', db.String(128), nullable=False)
-    # Buyer - B, Buyer & Farmer - C
-    type = db.Column('type', db.String(1), default='B')
-    isManager = db.Column('isManager', db.Boolean, default=False)
+    # Buyer - B, Buyer & Farmer - C, Manager - M
+    type = db.Column('type', db.String(1), default='M')
 
     def __init__(self, first_name, last_name, email, password):
         self.first_name = first_name
@@ -30,11 +29,8 @@ class Manager(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
-    def set_user_farmer(self):
-        self.type = 'C'
-
     def set_user_manager(self):
-        self.isManager = True
+        self.type = 'M'
 
     def add_user_to_session(self):
         session['logged_in'] = True
@@ -43,4 +39,3 @@ class Manager(db.Model):
         session['firstname'] = self.first_name
         session['lastname'] = self.last_name
         session['type'] = self.type
-        session['isManager'] = self.isManager

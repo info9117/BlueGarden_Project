@@ -72,9 +72,9 @@ def step_impl(context):
 def step_impl(context):
     assert 'Email Id already exists' in context.browser.page_source
 
-<<<<<<< HEAD
+
 # begin of add_produce feature
-=======
+
 @when('I register with First name, Last name, Email Id , Password & ConfirmPassword(Password and ConfirmPassword is not equal)')
 def step_impl(context):
     register(context, first_name='Frodo', last_name='Baggins', email='fbaggins@lotr.com', password='frodobaggins',confirmpassword='fefefefe')
@@ -84,7 +84,7 @@ def step_impl(context):
 def step_impl(context):
     assert 'Password and ConfirmPassword is not equal' in context.browser.page_source
 
->>>>>>> sprint-3-nanoha
+
 @given('I am in the add produce page')
 def step_impl(context):
     context.browser.get(context.address + "/login")

@@ -114,11 +114,9 @@ def step_impl(context):
     c.find_element_by_id("other_target").send_keys("On the roof!")
     date="10 Sep, 2016"
     c.execute_script('$(function() { $("#date").val("'+date+'"); });')
-<<<<<<< HEAD
     #c.find_element_by_id("date").send_keys(date)
     #time.sleep(10)
-=======
->>>>>>> origin/sprint-3-gardeners
+
     c.find_element_by_id("form").submit()
 @then('the process new active process is initialised and steps populated from the process template')
 def step_impl(context):
