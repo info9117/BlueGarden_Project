@@ -167,6 +167,36 @@ def step_impl(context, total):
     :type total: float
     """
     assert str(total) in context.browser.page_source
+	
+def send_feedback(context, username, email, subject, message):
+    username_field = context.browser.find_element_by_id("username")
+    email_field = context.browser.find_element_by_id("email")
+    subject_field = context.browser.find_element_by_id("subject")
+    message_field = context.browser.find_element_by_id("message")
+    username_field.send_keys(username)
+    email_field.send_keys(email)
+    subject_field.send_keys(subject)
+    message_field.send_keys(message)
+    email_field.submit()
+	
+@given('I am in feedback page')
+def step_impl(context):
+	context.browser.get(context.address + "/login")
+	login(context, 'singarisathwik007@gmail.com', 'dm08b048')
+
+	context.browser.get(context.address + "/feedback")
+	register_found = re.search("feedback", context.browser.page_source)
+	assert register_found
+
+@when('I register with User name, Email, Subject, Message')
+def step_impl(context):
+    send_feedback(context, username='sam', email='example@gmail.com', subject="feedback", message='Hello!')
+    assert context.browser.page_source
+
+
+@then('I should be shown thank message')
+def step_impl(context):
+    assert 'thank' in context.browser.page_source
 
 
 
