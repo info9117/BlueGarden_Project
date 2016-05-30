@@ -54,12 +54,14 @@ def step_impl(context):
 @then('this crop can be changed to produce')
 def step_impl(context):
     context.browser.get(context.address + '/farm/1/produce/add')
+
     assert context.browser.page_source
 
 @when('a farmer choose an crop')
 def step_impl(context):
     context.browser.get(context.address + "/update_active_process/113")
     assert context.browser.page_source
+
 
 @then('a new page display all the activities of that process')
 def step_impl(context):
@@ -82,16 +84,18 @@ def step_impl(context):
     assert 'you successfully finish this acitivity' in context.browser.page_source
     
 
+
 def set_finish_process(context):
     actid_field = context.browser.find_element_by_id("finishactivity")
     #actid_field.send_keys(set_finish_process)
     actid_field.submit()'''
     
-    
+
 def change_state(context, growstate):
     newGrowState_field = context.browser.find_element_by_id("change_state")
-    newGrowState_field.send_keys(change_state)
+    newGrowState_field.send_keys(growstate)
     newGrowState_field.submit()
+    context.response = context.browser.page_source
 
 
 
@@ -106,6 +110,7 @@ def addcrop(context, id, cropname, growstate, farmid):
     growstate_field.send_keys(growstate)
     farmid_field.send_keys(farmid)
     id_field.submit()
+
 
     #context.response = context.browser.page_source
 
