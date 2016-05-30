@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Add Your Crops{% endblock %}
+{% block content %}
+
+
+<div class="intro">
+    <div class="mess">
+    {% for message in get_flashed_messages() %}
+    {{ message }}
+    {% endfor %}
+    </div>
+    <div class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white center-align"
+                 style="padding: 30px 15px;">
+    {% for act in act_activities %}
+
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+        }
+    </style>
+    <table style="width:100%" color="red" border="1">
+      <tr>
+        <td>ID:{{act.id}}</td>
+        <td>Process _D:{{act.Active_Process_ID}}</td>
+        <td>Activity_ID:{{act.Activity_ID}}<form class="complete_activity_form" action="{{ url_for('update_active_process', crop_id = crop_id) }}" method="post">
+    finish your activity!  <br>
+	  <input id = "finishactivity" type="hidden" name="finish_activity" value= {{ act.Activity_ID }}>
+	  <input type="submit" value="finish_activity">
+
+    </form>   </td>
+        <td>Start_Date: {{act.Start_Date}}</td>
+      </tr>
+
+    </table>
+
+
+        </div>
+        </div>
+
+
+    {% endfor %}
+
+    {% endblock %}

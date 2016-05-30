@@ -1,5 +1,3 @@
-
-
 from shared import db
 
 

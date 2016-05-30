@@ -304,6 +304,6 @@ class BlueGardenTestCase(BaseTestCase):
         response = self.client.post('/produce/1', data=dict(
             amount='2'))
         self.assertIn(b'4.4', response.data)
-
+    
 if __name__ == '__main__':
     unittest.main()

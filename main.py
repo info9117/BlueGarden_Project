@@ -89,6 +89,13 @@ def change_state(crop_id):
 def update_active_process(crop_id):
     return cropController.update_active_process(crop_id)
 
+'''@app.route('/completing<int:Activity_ID>', methods = ['GET', 'POST'])
+@login_required
+def completing(Activity_ID):
+    return cropController.complete_activity(Activity_ID)'''
+
+
+
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -144,7 +151,8 @@ def uploaded_image(farm_id, filename):
 @login_required
 def process():
     return templateController.add_process()
-    
+
+
 @app.route('/active_process/<process_or_crop>/<int:id>', methods=['GET', 'POST'])
 @login_required
 def active_process(process_or_crop,id):

@@ -56,13 +56,36 @@ def step_impl(context):
     context.browser.get(context.address + '/farm/1/produce/add')
     assert context.browser.page_source
 
+@when('a farmer choose an crop')
+def step_impl(context):
+    context.browser.get(context.address + "/update_active_process/113")
+    assert context.browser.page_source
 
+@then('a new page display all the activities of that process')
+def step_impl(context):
+    assert context.browser.page_source
 
+'''@given('at the update_Process page')
+def step_impl(context):
+    context.browser.get(context.address + "/login")
+    login(context, 'singarisathwik007@gmail.com', 'dm08b048')
+    context.browser.get(context.address + "/update_active_process/113")
+    assert  context.browser.page_source
+
+@when('a farmer choose a finished activity')
+def step_impl(context):
+    set_finish_process(context)
+    assert context.browser.page_source
+
+@then('this activity will be specified finished')
+def step_impl(context):
+    assert 'you successfully finish this acitivity' in context.browser.page_source
     
-    
-    
-    
-    
+
+def set_finish_process(context):
+    actid_field = context.browser.find_element_by_id("finishactivity")
+    #actid_field.send_keys(set_finish_process)
+    actid_field.submit()'''
     
     
 def change_state(context, growstate):
@@ -83,11 +106,7 @@ def addcrop(context, id, cropname, growstate, farmid):
     growstate_field.send_keys(growstate)
     farmid_field.send_keys(farmid)
     id_field.submit()
-    '''context.browser.find_element_by_name('id').send_keys(id)
-    context.browser.find_element_by_name('cropname').send_keys(cropname)
-    context.browser.find_element_by_name('growstate').send_keys(growstate)
-    context.browser.find_element_by_name('farmid').send_keys(farmid)
-    context.browser.find_element_by_name(id).submit()'''
+
     #context.response = context.browser.page_source
 
     
