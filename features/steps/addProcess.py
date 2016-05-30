@@ -13,7 +13,7 @@ def step_impl(context):
 def step_impl(context):
     context.browser.get(context.address + "/login")
     login(context, 'singarisathwik007@gmail.com', 'dm08b048')
-    context.browser.get(context.address + '/activity/1')
+    context.browser.get(context.address + '/activity/2')
     assert "Record Activity" in context.browser.page_source
 
 @when('I select an exting process and add an activity')
@@ -26,7 +26,7 @@ def step_impl(context):
 
 @when('I select an exting process')
 def step_impl(context):
-    context.browser.get(context.address + '/activity/1/add')
+    context.browser.get(context.address + '/activity/2')#fail#########################################################
 
 @when('a farmer creates a new process with no name')
 def step_impl(context):
@@ -43,7 +43,7 @@ def step_impl(context):
 
 @then('I will be shown the activity added to the process')
 def step_impl(context):
-    assert "Activity was recorded" in context.browser.page_source
+    assert "was added to" in context.browser.page_source
 
 @then('the new process is recorded')
 def step_impl(context):
@@ -66,5 +66,9 @@ def addProcess(context, process_name, process_description):
     context.browser.find_element_by_id("form").submit()
 
 def addActivity(context, activity_description):
+    process = '2'
+    resource = '2'
+    context.browser.execute_script('$(function() { $("#resource").val("'+resource+'"); });')
+    context.browser.execute_script('$(function() { $("#process").val("'+process+'"); });')
     context.browser.find_element_by_name('description').send_keys(activity_description)
     context.browser.find_element_by_id("form").submit()
