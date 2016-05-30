@@ -11,6 +11,9 @@ from controllers.farmController import FarmController as farmController
 from controllers.fieldController import FieldController as fieldController
 from controllers.cropController import CropController as cropController
 from controllers import ProduceController
+
+from controllers.feedbackController import FeedbackController
+
 from shared import db
 
 # Creating application object
@@ -172,6 +175,11 @@ def page_not_found(e):
 @app.route('/shutdown')
 def shutdown():
     shutdown_server()
+	
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+	return FeedbackController.feedback()
+	
 
 
 if __name__ == '__main__':
