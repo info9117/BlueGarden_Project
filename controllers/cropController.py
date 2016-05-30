@@ -35,8 +35,10 @@ class CropController:
             print(activity_done_id)
             activity_done = Active_Activity.query.filter_by(id = activity_done_id).first()
             print(activity_done)
-            activity_done.Start_Date = True
+            print(activity_done.Action_Completed)
+            activity_done.Action_Completed = True
             db.session.add(activity_done)
+            print(activity_done.Action_Completed)
             db.session.commit()
             flash("you successfully finish this acitivity")
             return redirect(url_for('update_active_process', crop_id = crop_id))
