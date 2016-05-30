@@ -155,7 +155,8 @@ class BlueGardenTestCase(BaseTestCase):
     '''#Test change crop state
     def change_state(self, cropid, changestate):
         return self.client.post('/change_state/1',data=dict(
-            oristate = Crop.query.get(cropid), 
+            #oristate = Crop.query.get(cropid),
+            oristate = Crop.query.filter_by(id=cropid).first(),
             new_state=changestate), follow_redirects=True)
 
     #Test change crop state       

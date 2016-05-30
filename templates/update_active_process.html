@@ -38,10 +38,19 @@
     </table>
 
 
+
+
+
         </div>
         </div>
 
 
     {% endfor %}
+     <form class="complete_process_form" action="{{ url_for('update_active_process', crop_id = crop_id) }}" method="post">
+    {{  }}  <br>
+	  <input id = "finishprocess" type="hidden" name="finish_process" value= {{ act.Active_Process_ID }}>
+	  <input type="submit" value="finish_process">
+
+    </form>
 
     {% endblock %}
