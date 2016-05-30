@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for, request, redirect, session, flash, send_from_directory, abort
 from functools import wraps
+
 from controllers import ProduceController
 from models import *
 from controllers.userController import UserController as userController
@@ -8,6 +9,8 @@ from controllers.fieldController import FieldController as fieldController
 from controllers.cropController import CropController as cropController
 from controllers.templateController import TemplateController as templateController
 from controllers.resourcelistController import ResourceController as resourceController
+from controllers import ProduceController
+from controllers.feedbackController import FeedbackController
 
 from shared import db
 
@@ -129,6 +132,7 @@ def view_produce(produce_id):
 
 @app.route('/uploads/<int:farm_id>/<filename>', )
 def uploaded_image(farm_id, filename):
+    print(safe_join(app.config['UPLOAD_FOLDER']+'produce/' + str(farm_id), filename))
     return send_from_directory(app.config['UPLOAD_FOLDER'] + 'produce/' + str(farm_id),
                                filename)
 
@@ -165,6 +169,10 @@ def page_not_found(e):
 @app.route('/shutdown')
 def shutdown():
     shutdown_server()
+
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+	return FeedbackController.feedback()
 
 
 if __name__ == '__main__':
