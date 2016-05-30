@@ -52,12 +52,8 @@ class BaseTestCase(TestCase):
         db.session.add(Works(2, 2))
         db.session.add(Resource_List('fertiliser'))
         db.session.flush()
-<<<<<<< HEAD
-
-
-=======
         db.session.add(Process_List('making cheese','Cheese making process'))
->>>>>>> origin/sprint-3-gardeners
+
         db.session.commit()
         # add a manager account and a random contact form entry
 

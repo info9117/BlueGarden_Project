@@ -1,9 +1,11 @@
 from main import app
-from shared import db
 from models import *
 from flask_testing import TestCase
 import unittest
-from io import StringIO, BytesIO
+
+from models.contact import Contact
+from models.manager import Manager
+
 
 class BaseTestCase(TestCase):
     def create_app(self):
@@ -12,8 +14,9 @@ class BaseTestCase(TestCase):
 
     def setUp(self):
         db.create_all()
-        db.session.add(User('Kousaka', 'Honoka', 'kousaka.honoka@icloud.com', 'admin678kousaka'))
-        db.session.add(Contact('Hey!', 'I have something to say ^_^', ))
+        db.session.add(Manager('Kousaka', 'Honoka', 'kousaka.honoka@icloud.com', 'admin678kousaka', True))
+        db.session.add(Contact('Hey!', 'I have something to say ^_^' ))
+        db.session.add(Contact('Uhum!', 'I am unhappy. I want to complain! >_<. '))
         db.session.flush()
         db.session.commit()
         # add a manager account and a random contact form entry

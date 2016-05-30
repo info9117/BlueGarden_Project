@@ -3,8 +3,8 @@ from flask import session
 from shared import db
 
 
-class User(db.Model):
-    __tablename__ = 'users'
+class Manager(db.Model):
+    __tablename__ = 'managers'
     id = db.Column('id', db.Integer, primary_key=True)
     first_name = db.Column('first_name', db.String(255), nullable=False)
     last_name = db.Column('last_name', db.String(255), nullable=False)
@@ -19,6 +19,7 @@ class User(db.Model):
         self.last_name = last_name
         self.email = email
         self.set_password(password)
+        self.set_user_manager()
 
     def __repr__(self):
         return self.email

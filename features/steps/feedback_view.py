@@ -2,9 +2,9 @@ from behave import *
 import re
 
 
-@given('I am logged in to system')
+@given('I am logged in as a manager')
 def step_impl(context):
-    login(context, 'admin@gmail.com', 'dm08b04')
+    login(context, 'admin@gmail.com', 'pswd1234')
     assert context.browser.page_source
 
 
@@ -16,7 +16,7 @@ def step_impl(context):
 
 @then('system should display all received feedback')
 def step_impl(context):
-    contact(context, )
+    contact(context, name='Fate', email='fate@microsoft.com', title='Hey!', enquiry='I am not happy. -_-##')
 
 
 def login(context, email, password):
