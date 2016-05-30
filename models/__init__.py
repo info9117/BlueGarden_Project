@@ -10,4 +10,5 @@ from .item import Item
 from .unit import db
 from .works import Works
 from .recent_produce import RecentProduce
+from .check import Check
 

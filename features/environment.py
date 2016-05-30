@@ -44,6 +44,7 @@ def before_all(context):
         db.session.add(Works(1, 2))
         db.session.flush()
         db.session.add(User('Joe', 'Farmer', 'farmer_j01@gmail.com', 'louise1993'))
+        db.session.add(Item(amount=2, price=2.2, produce_id=1, unit_id=1))
         db.session.commit()
 
 

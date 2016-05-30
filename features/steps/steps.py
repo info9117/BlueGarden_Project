@@ -1,3 +1,4 @@
+
 import time
 from behave import *
 import re
@@ -109,6 +110,7 @@ def step_impl(context):
     assert 'Browse Produce' in context.browser.page_source
 
 
+
 @when(u'I go to browse produce page and apply filters')
 def step_impl(context):
     context.browser.get(context.address + '/farm/1/produce/add')
@@ -117,14 +119,17 @@ def step_impl(context):
     assert True
 
 
+
 @then(u'I see produce in the page')
 def step_impl(context):
     assert 'Eggplant' in context.browser.page_source
 
 
+
 @then(u'I see filtered produce in the page')
 def step_impl(context):
     assert 'Corn' in context.browser.page_source
+
 
 
 def login(context, email, password):
@@ -161,6 +166,19 @@ def add_produce(context, name, description, category, units, price1, prod_image)
     name_field.submit()
 
 
+@given('at the product details page')
+def step_impl(context):
+    context.browser.get(context.address + "/produce/1")
+
+
+
+@then('the system shows product details product name, farm name, price, unit and image')
+def step_impl(context):
+    """
+    :type context: behave.runner.Context
+    """
+    assert context.browser.page_source
+
 @given(u'the product details page and produce price')
 def step_impl(context):
     context.browser.get(context.address + "/produce/1")
@@ -185,6 +203,7 @@ def step_impl(context, total):
     """
     assert str(total) in context.browser.page_source
 
+
 @given(u'I am in purchase page')
 def step_impl(context):
     context.browser.get(context.address + "/login")
@@ -208,4 +227,40 @@ def step_impl(context):
     context.browser.execute_script('$("#cc-csc").val( "2222" );')
     context.browser.execute_script('$("#submitButton").click();')
     assert True
+
+
+@given(u'the user at the checkout page')
+def step_impl(context):
+    context.browser.get(context.address + "/checkout/1")
+
+
+@when(u'the user enters his {name} {email} {phone} {address} {discount} and clicks on save buyer info')
+def step_impl(context, name, email, phone, address, discount):
+    """
+    :type context:  behave,runner.context
+    :type name: str
+    :type email: str
+    :type phone: int
+    :type address: str
+    :type discount: int
+    """
+    name_field = context.browser.find_element_by_id("name")
+    name_field.send_keys(str(name))
+    email_field = context.browser.find_element_by_id("email")
+    email_field.send_keys(str(email))
+    phone_field = context.browser.find_element_by_id("phone")
+    phone_field.send_keys(str(phone))
+    address_field = context.browser.find_element_by_id("address")
+    address_field.send_keys(str(address))
+    discount_field = context.browser.find_element_by_id("discount")
+    discount_field.send_keys(str(discount))
+    name_field.submit()
+
+
+@then(u'the system saves the information into the database and shows success message to the user and total value of item and total value after discount')
+def step_impl(context):
+    """
+    :type context: behave.runner.Context
+    """
+    assert "information has been saved successfully" in context.browser.page_source
 

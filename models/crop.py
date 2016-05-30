@@ -1,4 +1,3 @@
-
 from shared import db
 
 class Crop(db.Model):

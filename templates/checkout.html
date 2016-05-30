@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Blue Garden Product Details</title>
+    <title>Blue Garden Checkout</title>
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/cover.css') }}" rel="stylesheet">
 
@@ -44,40 +44,44 @@
                 </div>
             </div>
         </div>
-        <div data-position="title-vendor"><h1 class="page-title" itemprop="name">{{ produce.name }}</h1>
-            <p style="font-size: small">{{ produce.farm.name }}</p>
-            <p style="font-size: small">Product of Australia</p><span class="price" name="price" id="price"
-                                                                      type="number">${{ produce.prices[0].price }}</span>
-            <small>per {{ produce.prices[0].unit.name }}</small>
-            </p>
-            <img src="{{ url_for('uploaded_image', farm_id=produce.farm_id, filename=produce.image.filename) }}" style="max-height: 200px;">
+        <div data-position="title-vendor">
+            <h1 class="page-title" itemprop="name">{{ item.produce.name }}</h1>
+            <p>${{ item.price }} per {{ item.unit.name }}</p>
         </div>
-        <div align="center">
-            {#            <img src="{{ url_for('static', filename='images/eggplant.jpg') }}" style="height: 500px; width: 500px;">#}
-            {#            <img src="{{ url_for('uploaded_image', farm_id=produce.farm_id, filename=produce.image.filename) }}">#}
-        </div>
-        <label for="amount" class="sr-only"> </label>
+
         <form method="POST">
-            <input type="number" name="amount" id="amount" class="form-control" placeholder="amount">
-            <button id="btncart" class="btn btn-lg btn-primary btn-block" type="submit">Add to cart</button>
+            <input type="text" name="name" id="name" class="form-control" placeholder="name">
+            <input type="text" name="email" id="email" class="form-control" placeholder="email">
+            <input type="number" name="phone" id="phone" class="form-control" placeholder="phone">
+            <input type="text" name="address" id="address" class="form-control" placeholder="address">
+            <input type="number" name="discount" id="discount" class="form-control" placeholder="discount">
+            <button id="btncheck" class="btn btn-lg btn-primary btn-block" type="submit">Save Buyer Data</button>
         </form>
-        {% if item %}
-            <a href="{{ url_for('checkout', item_id=item.id) }}">
-            <input type="button" value="Checkout" />
-            </a>
+        <form method="get" action="/page2">
+            <button type="submit">Pay Now</button>
+        </form>
+
+        <h1>Total is ${{ item.total }}</h1>
+        {% if check %}
+        {% if check.total != item.total %}
+        <h1>Total after discount is ${{ check.total }}</h1>
+        {% else %}
+        <h1>No discount for this item</h1>
+        {% endif %}
         {% endif %}
 
+
         <div class="jumbotron">
-            {% if item %}
-                <h1>Total is ${{ item.total }}</h1>
-            {% endif %}
+            <h1>{{ percentage }}</h1>
+        </div>
+        <div class="jumbotron">
+            <h1>{{ response }}</h1>
         </div>
 
-
-        <!--core JavaScript
+                <!--core JavaScript
     ================================================== -->
-        <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+                <!-- Placed at the end of the document so the pages load faster -->
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
         <script src="{{ url_for('static', filename='js/ie10-viewport-bug-workaround.js') }}"></script>
     </div>

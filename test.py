@@ -35,8 +35,8 @@ class BaseTestCase(TestCase):
         db.session.flush()
         db.session.add(Works(2, 1))
         db.session.add(Works(2, 2))
+        db.session.add(Item(amount=2, price=2.2, produce_id=1, unit_id=1))
         db.session.flush()
-
         db.session.commit()
 
     def tearDown(self):
@@ -248,7 +248,6 @@ class BlueGardenTestCase(BaseTestCase):
         self.assertIn(b'4.4', response.data)
 
 
-
     # Testing purchase page
 
     def test_purchase_page(self):
@@ -271,6 +270,27 @@ class BlueGardenTestCase(BaseTestCase):
             self.add_test_produce()
         response = self.client.get('/search/produce?search=Apple', follow_redirects=True)
         self.assertIn(b'Apple', response.data)
+
+        # Products details test
+    def test_view_produce_page_content(self):
+        print('\n## Testing produce details page content ##')
+        response = self.client.get('/produce/1', content_type='html/text')
+        self.assertIn(b'corn', response.data)
+        self.assertIn(b'2.2', response.data)
+        self.assertIn(b'Shire Farms', response.data)
+
+    def test_checkout_pagecontent(self):
+        response=self.client.get('/checkout/1', content_type='html/text')
+        self.assertIn(b'corn', response.data)
+    def test_checkout_submit(self):
+        response=self.client.post('/checkout/1', data=dict(
+            name="mike",
+            email="mike@gmail.com",
+            phone="123456",
+            address="NSW Redfern",
+            discount="11111"))
+        self.assertIn(b"information has been saved successfully", response.data)
+
 
 
 if __name__ == '__main__':

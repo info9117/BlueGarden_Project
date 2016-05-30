@@ -1,8 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect, session, flash, send_from_directory, abort
-from flask import request
 import stripe
 from functools import wraps
-from controllers import ProduceController
+from controllers import ProduceController, CheckoutController
 from models import *
 from controllers.userController import UserController as userController
 from controllers.farmController import FarmController as farmController
@@ -31,6 +30,7 @@ def shutdown_server():
     if func is None:
         raise RuntimeError("Not running with Werkzeug server")
     func()
+
 
 #keyes for payment
 stripe_keys = {
@@ -94,6 +94,11 @@ def browse_produce(page):
     return ProduceController.browse_produce(page)
 
 
+@app.route('/checkout/<int:item_id>', methods=['POST', 'GET'])
+def checkout(item_id):
+    return CheckoutController.checkout(item_id)
+
+
 @app.route('/sell', methods=['GET', 'POST'])
 @login_required
 def sell():
@@ -124,6 +129,7 @@ def url_for_browse_produce(page):
 
 app.jinja_env.globals['url_for_browse_produce'] = url_for_browse_produce
 
+
 @app.route('/purchase')
 def reference():
     return render_template('reference.html', key=stripe_keys['publishable_key'])
@@ -145,7 +151,6 @@ def charge():
   #       description='Flask Charge'
   #   )
   return render_template('charge.html', amount=amount)
-
 
 
 @app.errorhandler(404)

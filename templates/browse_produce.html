@@ -84,7 +84,7 @@
                 <img class='result-img'
                      src="{{ url_for('uploaded_image', farm_id=produce.farm_id, filename=produce.image.filename) }}">
                 <div class="result-details">
-                    <a href="#"><h6 class="result-name strong">{{ produce.name }}</h6></a>
+                    <a href="{{ url_for('view_produce', produce_id=produce.id) }}"><h6 class="result-name strong">{{ produce.name }}</h6></a>
                     <p class="result-caption">{{ produce.farm.name }}, {{ produce.farm.address.city }}</p>
                     <h5 class="result-price">$ {{ produce.prices[0].price }}/{{ produce.prices[0].unit.name }}</h5>
                     <a id="produce{{ produce.id }}" class="waves-effect waves-light moderate-pink darken-1 btn add-to-cart"
