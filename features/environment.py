@@ -21,7 +21,7 @@ def before_all(context):
         db.create_all()
         db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
         db.session.add(User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins'))
-
+        User.query.get(1).set_user_farmer()
         db.session.add(User('Billy', 'Bogan','email@email.com','password'))
         db.session.add(Unit('Kg'))
         db.session.add(Unit('gm'))
