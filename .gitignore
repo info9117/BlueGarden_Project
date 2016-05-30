@@ -1,3 +1,5 @@
+.coverage
+.DS_Store
 *.pyc
 /venv
 /.idea
