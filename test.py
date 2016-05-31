@@ -395,6 +395,26 @@ class BlueGardenTestCase(BaseTestCase):
             discount="11111"))
         self.assertIn(b"information has been saved successfully", response.data)
 
+    # Testing feedback page
+    def test_feedback(self):
+        with self.client as c:
+            with c.session_transaction() as session:
+                session['logged_in'] = True
+                session['email'] = 'singarisathwik007@gmail.com'
+                session['firstname'] = 'Sathwik'
+                session['lastname'] = 'Singari'
+                print('\n## Testing feedback page ##')
+
+
+        response = self.client.post('/feedback',
+            data=dict(
+                username="sam",
+                email="example@gmail.com",
+                subject="test message",
+                message="Good!"
+            ), follow_redirects=True)
+
+        self.assertIn(b'Thank', response.data)
 
 
 if __name__ == '__main__':

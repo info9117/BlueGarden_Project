@@ -17,6 +17,8 @@ from controllers.fieldController import FieldController as fieldController
 from controllers.cropController import CropController as cropController
 from controllers.templateController import TemplateController as templateController
 from controllers.resourcelistController import ResourceController as resourceController
+from controllers import ProduceController
+from controllers.feedbackController import FeedbackController
 
 from controllers import ProduceController
 from shared import db
@@ -236,6 +238,10 @@ def page_not_found(e):
 @app.route('/shutdown')
 def shutdown():
     shutdown_server()
+
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+	return FeedbackController.feedback()
 
 
 if __name__ == '__main__':
