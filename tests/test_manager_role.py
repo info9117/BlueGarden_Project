@@ -31,10 +31,6 @@ class BaseTestCase(TestCase):
 
 class Manager_role(BaseTestCase):
 
-    def test_login_valid_credentials(self):
-        print('\n## Testing Login page with valid credentials ##')
-        response = self.manager_login('singarisathwik007@gmail.com', 'dm08b048')
-        self.assertIn(b'Hello Sathwik', response.data)
 
     # Test if an actual manager can log in.
     def test_maanger_login(self):
@@ -46,8 +42,8 @@ class Manager_role(BaseTestCase):
     # Test if a non-manager user can log in.
     def test_non_manager_login(self):
         print('\n## Testing if a non-manager could log into system. ##')
-        response = self.manager_login('nico@takamachi.com', 'nico1234')
-        self.assertIn(b'Sorry, you are not a manager.')
+        response = self.manager_login('nico@takamachi.com', 'nico1234', 'B')
+        self.assertIn(b'Sorry, you are not a manager.', response.data)
 
 
     def manager_login(self, email, password, type):

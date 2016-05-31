@@ -10,7 +10,7 @@ class User(db.Model):
     last_name = db.Column('last_name', db.String(255), nullable=False)
     email = db.Column('email', db.String(255), unique=True)
     password = db.Column('password', db.String(128), nullable=False)
-    # Buyer - B, Buyer & Farmer - C
+    # Buyer - B, Buyer & Farmer - C, Manager - M
     type = db.Column('type', db.String(1), default='B')
     isManager = db.Column('isManager', db.Boolean, default=False)
 
@@ -37,6 +37,7 @@ class User(db.Model):
 
     def set_user_manager(self):
         self.type = 'M'
+
 
     def add_user_to_session(self):
         session['logged_in'] = True
