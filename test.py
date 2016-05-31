@@ -2,6 +2,7 @@ from main import app
 from models import *
 from flask_testing import TestCase
 import unittest
+
 from io import BytesIO
 
 
@@ -103,6 +104,7 @@ class BlueGardenTestCase(BaseTestCase):
         response = self.register('Frodo', 'Baggins', 'fbaggins@lotr.com', 'frodobaggins')
         self.assertIn(b'Hello Frodo', response.data)
 
+
     #Testing add crop with new crop
     def test_login_addcrop(self):
         print('\n## Testing add crop with new crop')
@@ -114,6 +116,7 @@ class BlueGardenTestCase(BaseTestCase):
         rv = self.addcrop('563', 'corn', 'harvest', '892')
 
         assert b'You success added crop' in rv.data
+
 
     def test_dashboard_recently_viewed(self):
         print('\n## Testing viewing recently viewed on the dashboard')
@@ -136,6 +139,7 @@ class BlueGardenTestCase(BaseTestCase):
 
     def logout(self):
         return self.client.get('/logout', follow_redirects=True)
+
 
 
     # Test add crop function    
@@ -179,6 +183,16 @@ class BlueGardenTestCase(BaseTestCase):
         self.login('bbaggins@lotr.com', 'bilbobaggins')
         response = self.client.get('/farm/1/produce/add', content_type='html/text', follow_redirects=True)
         self.assertIn(b'Shire Farms', response.data)
+       
+
+    # Products details test
+    def test_view_produce_page_content(self):
+        print('\n## Testing produce details page content ##')
+        response = self.client.get('/produce/1', content_type='html/text')
+        self.assertIn(b'corn', response.data)
+        self.assertIn(b'2.2', response.data)
+        self.assertIn(b'Shire Farms', response.data)
+        
 
     def test_adding_produce_to_farm(self):
         print('\n## Testing Add produce to farm ##')
@@ -332,6 +346,7 @@ class BlueGardenTestCase(BaseTestCase):
         self.assertIn(b"was added to making cheese",response.data)
 
 
+
     def test_add_to_cart(self):
         response = self.client.post('/produce/1', data=dict(
             amount='2'))
@@ -339,7 +354,6 @@ class BlueGardenTestCase(BaseTestCase):
 
 
     # Testing purchase page
-
     def test_purchase_page(self):
         print('\n## Testing purchase page ##')
         self.login('bbaggins@lotr.com', 'bilbobaggins')

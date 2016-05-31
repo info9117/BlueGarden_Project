@@ -3,7 +3,6 @@ import time
 from behave import *
 import re
 
-
 @given('I am in the login page')
 def step_impl(context):
     context.browser.get(context.address + "/login")
@@ -152,6 +151,7 @@ def register(context, first_name, last_name, email, password):
     email_field.submit()
 
 
+
 def add_produce(context, name, description, category, units, price1, prod_image):
     name_field = context.browser.find_element_by_id("name")
     description_field = context.browser.find_element_by_id("description")
@@ -172,17 +172,17 @@ def step_impl(context):
 
 
 
-@then('the system shows product details product name, farm name, price, unit and image')
-def step_impl(context):
-    """
-    :type context: behave.runner.Context
-    """
-    assert context.browser.page_source
 
 @given(u'the product details page and produce price')
 def step_impl(context):
     context.browser.get(context.address + "/produce/1")
 
+@then('the system shows product details product name, farm name, price, unit and image')
+def step_impl(context):
+    """
+    :type context: behave.runner.Context
+    """
+    assert context.browser.page_source    
 
 @when(u'the user selects the {amount} of the product')
 def step_impl(context, amount):
@@ -263,4 +263,5 @@ def step_impl(context):
     :type context: behave.runner.Context
     """
     assert "information has been saved successfully" in context.browser.page_source
+
 

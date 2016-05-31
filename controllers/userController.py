@@ -23,6 +23,7 @@ class UserController:
                 if user:
                     if not user.check_password(password):
                         errors.append("Email Id/Password do not match")
+
                 else:
                     errors.append("User doesn't exist")
             if not errors:
@@ -63,11 +64,13 @@ class UserController:
     @staticmethod
     def logout():
         session.pop('logged_in', None)
+        session.pop('id', None)
         session.pop('email', None)
         session.pop('firstname', None)
         session.pop('lastname', None)
         flash('You successfully logged out', 'success')
         return redirect(url_for('login'))
+
 
     @staticmethod
     def addcrop():

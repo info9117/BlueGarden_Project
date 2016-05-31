@@ -19,21 +19,26 @@ def before_all(context):
         # Extensions like Flask-SQLAlchemy now know what the "current" app
         # is while within this block. Therefore, you can now run........
         db.create_all()
-        user1 = User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048')
-        user1.set_user_farmer()
-        db.session.add(user1)
+        db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
         db.session.add(User('Bilbo', 'Baggins', 'bbaggins@lotr.com', 'bilbobaggins'))
+        User.query.get(1).set_user_farmer()
         db.session.add(User('Billy', 'Bogan','email@email.com','password'))
         db.session.add(Unit('Kg'))
         db.session.add(Unit('gm'))
         db.session.add(Unit('l'))
         db.session.add(Unit('ml'))
         db.session.flush()
+
         db.session.add(Address('123 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
         db.session.add(Address('126 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
-        db.session.flush()
         db.session.add(Farm('Shire Farms', 1))
         db.session.add(Farm('Mordor Farms', 2))
+
+        #db.session.add(Image('eggplant.jpg', 'produce/1/eggplant.jpeg'))
+        #db.session.add(Produce('Eggplant', 'Sweet organic eggplants', 'Vegetable', 1, 1))
+        #db.session.add(Price(1, 1, 4.35))
+        #db.session.add(Price(1, 2, 2.8))
+
         db.session.add(Produce('corn', 'vegetable', 'tasty', 1, 1))
         db.session.add(Produce('milk', 'dairy', 'yum', 2, 2))
         db.session.flush()
@@ -56,6 +61,7 @@ def before_all(context):
         db.session.add(Process_List('making cheese','Cheese making process'))
         db.session.add(Process_List( 'Grow Spaghetti','How to grow a spaghetti tree' ))
 
+        db.session.add(Resource('fertiliser', 1))
 
         db.session.commit()
 
