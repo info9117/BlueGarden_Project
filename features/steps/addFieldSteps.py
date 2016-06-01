@@ -8,6 +8,13 @@ def step_impl(context):
     context.browser.get(context.address + '/field')
     assert "Add a Field" in context.browser.page_source
 
+@given('at the field page as a user without farms')
+def step_impl(context):
+    context.browser.get(context.address + "/login")
+    login(context, 'bbaggins@lotr.com', 'bilbobaggins')
+    context.browser.get(context.address + '/field')
+    assert "Add a Field" in context.browser.page_source
+
 @when('a farmer submits new field name and valid farm name')
 def step_impl(context):
     addTestField(context, "Addison Field","Shire Farms")
@@ -17,6 +24,9 @@ def step_impl(context):
     #print(context.browser.page_source)
     assert 'Addison Field'in context.browser.page_source
 
+@then ('I will be advised I do not have any farms')
+def step_impl(context):
+    assert "You dont have any farms yet" in context.browser.page_source
 
 @when('a farmer submits new field name for another farmers farm')
 def step_impl(context):

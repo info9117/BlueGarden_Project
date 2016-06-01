@@ -192,12 +192,6 @@ def active_process(process_or_crop,id):
 
     return farmController.active_process(process_or_crop,id)
 
-@app.route('/activity/<int:process_id>/add', methods=['GET', 'POST'])
-@login_required
-def add_activity_to_process(process_id):
-    return farmController.linkToActivity(process_id)
-
-
 def url_for_browse_produce(page):
     args = dict(list(request.view_args.items()) + list(request.args.to_dict().items()))
     args['page'] = page

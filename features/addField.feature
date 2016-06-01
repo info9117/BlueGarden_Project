@@ -18,6 +18,11 @@ Feature: Farmer user can add a field to their farm
     When a farmer submits new field name for nonexistant farm
     Then I will be advised it is not my farm
 
+    Scenario: Cannot add field with no farms
+    Given at the field page as a user without farms
+    When a farmer submits new field name and valid farm name
+    Then I will be advised I do not have any farms
+
     Scenario: Must add a field name
     Given at the field page
     When I submit without a field name
