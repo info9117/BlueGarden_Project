@@ -52,7 +52,8 @@ class ProduceController:
                     db.session.add(Price(prod.id, p, prices[p]))
                     db.session.flush()
                 db.session.commit()
-                return 'Success'
+                flash('You successfully added '+name, 'success')
+                return redirect(url_for('sell'))
         units = Unit.query.all()
         current_farm = Farm.query.get(farm_id)
         if not current_farm:
@@ -63,7 +64,6 @@ class ProduceController:
     @staticmethod
     def browse_produce(page):
         results_per_page = 12
-        results_filtered = False
         categories = ['Vegetable', 'Fruit', 'Grain', 'Meat', 'Diary', 'Other']
         category_filter = []
         for category in categories:
@@ -71,33 +71,14 @@ class ProduceController:
                 category_filter.append(category.lower())
         location = request.args.get('location')
         search = request.args.get('search')
-
+        results = Produce.query
         if category_filter:
-            results_filtered = True
-            results = Produce.query.filter(func.lower(Produce.category).in_(category_filter)) \
-                .order_by(Produce.id)
-        if results_filtered and location:
-                results = results.filter(Produce.farm_id == Farm.query.with_entities(Farm.id)
-                                         .filter(and_(Farm.address_id == Address.id, func.lower(Address.city) ==
-                                                      location.lower()))).order_by(Produce.id)
-        if not results_filtered and location:
-            results_filtered = True
-            results = Produce.query.filter(Produce.farm_id == Farm.query.with_entities(Farm.id)
-                                           .filter(and_(Farm.address_id == Address.id, func.lower(Address.city) ==
-                                                        location.lower()))).order_by(Produce.id)
-
-        if results_filtered and search:
-            results = results.filter(Produce.name.like("%"+search+"%")).order_by(Produce.id)
-
-        if not results_filtered and search:
-            results_filtered = True
-            results = Produce.query.filter(Produce.name.like("%" + search + "%")).order_by(Produce.id)
-
-        if results_filtered:
-            results = results.paginate(page, results_per_page, False)
-
-        if not results_filtered:
-            results = Produce.query.order_by(Produce.farm_id).paginate(page, results_per_page, False)
+            results = results.filter(func.lower(Produce.category).in_(category_filter))
+        if location:
+            results = results.filter(Produce.farm_id == Farm.query.with_entities(Farm.id).filter(and_(Farm.address_id == Address.id, func.lower(Address.city) == location.lower())))
+        if search:
+            results = results.filter(Produce.name.like("%" + search + "%")).order_by(Produce.id)
+        results = results.order_by(Produce.id).paginate(page, results_per_page, False)
         total = results.total
         # print(results.query.as_scalar())
         pagination = Pagination(results, page, results_per_page, total, results.items)

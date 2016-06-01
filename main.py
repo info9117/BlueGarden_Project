@@ -3,13 +3,8 @@ from flask import Flask, render_template, url_for, request, redirect, session, f
 import stripe
 from functools import wraps
 from controllers import ProduceController, CheckoutController
-import os
-
 from werkzeug.security import safe_join
 from controllers.userController import UserController
-from werkzeug.utils import secure_filename
-import utilities
-
 from models import *
 from controllers.userController import UserController as userController
 from controllers.farmController import FarmController as farmController
@@ -17,10 +12,7 @@ from controllers.fieldController import FieldController as fieldController
 from controllers.cropController import CropController as cropController
 from controllers.templateController import TemplateController as templateController
 from controllers.resourcelistController import ResourceController as resourceController
-from controllers import ProduceController
 from controllers.feedbackController import FeedbackController
-
-from controllers import ProduceController
 from shared import db
 
 # Creating application object
@@ -36,6 +28,12 @@ app.config.from_object('config.DevelopmentConfig')
 db.init_app(app)
 with app.app_context():
     db.create_all()
+    if not Unit.query.all():
+        db.session.add(Unit('Kg'))
+        db.session.add(Unit('gm'))
+        db.session.add(Unit('l'))
+        db.session.add(Unit('ml'))
+        db.session.commit()
 
 
 def serve_forever():
@@ -48,8 +46,7 @@ def shutdown_server():
         raise RuntimeError("Not running with Werkzeug server")
     func()
 
-
-#keyes for payment
+# keys for payment
 stripe_keys = {
   'secret_key': 'sk_test_BQokikJOvBiI2HlWgH4olfQ2',
   'publishable_key': 'pk_test_6pRNASCoBOKtIshFeQd4XMUh'
@@ -125,9 +122,9 @@ def checkout(item_id):
 @app.route('/sell', methods=['GET', 'POST'])
 @login_required
 def sell():
-
     return farmController.add_farm()
-    
+
+
 @app.route('/activity/<int:process_id>', methods=['GET', 'POST'])
 @login_required
 def activity(process_id):
