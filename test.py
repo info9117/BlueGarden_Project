@@ -18,10 +18,10 @@ class BaseTestCase(TestCase):
         db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
         db.session.add(user2)
         db.session.add(User('Master', 'Farmer', 'mrmf@gmail.com', 'shazza'))
-        db.session.add(Unit('Kg'))
-        db.session.add(Unit('gm'))
-        db.session.add(Unit('l'))
-        db.session.add(Unit('ml'))
+        # db.session.add(Unit('Kg'))
+        # db.session.add(Unit('gm'))
+        # db.session.add(Unit('l'))
+        # db.session.add(Unit('ml'))
         db.session.flush()
         db.session.add(Address('123 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
         db.session.add(Address('126 Hill Rd', None, 'Melbourne', 'NSW', 'Australia', 2010))
@@ -189,7 +189,7 @@ class BlueGardenTestCase(BaseTestCase):
         print('\n## Testing Add produce to farm ##')
         self.login('bbaggins@lotr.com', 'bilbobaggins')
         response = self.add_produce('Eggplant', 'Big eggplants', 'Vegetable', 1, 4.38, 'static/images/eggplant.jpg', 1)
-        self.assertIn(b"Success", response.data)
+        self.assertIn(b"You successfully added Eggplant", response.data)
 
     def add_produce(self, name, description, category, selected_units, price1, prod_image, farm_id):
         img = open(prod_image, 'rb')

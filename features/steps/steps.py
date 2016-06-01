@@ -3,6 +3,7 @@ import time
 from behave import *
 import re
 
+
 @given('I am in the login page')
 def step_impl(context):
     context.browser.get(context.address + "/login")
@@ -62,9 +63,10 @@ def step_impl(context):
 def step_impl(context):
     assert 'Email Id already exists' in context.browser.page_source
 
+
 @when('I register with First name, Last name, Email Id , Password & ConfirmPassword(Password and ConfirmPassword is not equal)')
 def step_impl(context):
-    register(context, first_name='Frodo', last_name='Baggins', email='fbaggins@lotr.com', password='frodobaggins',confirmpassword='fefefefe')
+    register(context, first_name='Frodo', last_name='Baggins', email='fbaggins@lotr.com', password='frodobaggins', confirmpassword='fefefefe')
     assert context.browser.page_source
 
 @then('I should be shown the error')
@@ -87,7 +89,8 @@ def step_impl(context):
 
 @then(u'I will receive a success message')
 def step_impl(context):
-    assert 'Success' in context.browser.page_source
+    time.sleep(3)
+    assert 'You successfully added Eggplant' in context.browser.page_source
 
 
 @given(u'I am logged in at the dashboard page')

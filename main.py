@@ -207,23 +207,23 @@ app.jinja_env.globals['url_for_browse_produce'] = url_for_browse_produce
 def reference():
     return render_template('reference.html', key=stripe_keys['publishable_key'])
 
+
 @app.route('/charge', methods=['POST'])
 def charge():
-  amount = 500
+    amount = 500
 
-  # customer = stripe.Customer.create(
-  #       email=request.form['stripeEmail'],
-  #       card=request.form['stripeToken']
-  #     )
+    # customer = stripe.Customer.create(
+    #       email=request.form['stripeEmail'],
+    #       card=request.form['stripeToken']
+    #     )
 
-
-  # charge = stripe.Charge.create(
-  #       customer=customer.id,
-  #       amount=amount,
-  #       currency='AUD',
-  #       description='Flask Charge'
-  #   )
-  return render_template('charge.html', amount=amount)
+    # charge = stripe.Charge.create(
+    #       customer=customer.id,
+    #       amount=amount,
+    #       currency='AUD',
+    #       description='Flask Charge'
+    #   )
+    return render_template('charge.html', amount=amount)
 
 
 @app.errorhandler(404)
@@ -231,10 +231,10 @@ def page_not_found(e):
     return render_template('404.html')
 
 
-
 @app.route('/shutdown')
 def shutdown():
     shutdown_server()
+
 
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback():
