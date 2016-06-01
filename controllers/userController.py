@@ -40,7 +40,7 @@ class UserController:
             last_name = request.form.get('lastname', '')
             email = request.form.get('email', '')
             password = request.form.get('password', '')
-            conf_pswd = request.form.get('confirm password', '')
+            conf_pswd = request.form.get('confirmpassword', '')
             if not first_name:
                 errors.append('First Name cannot be empty')
             if not last_name:
