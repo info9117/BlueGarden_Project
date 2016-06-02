@@ -12,7 +12,8 @@ class CropController:
         
         if request.method == 'POST':
             new_state = request.form.get('change_state','')
-            oristate = Crop.query.get(crop_id)
+            #oristate = Crop.query.get(crop_id)
+            oristate = Crop.query.filter_by(id = crop_id).first()
             oristate.grow_state = new_state
             db.session.add(oristate)
             db.session.commit()

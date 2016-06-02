@@ -38,6 +38,9 @@ class BaseTestCase(TestCase):
         db.session.add(Works(2, 1))
         db.session.add(Works(2, 2))
         db.session.flush()
+        db.session.add(Crop(55,'banana', 'need some water', 55))
+        db.session.flush()
+
 
         db.session.commit()
 
@@ -107,7 +110,8 @@ class BlueGardenTestCase(BaseTestCase):
         #rv=self.addcrop('1', 'corn', 'plant', '1')
 
         rv = self.login('singarisathwik007@gmail.com', 'dm08b048')
-        rv = self.addcrop('563', 'corn', 'harvest', '892')
+        rv = self.addcrop('56', 'corn', 'harvest', '56')
+
 
         assert b'You success added crop' in rv.data
 
@@ -147,18 +151,18 @@ class BlueGardenTestCase(BaseTestCase):
             farm_id = farmid
             ),follow_redirects=True)
 
-    '''#Test change crop state
-    def change_state(self, cropid, changestate):
-        return self.client.post('/change_state/1',data=dict(
-            oristate = Crop.query.get(cropid), 
+    #Test change crop state
+    def change_state(self,  changestate):
+        return self.client.post('/change_state/57',data=dict(
+            crop_id = 57,
             new_state=changestate), follow_redirects=True)
 
     #Test change crop state       
     def test_change_state(self):
         rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
-        rv=self.change_state('1','harvest')
-        assert b'you successfully change the state' in rv.data'''
-
+        rv = self.addcrop('57', 'corn', 'harvest', '57')
+        rv=self.change_state('harvest')
+        assert b'you successfully change the state' in rv.data
 
     def test_dashboard_for_content(self):
         with self.client as c:
