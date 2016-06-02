@@ -29,7 +29,7 @@
         <td>Activity_ID:{{act.Activity_ID}}<form class="complete_activity_form" action="{{ url_for('update_active_process', crop_id = crop_id) }}" method="post">
     finish your activity!  <br>
 	  <input id = "finishactivity" type="hidden" name="finish_activity" value= {{ act.Activity_ID }}>
-	  <input type="submit" value="finish_activity">
+	  <input type="submit" name="submit" value="finish_activity">
 
     </form>   </td>
         <td>Start_Date: {{act.Action_Completed}}</td>
@@ -46,11 +46,13 @@
 
 
     {% endfor %}
+
+    {% for act in act_activities %}
      <form class="complete_process_form" action="{{ url_for('update_active_process', crop_id = crop_id) }}" method="post">
-    {{  }}  <br>
+     finish your process   <br>
 	  <input id = "finishprocess" type="hidden" name="finish_process" value= {{ act.Active_Process_ID }}>
-	  <input type="submit" value="finish_process">
+	  <input type="submit" name="submit" value="finish_process">
 
     </form>
-
+    {% endfor %}
     {% endblock %}
