@@ -14,6 +14,7 @@ def step_impl(context):
 
 @then('the new field name is recorded with the parent farm')
 def step_impl(context):
+    #print(context.browser.page_source)
     assert 'Addison Field'in context.browser.page_source
 
 

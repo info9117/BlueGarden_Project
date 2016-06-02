@@ -67,7 +67,7 @@ def step_impl(context):
     
 def change_state(context, growstate):
     newGrowState_field = context.browser.find_element_by_id("change_state")
-    newGrowState_field.send_keys(change_state)
+    newGrowState_field.send_keys(growstate)
     newGrowState_field.submit()
 
 

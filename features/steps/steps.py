@@ -1,18 +1,6 @@
 from behave import *
 import re
 
-@given('at the product details page')
-def step_impl(context):
-    context.browser.get(context.address + "/produce/1")
-
-
-
-@then('the system shows product details product name, farm name, price, unit and image')
-def step_impl(context):
-    """
-    :type context: behave.runner.Context
-    """
-
 @given('I am in the login page')
 def step_impl(context):
     context.browser.get(context.address + "/login")
@@ -110,6 +98,7 @@ def step_impl(context):
     login(context, 'singarisathwik007@gmail.com', 'dm08b048')
     assert 'Hello Sathwik' in context.browser.page_source
 
+
 @when(u'I go to browse produce page')
 def step_impl(context):
     context.browser.get(context.address + '/farm/1/produce/add')
@@ -121,7 +110,6 @@ def step_impl(context):
 @then(u'I see produce in the page')
 def step_impl(context):
     assert 'Eggplant' in context.browser.page_source
-
 
 
 def login(context, email, password):
@@ -143,11 +131,35 @@ def register(context, first_name, last_name, email, password):
     password_field.send_keys(password)
     email_field.submit()
 
+@given('at the product details page')
+def step_impl(context):
+    context.browser.get(context.address + "/produce/1")
+
+
+def add_produce(context, name, description, category, units, price1, prod_image):
+    name_field = context.browser.find_element_by_id("name")
+    description_field = context.browser.find_element_by_id("description")
+    name_field.send_keys(name)
+    description_field.send_keys(description)
+    context.browser.execute_script('$(function() { $("#category").val("'+category+'"); });')
+    context.browser.execute_script('$(function() { $("#unit").val("'+units+'"); });')
+    context.browser.execute_script('addItem()')
+    price1_field = context.browser.find_element_by_id("price1")
+    price1_field.send_keys(price1)
+    context.browser.find_element_by_id("prod_image").send_keys(prod_image)
+    name_field.submit()
+
 
 @given(u'the product details page and produce price')
 def step_impl(context):
     context.browser.get(context.address + "/produce/1")
 
+@then('the system shows product details product name, farm name, price, unit and image')
+def step_impl(context):
+    """
+    :type context: behave.runner.Context
+    """
+    assert context.browser.page_source    
 
 @when(u'the user selects the {amount} of the product')
 def step_impl(context, amount):
