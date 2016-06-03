@@ -74,4 +74,5 @@ def after_all(context):
     with app.app_context():
         db.session.remove()
         db.drop_all()
+    
 

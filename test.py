@@ -248,7 +248,7 @@ class BlueGardenTestCase(BaseTestCase):
     def test_farm_page_content(self):
         print('\n## Testing new farmer user has no farms yet ##')
         self.login('mrmf@gmail.com', 'shazza')
-        response = self.client.get('/sell', follow_redirects=True)
+        response = self.client.get('/farm', follow_redirects=True)
         self.assertIn(b"You dont have any farms yet.", response.data)
 
     # Testing that user can add farms that they work on
@@ -265,7 +265,7 @@ class BlueGardenTestCase(BaseTestCase):
 
     def add_farm(self, name, address1, address2, city, state, country, postcode):
         self.login('mrmf@gmail.com', 'shazza')
-        return self.client.post('/sell', data=dict(
+        return self.client.post('/farm', data=dict(
             name=name,
             address1=address1,
             address2=address2,

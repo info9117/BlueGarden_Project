@@ -19,6 +19,7 @@ from controllers.templateController import TemplateController as templateControl
 from controllers.resourcelistController import ResourceController as resourceController
 from controllers import ProduceController
 from controllers.feedbackController import FeedbackController
+from controllers.processController import ProcessController
 
 from controllers import ProduceController
 from shared import db
@@ -122,16 +123,15 @@ def checkout(item_id):
     return CheckoutController.checkout(item_id)
 
 
-@app.route('/sell', methods=['GET', 'POST'])
+@app.route('/farm', methods=['GET', 'POST'])
 @login_required
-def sell():
-
+def farm():
     return farmController.add_farm()
     
 @app.route('/activity/<int:process_id>', methods=['GET', 'POST'])
 @login_required
 def activity(process_id):
-    return farmController.activity(process_id)
+    return ProcessController.activity(process_id)
 
 
 @app.route('/field', methods=['GET', 'POST'])
@@ -184,18 +184,13 @@ def uploaded_image(farm_id, filename):
 @app.route('/process', methods=['GET', 'POST'])
 @login_required
 def process():
-    return templateController.add_process()
+    return ProcessController.add_process()
     
 @app.route('/active_process/<process_or_crop>/<int:id>', methods=['GET', 'POST'])
 @login_required
 def active_process(process_or_crop,id):
 
-    return farmController.active_process(process_or_crop,id)
-
-@app.route('/activity/<int:process_id>/add', methods=['GET', 'POST'])
-@login_required
-def add_activity_to_process(process_id):
-    return farmController.linkToActivity(process_id)
+    return ProcessController.active_process(process_or_crop,id)
 
 
 def url_for_browse_produce(page):

@@ -9,7 +9,7 @@ import re
 def step_impl(context):
     context.browser.get(context.address + "/login")
     login(context, 'farmer_j01@gmail.com', 'louise1993')
-    context.browser.get(context.address + "/sell")
+    context.browser.get(context.address + "/farm")
     assert 'Add Farm' in context.browser.page_source
 
 @when('a farmer submits valid farm name and address')
@@ -41,7 +41,7 @@ def step_impl(context):
 
 @when('the user views the sell page')
 def step_impl(context):
-    context.browser.get(context.address + "/sell")
+    context.browser.get(context.address + "/farm")
 
 @then('the the error: "You dont have any farms yet." is returned')
 def step_impl(context):
