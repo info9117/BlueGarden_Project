@@ -71,6 +71,7 @@ class ProduceController:
                 category_filter.append(category.lower())
         location = request.args.get('location')
         search = request.args.get('search')
+
         if category_filter:
             results_filtered = True
             results = Produce.query.filter(func.lower(Produce.category).in_(category_filter)) \
