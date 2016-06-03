@@ -75,7 +75,7 @@ class FarmController:
                 errors.append("You must enter a name")
             if not address1:
                 errors.append("You must enter an address")
-            else:
+            elif not errors:
 
                 #add farm address:
                 address = Address(address1,address2,city,state,country,postcode)

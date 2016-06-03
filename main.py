@@ -15,7 +15,6 @@ from controllers.userController import UserController as userController
 from controllers.farmController import FarmController as farmController
 from controllers.fieldController import FieldController as fieldController
 from controllers.cropController import CropController as cropController
-from controllers.templateController import TemplateController as templateController
 from controllers.resourcelistController import ResourceController as resourceController
 from controllers import ProduceController
 from controllers.feedbackController import FeedbackController

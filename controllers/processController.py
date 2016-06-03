@@ -115,7 +115,6 @@ class ProcessController:
 
         if request.method == 'POST':
             if not process or not Start_Date:
-                print("error")
                 errors.append("A process and start date must be selected")
             if target == '' and not errors:
                 # A process commences with NULL target
@@ -123,7 +122,7 @@ class ProcessController:
                     Active_Process(process.id, user_id, datetime.strptime(Start_Date, '%d %b, %Y'), None, None, None, None))
                 db.session.commit()
                 Active_Process_ID = db.session.query(Active_Process).order_by(Active_Process.id.desc()).first().id
-                Farm.init_process(Active_Process_ID, process.id)
+                ProcessController.init_process(Active_Process_ID, process.id)
                 flash("New active process \"" + Process_List.query.get(
                     process.id).process_name + "\" commences on the " + Start_Date)
                 return render_template('/active_process.html', processes=processes)
@@ -147,7 +146,7 @@ class ProcessController:
                 db.session.add(Active_Process(process.id, user_id, pydate, None, None, Target_Type, Target_ID))
                 db.session.commit()
                 Active_Process_ID = db.session.query(Active_Process).order_by(Active_Process.id.desc()).first().id
-                Farm.init_process(Active_Process_ID, process.id)
+                ProcessController.init_process(Active_Process_ID, process.id)
                 flash("New active process \"" + Process_List.query.get(process.id).process_name + "\" commences on the " +
                       Start_Date + " for your " + Target_Type)
                 #..process started

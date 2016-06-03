@@ -17,7 +17,10 @@ class BaseTestCase(TestCase):
         user2.set_user_farmer()
         db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
         db.session.add(user2)
-        db.session.add(User('Master', 'Farmer', 'mrmf@gmail.com', 'shazza'))
+        user3 = User('Master', 'Farmer', 'mrmf@gmail.com', 'shazza')
+        user4 = User('Not', 'Farmer', 'mrmf@farm.com', 'qwerty')
+        db.session.add(user3)
+        db.session.add(user4)
         db.session.add(Unit('Kg'))
         db.session.add(Unit('gm'))
         db.session.add(Unit('l'))
@@ -44,7 +47,9 @@ class BaseTestCase(TestCase):
         db.session.add(Resource_List('fertiliser'))
         db.session.flush()
         db.session.add(Process_List('making cheese', 'Cheese making process'))
-
+        db.session.add(Field("east block",'Shire Farms',1))
+        db.session.add(Works(3, 1))
+        user3.set_user_farmer()
         db.session.commit()
 
     def tearDown(self):
@@ -103,17 +108,6 @@ class BlueGardenTestCase(BaseTestCase):
         response = self.register('Frodo', 'Baggins', 'fbaggins@lotr.com', 'frodobaggins')
         self.assertIn(b'Hello Frodo', response.data)
 
-    # Testing add crop with new crop
-    def test_login_addcrop(self):
-        print('\n## Testing add crop with new crop')
-
-        # rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
-        # rv=self.addcrop('1', 'corn', 'plant', '1')
-
-        rv = self.login('singarisathwik007@gmail.com', 'dm08b048')
-        rv = self.addcrop('563', 'corn', 'harvest', '892')
-
-        assert b'You success added crop' in rv.data
 
     def test_dashboard_recently_viewed(self):
         print('\n## Testing viewing recently viewed on the dashboard')
@@ -235,105 +229,6 @@ class BlueGardenTestCase(BaseTestCase):
         self.add_produce('Potato', 'Big Potatoes', 'Vegetable', 1, 4.38, 'static/images/potato.jpg', 2)
         self.produce_added = True
 
-    # Testing the flag for farmer user type
-    def test_farmer_type(self):
-        print('\n## Testing the flag for farmer user type ##')
-        user = User.query.filter_by(email='mrmf@gmail.com').first()
-        User.set_user_farmer(user)
-        assert 'Master' in [farmer.first_name for farmer in User.query.filter_by(type='C').all()]
-        user.type = 'B'
-        assert 'Master' not in [farmer.first_name for farmer in User.query.filter_by(type='C').all()]
-
-    # Testing new farmer user has no farms yet
-    def test_farm_page_content(self):
-        print('\n## Testing new farmer user has no farms yet ##')
-        self.login('mrmf@gmail.com', 'shazza')
-        response = self.client.get('/farm', follow_redirects=True)
-        self.assertIn(b"You dont have any farms yet.", response.data)
-
-    # Testing that user can add farms that they work on
-    def test_add_farms(self):
-        print('\n## Testing that user can add farms that they work on ##')
-        response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
-        self.assertIn(b"Community Farm", response.data)
-
-    def test_add_duplicate_farms(self):
-        print('\n## Testing that user cannot add duplicate farms that they work on ##')
-        self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
-        response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
-        self.assertIn(b"Already Exists", response.data)
-
-    def add_farm(self, name, address1, address2, city, state, country, postcode):
-        self.login('mrmf@gmail.com', 'shazza')
-        return self.client.post('/farm', data=dict(
-            name=name,
-            address1=address1,
-            address2=address2,
-            city=city,
-            state=state,
-            country=country,
-            postcode=postcode
-        ), follow_redirects=True)
-
-    def add_activity(self, process, description, resource):
-        self.login('mrmf@gmail.com', 'shazza')
-        return self.client.post('/activity/0', data=dict(
-            process=process,
-            description=description,
-            resource=resource
-        ), follow_redirects=True)
-
-    def start_process(self, target, farm, field, crop, date, user_id, process, other_target):
-        return self.client.post('/active_process/process/1', data=dict(
-            target=target,
-            farm=farm,
-            field=field,
-            crop=crop,
-            date=date,
-            user_id=user_id,
-            process=process,
-            other_target=other_target
-        ), follow_redirects=True)
-
-    # Testing that user can record activities
-    def test_add_activity(self):
-        print('\n## Testing that user can record activities ##')
-        process = db.session.query(Process_List).order_by(Process_List.id.asc()).first().id
-        resource = db.session.query(Resource_List).order_by(Resource_List.id.asc()).first().id
-        description = 'Mowing the lawn'
-        response = self.add_activity(process, description, resource)
-        self.assertIn(b"was added to", response.data)
-
-    # Testing that farmer can initiate new process on target <X>
-    def test_start_process(self):
-        self.login('mrmf@gmail.com', 'shazza')
-        user = User.query.get(User.query.filter_by(email='mrmf@gmail.com').first().id)
-        print('\n## Test-- Farmer starts process for: Farm ##')
-        response = self.start_process("farm", 1, '', '', "10 Sep, 2016", user.id, 1, '')
-        self.assertIn(b"for your farm", response.data)
-        print('\n## Test-- Farmer starts process for: Other ##')
-        response = self.start_process("other", '', '', '', "10 Sep, 2016", user.id, 1, 'On the roof!')
-        self.assertIn(b"for your other", response.data)
-        print('\n## Test-- Farmer starts process for: None ##')
-        response = self.start_process('', '', '', '', "10 Sep, 2016", user.id, 1, '')
-        self.assertIn(b"commences on the ", response.data)
-        print('\n## Test-- Farmer starts process for: Field ##')
-        response = self.start_process("field", '', 1, '', "10 Sep, 2016", user.id, 1, '')
-        self.assertIn(b"for your field", response.data)
-        print('\n## Test-- Farmer starts process for: Crop ##')
-        response = self.start_process("crop", '', '', 1, "10 Sep, 2016", user.id, 1, '')
-        self.assertIn(b"for your crop", response.data)
-
-    # testing farmer can add activity to process template
-    def test_process_template_build(self):
-        self.login('mrmf@gmail.com', 'shazza')
-        print('\n## Testing that user can record steps in process ##')
-        response = self.client.post('/activity/1', data=dict(
-            process=1,
-            description="step1",
-            resource=1
-        ), follow_redirects=True)
-        self.assertIn(b"was added to making cheese", response.data)
 
     def test_add_to_cart(self):
         response = self.client.post('/produce/1', data=dict(

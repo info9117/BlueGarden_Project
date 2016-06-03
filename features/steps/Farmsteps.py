@@ -45,6 +45,9 @@ def step_impl(context):
 
 @then('the the error: "You dont have any farms yet." is returned')
 def step_impl(context):
+    print(context.browser.page_source)
+    import time
+    time.sleep(4)
     assert 'You dont have any farms yet.' in context.browser.page_source
 
 def add_farm(context, name, address1, address2, city, state, country, postcode):
@@ -70,6 +73,8 @@ def register(context, first_name, last_name, email, password):
     lastname_field = context.browser.find_element_by_id("lastname")
     email_field = context.browser.find_element_by_id("email")
     password_field = context.browser.find_element_by_id("password")
+    conf_passwd = context.browser.find_element_by_id("confirmpassword")
+    conf_passwd.send_keys(password)
     firstname_field.send_keys(first_name)
     lastname_field.send_keys(last_name)
     email_field.send_keys(email)
