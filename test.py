@@ -87,10 +87,16 @@ class BlueGardenTestCase(BaseTestCase):
     #Testing resource list
     def test_login_resourcelist(self):
         print('\n## Testing add resource ##')
-        self.login('bbaggins@lotr.com', 'bilbobaggins')
+        rv = self.login('singarisathwik007@gmail.com', 'dm08b048')
         response = self.add_resourcelist('this is your resource')
         #self.assertIn(b'this is your resource',response.data)
         #assert b'added resource successfully' in response.data
+
+    def add_resourcelist(self, decription):
+        self.login('mrmf@gmail.com', 'shazza')
+        return self.client.post('/addresource', data = dict(
+            decription = decription
+        ), follow_redirects = True)
 
 
     # Testing Registration Page content
@@ -155,18 +161,18 @@ class BlueGardenTestCase(BaseTestCase):
             farm_id=farmid
         ), follow_redirects=True)
 
-    '''#Test change crop state
-    def change_state(self, cropid, changestate):
-        return self.client.post('/change_state/1',data=dict(
-            #oristate = Crop.query.get(cropid),
-            oristate = Crop.query.filter_by(id=cropid).first(),
+    #Test change crop state
+    def change_state(self,  changestate):
+        return self.client.post('/change_state/57',data=dict(
+            crop_id = 57,
             new_state=changestate), follow_redirects=True)
 
-    #Test change crop state       
+    #Test change crop state
     def test_change_state(self):
         rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
-        rv=self.change_state('1','harvest')
-        assert b'you successfully change the state' in rv.data'''
+        rv = self.addcrop('57', 'corn', 'harvest', '57')
+        rv=self.change_state('harvest')
+        assert b'you successfully change the state' in rv.data
 
     def test_dashboard_for_content(self):
         with self.client as c:
