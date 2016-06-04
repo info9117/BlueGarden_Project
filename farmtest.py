@@ -18,29 +18,16 @@ class BlueGardenFarmTests(TestCase):
         user4 = User('Not', 'Farmer', 'mrmf@farm.com', 'qwerty')
         db.session.add(user3)
         db.session.add(user4)
-        db.session.add(Unit('Kg'))
-        db.session.add(Unit('gm'))
-        db.session.add(Unit('l'))
-        db.session.add(Unit('ml'))
-        db.session.flush()
         db.session.add(Address('123 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
         db.session.add(Address('126 Hill Rd', None, 'Melbourne', 'NSW', 'Australia', 2010))
         db.session.flush()
         db.session.add(Farm('Shire Farms', 1))
         db.session.add(Farm('Mordor Farms', 1))
-        db.session.add(Produce('corn', 'vegetable', 'tasty', 1, 1))
-        db.session.add(Produce('milk', 'dairy', 'yum', 2, 2))
-        db.session.flush()
-        db.session.add(Price(1, 1, 2.2))
-        db.session.add(Price(2, 1, 4.4))
-        db.session.add(RecentProduce(1, 1))
         db.session.flush()
         db.session.add(Works(2, 1))
         db.session.add(Works(2, 2))
         db.session.add(Activity_List('activity name',1))
-        db.session.add(Item(amount=2, price=2.2, produce_id=1, unit_id=1))
         db.session.flush()
-
         db.session.add(Resource_List('fertiliser'))
         db.session.flush()
         db.session.add(Process_List('making cheese', 'Cheese making process'))
@@ -52,6 +39,19 @@ class BlueGardenFarmTests(TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+
+    #Testing resource list
+    def test_login_resourcelist(self):
+        print('\n## Testing add resource ##')
+        rv = self.login('singarisathwik007@gmail.com', 'dm08b048')
+        response = self.add_resourcelist('this is your resource')
+        self.assertIn(b'this is your resource',response.data)
+
+    def add_resourcelist(self, decription):
+        self.login('mrmf@gmail.com', 'shazza')
+        return self.client.post('/addresource', data = dict(
+            resourcedescription = decription
+        ), follow_redirects = True)
 
     # Testing add crop with new crop
     def test_login_addcrop(self):
@@ -69,17 +69,17 @@ class BlueGardenFarmTests(TestCase):
             farm_id=farmid
         ), follow_redirects=True)
 
-    '''#Test change crop state
+    # Test change crop state
     def change_state(self, cropid, changestate):
         return self.client.post('/change_state/1',data=dict(
             oristate = Crop.query.get(cropid),
             new_state=changestate), follow_redirects=True)
 
-    #Test change crop state
+    # Test change crop state
     def test_change_state(self):
         rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
         rv=self.change_state('1','harvest')
-        assert b'you successfully change the state' in rv.data'''
+        assert b'you successfully change the state' in rv.data
 
     # Testing the flag for farmer user type
     def test_farmer_type(self):
@@ -124,6 +124,12 @@ class BlueGardenFarmTests(TestCase):
             postcode=postcode
         ), follow_redirects=True)
 
+    def add_process(self, process_name, process_description):
+        self.login('mrmf@gmail.com', 'shazza')
+        return self.client.post('/process', data=dict(
+            process_name=process_name,
+            process_description=process_description
+        ), follow_redirects=True)
 
     def add_activity(self, process, description, resource, activity):
         self.login('mrmf@gmail.com', 'shazza')
@@ -147,6 +153,20 @@ class BlueGardenFarmTests(TestCase):
             other_target=other_target
         ), follow_redirects=True)
 
+     # Testing that farmer can register new process
+    def test_add_process(self):
+        print('\n## Testing that farmer can register new process ##')
+        response = self.add_process( "Process name", "process_description")
+        self.assertIn(b"Process name", response.data)
+
+    # Testing process page errors
+    def test_process_page(self):
+        print('\n## Testing process page error: name ##')
+        response = self.add_process("", "process_description")
+        self.assertIn(b"You must enter a Process name", response.data)
+        print('\n## Testing process page error: description ##')
+        response = self.add_process("Process name", "")
+        self.assertIn(b"You must enter a Process description", response.data)
 
     # Testing that user can record activities
     def test_add_activity(self):

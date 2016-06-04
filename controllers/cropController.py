@@ -82,16 +82,3 @@ class CropController:
                 return redirect(url_for("addcrop"))
 
         return render_template('update_active_process.html',errors = errors, crop_id = crop_id, act_activities  = act_activities )
-
-
-
-
-
-
-
-
-        
-
-
-
-    
