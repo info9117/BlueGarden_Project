@@ -80,9 +80,11 @@ def register():
 def logout():
     return userController.logout()
 
-@app.route('/contact')
+
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
     return feedbackController.feedback()
+
 
 @app.route('/addcrop', methods=['GET', 'POST'])
 @login_required
@@ -94,6 +96,7 @@ def addcrop():
 @login_required
 def change_state(crop_id):
     return cropController.change_state(crop_id)
+
 
 @app.route('/dashboard')
 @login_required
@@ -114,10 +117,7 @@ def sell():
 
 
 @app.route('/activity', methods=['GET', 'POST'])
-
-    
 @app.route('/activity/<int:process_id>', methods=['GET', 'POST'])
-
 @login_required
 def activity(process_id):
     return farmController.activity(process_id)
@@ -129,11 +129,10 @@ def field():
     return fieldController.addField()
 
 
-@app.route('/addresource',methods=['GET', 'POST'])
+@app.route('/addresource', methods=['GET', 'POST'])
 @login_required
 def resource():
     return resourceController.add_resource()
-
 
 
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
@@ -175,16 +174,18 @@ def uploaded_image(farm_id, filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'] + 'produce/' + str(farm_id) + '/',
                                filename)
 
+
 @app.route('/process', methods=['GET', 'POST'])
 @login_required
 def process():
     return templateController.add_process()
-    
+
+
 @app.route('/active_process/<process_or_crop>/<int:id>', methods=['GET', 'POST'])
 @login_required
-def active_process(process_or_crop,id):
+def active_process(process_or_crop, id):
+    return farmController.active_process(process_or_crop, id)
 
-    return farmController.active_process(process_or_crop,id)
 
 @app.route('/activity/<int:process_id>/add', methods=['GET', 'POST'])
 @login_required
@@ -213,4 +214,3 @@ def shutdown():
 
 if __name__ == '__main__':
     serve_forever()
-

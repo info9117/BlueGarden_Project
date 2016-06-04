@@ -1,7 +1,7 @@
 
 {% extends "base.html" %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Contact Us{% endblock %}
 
 {% block navbar %}
 {% endblock %}
@@ -45,17 +45,7 @@
                 </div>
                 {% endif %}
                 {% endwith %}
-                <!--
-                <form class="contact_form" action="" method="post">
-                    <textarea id="enquiry" name="enquiry" type="text" placeholder="Enquiry" class="validate" rows="5" cols="40"></textarea>
-                    <br>
-                    <input id="email" name="email" type="email" placeholder="Email Address" class="validate">
-                    <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit" name="action">
-                        SUBMIT
-                    </button>
-                    
-                </form>
-                -->
+
                 <form class="contact_form" action="" method="POST">
                     <input id="firstname" name="name" type="text" placeholder="Name" class="validate">
                     <input id="email" name="email" type="email" placeholder="Email Address" class="validate">
