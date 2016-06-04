@@ -57,9 +57,9 @@
             <input type="number" name="discount" id="discount" class="form-control" placeholder="discount">
             <button id="btncheck" class="btn btn-lg btn-primary btn-block" type="submit">Save Buyer Data</button>
         </form>
-        <form method="get" action="/page2">
-            <button type="submit">Pay Now</button>
-        </form>
+        <a href="{{ url_for('reference') }}">
+            <input type="button" value="Pay Now" />
+        </a>
 
         <h1>Total is ${{ item.total }}</h1>
         {% if check %}
