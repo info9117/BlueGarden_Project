@@ -1,5 +1,4 @@
-import db
-import urlparse
+from shared import db
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
 
 '''
@@ -12,6 +11,7 @@ And through this file, there should be a link to backend feedback management por
 
 class Contact(db.Model):
     __tablename__ = 'feedback'
+    id = db.Column('id', db.Integer, primary_key=True)
     name = db.Column('name', db.String(255), nullable=False)
     email = db.Column('email', db.String(255), nullable=False)
     title = db.Column('title', db.String(255), nullable=False)

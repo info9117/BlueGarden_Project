@@ -56,34 +56,16 @@
                     
                 </form>
                 -->
-                <form class="form">
-  
-  <p class="name">
-   <label for="name">Name</label>
-      <input type="text" name="name" id="name" placeholder="John Doe" />
+                <form class="contact_form" action="" method="POST">
+                    <input id="firstname" name="name" type="text" placeholder="Name" class="validate">
+                    <input id="email" name="email" type="email" placeholder="Email Address" class="validate">
+                    <input id="title" name="title" type="text" placeholder="Title" class="validate">
 
-  </p>
-  
-  <p class="email">
-   <label for="email">Email</label>
-      <input type="text" name="email" id="email" placeholder="mail@example.com" />
-
-  </p>
-  
-  <p class="web">
-    <label for="web">Subject</label>
-      <input type="text" name="web" id="web" placeholder="" />
-
-  </p>  
- 
-  <p class="text">
-   <textarea name="text" placeholder="Write something to us"></textarea>
-  </p>
-  
-  <p class="submit">
-   <input type="submit" value="Send" />
-  </p>
- </form>
+					<input id="enquiry" name="enquiry" type="text" placeholder="Enquiry" class="validate">
+                    <button class="btn waves-effect waves-light moderate-pink darken-1 center-align" type="submit" name="submit">
+                        SUBMIT
+                    </button>
+                </form>
 
 </div>
 {% endblock %}
