@@ -6,11 +6,7 @@ from main import app
 from models import *
 from flask_testing import TestCase
 import unittest
-
 from io import BytesIO
-import os
-import flask
-
 
 
 class BaseTestCase(TestCase):
@@ -137,7 +133,6 @@ class BlueGardenTestCase(BaseTestCase):
         self.assertIn(b'Last Name cannot be empty', response.data)
         self.assertIn(b'Email Id cannot be empty', response.data)
         self.assertIn(b'Password cannot be empty', response.data)
-        self.assertIn(b'Password mismatch!', response.data)
 
     # Testing add crop with new crop
     def test_login_addcrop(self):
