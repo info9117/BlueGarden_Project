@@ -64,14 +64,18 @@ def step_impl(context):
     assert 'Email Id already exists' in context.browser.page_source
 
 
-@when('I register with First name, Last name, Email Id , Password & ConfirmPassword(Password and ConfirmPassword is not equal)')
+@when('I register with First name, Last name, Email Id , '
+      'Password & ConfirmPassword(Password and ConfirmPassword is not equal)')
 def step_impl(context):
-    register(context, first_name='Frodo', last_name='Baggins', email='fbaggins@lotr.com', password='frodobaggins', confirmpassword='fefefefe')
+    register(context, first_name='Frodo', last_name='Baggins', email='fbaggins@lotr.com', password='frodobaggins',
+             confirmpassword='fefefefe')
     assert context.browser.page_source
+
 
 @then('I should be shown the error')
 def step_impl(context):
-    assert 'Password and ConfirmPassword is not equal' in context.browser.page_source
+    assert 'Password mismatch!' in context.browser.page_source
+
 
 @given('I am in the add produce page')
 def step_impl(context):
@@ -118,8 +122,6 @@ def step_impl(context):
     add_produce(context, 'Eggplant', 'Bright Eggplants', 'Vegetable', '1', '4.32', '/eggplant.jpeg')
     context.browser.get(context.address + "/search/produce")
     assert 'Browse Produce' in context.browser.page_source
-
-
 
 @when(u'I go to browse produce page and apply filters')
 def step_impl(context):
