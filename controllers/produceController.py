@@ -80,7 +80,6 @@ class ProduceController:
             results = results.filter(Produce.name.like("%" + search + "%")).order_by(Produce.id)
         results = results.order_by(Produce.id).paginate(page, results_per_page, False)
         total = results.total
-        # print(results.query.as_scalar())
         pagination = Pagination(results, page, results_per_page, total, results.items)
         return render_template('browse_produce.html', results=results.items, categories=categories,
                                pagination=pagination)

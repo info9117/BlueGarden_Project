@@ -3,3 +3,6 @@
 *.db
 images
 *.memory
+.coverage
+htmlcov
+venv

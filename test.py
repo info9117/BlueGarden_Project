@@ -2,8 +2,12 @@ from main import app
 from models import *
 from flask_testing import TestCase
 import unittest
-
+from coverage import coverage
 from io import BytesIO
+import os
+
+cov = coverage(branch=True, omit=['venv/*', 'test.py'])
+cov.start()
 
 
 class BaseTestCase(TestCase):
@@ -18,10 +22,6 @@ class BaseTestCase(TestCase):
         db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
         db.session.add(user2)
         db.session.add(User('Master', 'Farmer', 'mrmf@gmail.com', 'shazza'))
-        # db.session.add(Unit('Kg'))
-        # db.session.add(Unit('gm'))
-        # db.session.add(Unit('l'))
-        # db.session.add(Unit('ml'))
         db.session.flush()
         db.session.add(Address('123 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
         db.session.add(Address('126 Hill Rd', None, 'Melbourne', 'NSW', 'Australia', 2010))
@@ -160,16 +160,10 @@ class BlueGardenTestCase(BaseTestCase):
         assert b'you successfully change the state' in rv.data'''
 
     def test_dashboard_for_content(self):
-        with self.client as c:
-            with c.session_transaction() as session:
-                session['logged_in'] = True
-                session['email'] = 'singarisathwik007@gmail.com'
-                session['firstname'] = 'Sathwik'
-                session['lastname'] = 'Singari'
-                print('\n## Testing dashboard page for content ##')
-
+        print('\n## Testing dashboard content ##')
+        self.login('bbaggins@lotr.com', 'bilbobaggins')
         response = self.client.get('/dashboard', content_type='html/text')
-        self.assertIn(b'Hello Sathwik', response.data)
+        self.assertIn(b'Hello Bilbo', response.data)
 
     def test_add_produce_page_content(self):
         print('\n## Testing Add produce page content ##')
@@ -190,6 +184,12 @@ class BlueGardenTestCase(BaseTestCase):
         self.login('bbaggins@lotr.com', 'bilbobaggins')
         response = self.add_produce('Eggplant', 'Big eggplants', 'Vegetable', 1, 4.38, 'static/images/eggplant.jpg', 1)
         self.assertIn(b"You successfully added Eggplant", response.data)
+
+    def test_add_produce_not_farmer(self):
+        print('\n## Testing add produce page content if the farm doesnt belong to you ##')
+        self.login('singarisathwik007@gmail.com', 'dm08b048')
+        response = self.client.get('/farm/1/produce/add', content_type='html/text', follow_redirects=True)
+        self.assertIn(b"Sorry, This farm doesn&#39;t belong to you", response.data)
 
     def add_produce(self, name, description, category, selected_units, price1, prod_image, farm_id):
         img = open(prod_image, 'rb')
@@ -405,4 +405,13 @@ class BlueGardenTestCase(BaseTestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    try:
+        unittest.main()
+    except:
+        pass
+    cov.stop()
+    cov.save()
+    print("\n\nCoverage Report:\n")
+    cov.report()
+    cov.html_report()
+    cov.erase()
