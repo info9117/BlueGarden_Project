@@ -4,5 +4,5 @@
 *.db
 *.memory
 .coverage
-htmlcov
-venv
+/htmlcov
+/venv
