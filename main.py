@@ -10,6 +10,7 @@ from controllers.userController import UserController as userController
 from controllers.farmController import FarmController as farmController
 from controllers.fieldController import FieldController as fieldController
 from controllers.cropController import CropController as cropController
+from controllers.feedbackController import FeedbackController as feedbackController
 
 from controllers import ProduceController
 
@@ -81,7 +82,7 @@ def logout():
 
 @app.route('/contact')
 def contact():
-    return render_template('contact.html')
+    return feedbackController.feedback()
 
 @app.route('/addcrop', methods=['GET', 'POST'])
 @login_required
