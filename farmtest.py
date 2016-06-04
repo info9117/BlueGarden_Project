@@ -52,6 +52,7 @@ class BlueGardenFarmTests(TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+
     # Testing add crop with new crop
     def test_login_addcrop(self):
         print('\n## Testing add crop with new crop')
@@ -67,6 +68,18 @@ class BlueGardenFarmTests(TestCase):
             grow_state=growstate,
             farm_id=farmid
         ), follow_redirects=True)
+
+    '''#Test change crop state
+    def change_state(self, cropid, changestate):
+        return self.client.post('/change_state/1',data=dict(
+            oristate = Crop.query.get(cropid),
+            new_state=changestate), follow_redirects=True)
+
+    #Test change crop state
+    def test_change_state(self):
+        rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
+        rv=self.change_state('1','harvest')
+        assert b'you successfully change the state' in rv.data'''
 
     # Testing the flag for farmer user type
     def test_farmer_type(self):
@@ -91,7 +104,7 @@ class BlueGardenFarmTests(TestCase):
         response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
         self.assertIn(b"Community Farm", response.data)
 
-
+    # Testing duplicate farm names error
     def test_add_duplicate_farms(self):
         print('\n## Testing that user cannot add duplicate farms that they work on ##')
         self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')

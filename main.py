@@ -19,6 +19,7 @@ from controllers.resourcelistController import ResourceController as resourceCon
 from controllers import ProduceController
 from controllers.feedbackController import FeedbackController
 from controllers.processController import ProcessController
+from controllers.cropController import CropController
 
 from controllers import ProduceController
 from shared import db
@@ -96,7 +97,7 @@ def logout():
 @app.route('/addcrop', methods=['GET', 'POST'])
 @login_required
 def addcrop():
-    return userController.addcrop()
+    return CropController.addcrop()
 
     
 @app.route('/change_state/<int:crop_id>',methods=['GET', 'POST'])
