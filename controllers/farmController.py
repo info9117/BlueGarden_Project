@@ -133,6 +133,8 @@ class FarmController:
                 return render_template('activity.html', resources=resources, errors=errors, processes=processes, process=process, activities=activities)
             if not resources:
                 errors.append("add some resources first!")
+            if not req_resource_id:
+                errors.append("select a resource this time")
             if not process:
                 errors.append("select a process")
             if not activity_description:
@@ -142,7 +144,8 @@ class FarmController:
                 newactivity = db.session.query(Activity_List).order_by(Activity_List.id.desc()).first().id
                 db.session.add(Process_Steps(process, newactivity))
                 db.session.commit()
-                flash("Activity was recorded")
+                process=Process_List.query.get(process)
+                flash("Activity \""+activity_description+"\" was added to "+process.process_name)
         process=''
         if process_id:
             process = Process_List.query.get(process_id)
@@ -235,73 +238,3 @@ class FarmController:
         return render_template('/active_process.html',errors=errors, processes=processes, process=process, target=target, other=other, field=field, fields=fields, farm=farm, farms=farms, crop=crop, crops=crops)
 
          
-
-    @staticmethod
-    def linkToActivity(id):
-        resources = []
-        errors = []
-        processes = []
-        process = Process_List.query.filter_by(id=id).first()
-        for resource in db.session.query(Resource_List).order_by(Resource_List.id.asc()).all():
-                resources.append(resource)
-        if request.method == 'POST':
-#            addActivityToProcess()
-
-            db.session.add(Process_Steps(process, newactivity))
-            db.session.commit()
-            req_resource_id = request.form.get('resource', '')
-            activity_description = request.form.get('description', '')
-            process = request.form.get('process', '')
-            activity = request.form.get('activity', '')
-            if activity:
-                db.session.add(Process_Steps(process, activity))
-                db.session.commit()
-                flash("Activity was recorded")
-                return render_template('activity.html', resources=resources, errors=errors, processes=processes, process=process)
-            if not resources:
-                errors.append("add some resources first!")
-            if not process:
-                errors.append("select a process")
-            if not activity_description:
-                errors.append("add an activity description")
-            if not errors:
-                db.session.add(Activity_List(activity_description, req_resource_id))
-                newactivity = db.session.query(Activity_List).order_by(Activity_List.id.desc()).first().id
-                db.session.add(Process_Steps(process, newactivity))
-                db.session.commit()
-                flash("Activity was recorded")
-                #return render_template('process.html', process=Process_List.query.get(process))
-            return render_template('activity.html', resources=resources, errors=errors, processes=processes, process=process)
-        return render_template('activity.html', resources=resources, errors=errors, processes=processes, process=process)
-'''
-    @staticmethod
-    def addActivityToProcess():
-        resources = []
-        errors = []
-        processes = []
-
-        req_resource_id = request.form.get('resource', '')
-        activity_description = request.form.get('description', '')
-        process = request.form.get('process', '')
-        activity = request.form.get('activity', '')
-        if activity:
-            db.session.add(Process_Steps(process, activity))
-            db.session.commit()
-            flash("Activity was recorded")
-            return render_template('activity.html', resources=resources, errors=errors, processes=processes, process=process, activities=activities)
-        if not resources:
-            errors.append("add some resources first!")
-        if not process:
-            errors.append("select a process")
-        if not activity_description:
-            errors.append("add an activity description")
-        if not errors:
-            db.session.add(Activity_List(activity_description, req_resource_id))
-            newactivity = db.session.query(Activity_List).order_by(Activity_List.id.desc()).first().id
-            db.session.add(Process_Steps(process, newactivity))
-            db.session.commit()
-            flash("Activity was recorded")
-            #return render_template('process.html', process=Process_List.query.get(process))
-            process = Process_List.query.get(process)
-        return render_template("/activity/{{ process.id }}/add", resources=resources, errors=errors, processes=processes, process=process, activities=activities)
-'''

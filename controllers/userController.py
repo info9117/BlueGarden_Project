@@ -23,6 +23,7 @@ class UserController:
                 if user:
                     if not user.check_password(password):
                         errors.append("Email Id/Password do not match")
+
                 else:
                     errors.append("User doesn't exist")
             if not errors:
@@ -32,7 +33,6 @@ class UserController:
                 return redirect(url_for('dashboard'))
         return render_template("login.html", errors=errors)
 
-    @staticmethod
     def register():
         errors = []
         if request.method == 'POST':
@@ -40,6 +40,7 @@ class UserController:
             last_name = request.form.get('lastname', '')
             email = request.form.get('email', '')
             password = request.form.get('password', '')
+            conf_pswd = request.form.get('confirmpassword', '')
             if not first_name:
                 errors.append('First Name cannot be empty')
             if not last_name:
@@ -52,6 +53,8 @@ class UserController:
                     errors.append("Email Id already exists")
             if not password:
                 errors.append('Password cannot be empty')
+            if conf_pswd != password:
+                errors.append('Password mismatch! ')
             if not errors:
                 user = User(first_name, last_name, email, password)
                 db.session.add(user)
@@ -63,11 +66,13 @@ class UserController:
     @staticmethod
     def logout():
         session.pop('logged_in', None)
+        session.pop('id', None)
         session.pop('email', None)
         session.pop('firstname', None)
         session.pop('lastname', None)
         flash('You successfully logged out', 'success')
         return redirect(url_for('login'))
+
 
     @staticmethod
     def addcrop():

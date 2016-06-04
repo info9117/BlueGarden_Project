@@ -1,3 +1,4 @@
+
 from behave import *
 import re
 
@@ -124,7 +125,6 @@ def login(context, email, password):
     email_field.send_keys(email)
     password_field.send_keys(password)
     email_field.submit()
-
 
 
 

@@ -1,6 +1,15 @@
+
 from flask import Flask, render_template, url_for, request, redirect, session, flash, send_from_directory, abort
+import stripe
 from functools import wraps
-from controllers import ProduceController
+from controllers import ProduceController, CheckoutController
+import os
+
+from werkzeug.security import safe_join
+from controllers.userController import UserController
+from werkzeug.utils import secure_filename
+import utilities
+
 from models import *
 from controllers.userController import UserController as userController
 from controllers.farmController import FarmController as farmController
@@ -8,7 +17,10 @@ from controllers.fieldController import FieldController as fieldController
 from controllers.cropController import CropController as cropController
 from controllers.templateController import TemplateController as templateController
 from controllers.resourcelistController import ResourceController as resourceController
+from controllers import ProduceController
+from controllers.feedbackController import FeedbackController
 
+from controllers import ProduceController
 from shared import db
 
 # Creating application object
@@ -37,6 +49,14 @@ def shutdown_server():
     func()
 
 
+#keyes for payment
+stripe_keys = {
+  'secret_key': 'sk_test_BQokikJOvBiI2HlWgH4olfQ2',
+  'publishable_key': 'pk_test_6pRNASCoBOKtIshFeQd4XMUh'
+}
+stripe.api_key = stripe_keys['secret_key']
+
+
 # Login Required wrap
 def login_required(function):
     @wraps(function)
@@ -60,12 +80,12 @@ def index():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    return userController.login()
+    return UserController.login()
 
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    return userController.register()
+    return UserController.register()
 
 
 @app.route('/logout')
@@ -84,15 +104,11 @@ def addcrop():
 def change_state(crop_id):
     return cropController.change_state(crop_id)
 
+
 @app.route('/update_active_process/<int:crop_id>', methods = ['GET', 'POST'])
 @login_required
 def update_active_process(crop_id):
     return cropController.update_active_process(crop_id)
-
-'''@app.route('/completing<int:Activity_ID>', methods = ['GET', 'POST'])
-@login_required
-def completing(Activity_ID):
-    return cropController.complete_activity(Activity_ID)'''
 
 
 
@@ -107,15 +123,23 @@ def dashboard():
 def browse_produce(page):
     return ProduceController.browse_produce(page)
 
+
+@app.route('/checkout/<int:item_id>', methods=['POST', 'GET'])
+def checkout(item_id):
+    return CheckoutController.checkout(item_id)
+
+
 @app.route('/sell', methods=['GET', 'POST'])
 @login_required
 def sell():
+
     return farmController.add_farm()
     
 @app.route('/activity/<int:process_id>', methods=['GET', 'POST'])
 @login_required
 def activity(process_id):
     return farmController.activity(process_id)
+
 
 @app.route('/field', methods=['GET', 'POST'])
 @login_required
@@ -135,7 +159,27 @@ def resource():
 def add_produce_to_farm(farm_id):
     return ProduceController.add_produce(farm_id, app.config['UPLOAD_FOLDER'])
 
+"""
+@app.route('/produce/<int:produce_id>', methods=['POST', 'GET'])
+def view_produce(produce_id):
+    produce1 = Produce.query.get(produce_id)
+    if request.method == 'POST':
+        amount = request.form.get('amount')
+        print('amount', type(amount))
+        print('produce', type(produce1.prices[0].price))
+        if amount:
+            amount = request.form.get('amount', '')
+            item1 = Item(produce1.prices[0].price, produce_id, amount)
+            db.session.add(item1)
+            db.session.commit()
+            return render_template('view_produce.html', produce=produce1, total=item1.total)
+        else:
+            return render_template('view_produce.html', produce=produce1, total="wrong value")
+    
+    return render_template('view_produce.html', produce=produce1)
 
+
+"""
 
 @app.route('/produce/<int:produce_id>', methods=['POST', 'GET'])
 def view_produce(produce_id):
@@ -144,7 +188,8 @@ def view_produce(produce_id):
 
 @app.route('/uploads/<int:farm_id>/<filename>', )
 def uploaded_image(farm_id, filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'] + 'produce/' + str(farm_id),
+    print(safe_join(app.config['UPLOAD_FOLDER']+'produce/' + str(farm_id), filename))
+    return send_from_directory(app.config['UPLOAD_FOLDER']+'produce/' + str(farm_id)+'/',
                                filename)
 
 @app.route('/process', methods=['GET', 'POST'])
@@ -159,12 +204,6 @@ def active_process(process_or_crop,id):
 
     return farmController.active_process(process_or_crop,id)
 
-@app.route('/activity/<int:process_id>/add', methods=['GET', 'POST'])
-@login_required
-def add_activity_to_process(process_id):
-    return farmController.linkToActivity(process_id)
-
-
 def url_for_browse_produce(page):
     args = dict(list(request.view_args.items()) + list(request.args.to_dict().items()))
     args['page'] = page
@@ -173,14 +212,42 @@ def url_for_browse_produce(page):
 app.jinja_env.globals['url_for_browse_produce'] = url_for_browse_produce
 
 
+@app.route('/purchase')
+def reference():
+    return render_template('reference.html', key=stripe_keys['publishable_key'])
+
+@app.route('/charge', methods=['POST'])
+def charge():
+  amount = 500
+
+  # customer = stripe.Customer.create(
+  #       email=request.form['stripeEmail'],
+  #       card=request.form['stripeToken']
+  #     )
+
+
+  # charge = stripe.Charge.create(
+  #       customer=customer.id,
+  #       amount=amount,
+  #       currency='AUD',
+  #       description='Flask Charge'
+  #   )
+  return render_template('charge.html', amount=amount)
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html')
 
 
+
 @app.route('/shutdown')
 def shutdown():
     shutdown_server()
+
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+	return FeedbackController.feedback()
 
 
 if __name__ == '__main__':

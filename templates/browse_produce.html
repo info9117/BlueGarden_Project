@@ -12,7 +12,7 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col s12 left-align moderate-pink-text text-darken-1">
+        <div class="col s12 m4 l4 left-align moderate-pink-text text-darken-1">
             <h3 class="hide-on-med-and-down">Browse</h3>
             <h4 class="hide-on-large-only">Browse</h4>
         </div>
@@ -23,6 +23,10 @@
                 <div class="collapsible-header"><h5>Filter</h5><i class="material-icons">arrow_drop_down</i></div>
                 <div class="collapsible-body">
                     <form id="filter-form-small" method="GET" action="">
+                         <div id="search-container-small">
+                            <h5>Search</h5>
+                            <input name="search" id="seatch-small" type="text" placeholder="e.g. Broccoli">
+                        </div>
                         <div id="category-container-small">
                             <h5>Category</h5>
                             <div id="category-items-small">
@@ -40,7 +44,7 @@
                         </div>
                         <div id="location-container-small">
                             <h5>Location</h5>
-                            <input name="location" id="location-small" type="text" placeholder="Sydney">
+                            <input name="location" id="location-small" type="text" placeholder="e.g. Sydney">
                         </div>
                         <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit">Apply</button>
                     </form>
@@ -49,6 +53,10 @@
         </ul>
         <div id="filter-column" class="col m3 l3 hide-on-small-only">
             <form id="filter-form" method="GET" action="">
+                <div id="search-container">
+                    <h5>Search</h5>
+                    <input name="search" id="search" type="text" placeholder="e.g. Broccoli">
+                </div>
                 <div id="category-container">
                     <h5>Category</h5>
                     <div id="category-items">
@@ -65,7 +73,7 @@
                 </div>
                 <div id="location-container">
                     <h5>Location</h5>
-                    <input name="location" id="location" type="text" placeholder="Sydney">
+                    <input name="location" id="location" type="text" placeholder="e.g. Sydney">
                 </div>
                 <button class="btn waves-effect waves-light moderate-pink darken-1" type="submit">Apply</button>
             </form>
@@ -76,7 +84,7 @@
                 <img class='result-img'
                      src="{{ url_for('uploaded_image', farm_id=produce.farm_id, filename=produce.image.filename) }}">
                 <div class="result-details">
-                    <a href="#"><h6 class="result-name strong">{{ produce.name }}</h6></a>
+                    <a href="{{ url_for('view_produce', produce_id=produce.id) }}"><h6 class="result-name strong">{{ produce.name }}</h6></a>
                     <p class="result-caption">{{ produce.farm.name }}, {{ produce.farm.address.city }}</p>
                     <h5 class="result-price">$ {{ produce.prices[0].price }}/{{ produce.prices[0].unit.name }}</h5>
                     <a id="produce{{ produce.id }}" class="waves-effect waves-light moderate-pink darken-1 btn add-to-cart"

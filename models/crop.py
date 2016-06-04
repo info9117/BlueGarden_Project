@@ -24,3 +24,4 @@ class Crop(db.Model):
         self.farm_id = farm_id
         self.active_process_id = active_process_id'''
     
+
