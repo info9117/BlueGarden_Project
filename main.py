@@ -1,21 +1,21 @@
-import os
-from flask import Flask, render_template, url_for, request, redirect, session, flash, send_from_directory
+
+from flask import Flask, render_template, url_for, request, redirect, session, flash, send_from_directory, abort
+import stripe
 from functools import wraps
+from controllers import ProduceController, CheckoutController
 from werkzeug.security import safe_join
 from controllers.userController import UserController
-from werkzeug.utils import secure_filename
-import utilities
 from models import *
 from controllers.userController import UserController as userController
 from controllers.farmController import FarmController as farmController
 from controllers.fieldController import FieldController as fieldController
 from controllers.cropController import CropController as cropController
-from controllers.feedbackController import FeedbackController as feedbackController
 
 from controllers import ProduceController
 
 from controllers.templateController import TemplateController as templateController
 from controllers.resourcelistController import ResourceController as resourceController
+from controllers.feedbackController import FeedbackController
 
 from shared import db
 
@@ -32,6 +32,12 @@ app.config.from_object('config.DevelopmentConfig')
 db.init_app(app)
 with app.app_context():
     db.create_all()
+    if not Unit.query.all():
+        db.session.add(Unit('Kg'))
+        db.session.add(Unit('gm'))
+        db.session.add(Unit('l'))
+        db.session.add(Unit('ml'))
+        db.session.commit()
 
 
 def serve_forever():
@@ -44,6 +50,13 @@ def shutdown_server():
         raise RuntimeError("Not running with Werkzeug server")
     func()
 
+# keys for payment
+stripe_keys = {
+  'secret_key': 'sk_test_BQokikJOvBiI2HlWgH4olfQ2',
+  'publishable_key': 'pk_test_6pRNASCoBOKtIshFeQd4XMUh'
+}
+stripe.api_key = stripe_keys['secret_key']
+
 
 # Login Required wrap
 def login_required(function):
@@ -53,9 +66,8 @@ def login_required(function):
             return function(*args, **kwargs)
         else:
             flash('Please login to view this page', 'error')
-            redirect_url = request.url
+            redirect_url = wrapped_function.__name__
             return redirect(url_for('login', redirect=redirect_url))
-
     return wrapped_function
 
 
@@ -110,13 +122,17 @@ def browse_produce(page):
     return ProduceController.browse_produce(page)
 
 
+@app.route('/checkout/<int:item_id>', methods=['POST', 'GET'])
+def checkout(item_id):
+    return CheckoutController.checkout(item_id)
+
+
 @app.route('/sell', methods=['GET', 'POST'])
 @login_required
 def sell():
     return farmController.add_farm()
 
 
-@app.route('/activity', methods=['GET', 'POST'])
 @app.route('/activity/<int:process_id>', methods=['GET', 'POST'])
 @login_required
 def activity(process_id):
@@ -202,6 +218,29 @@ def url_for_browse_produce(page):
 app.jinja_env.globals['url_for_browse_produce'] = url_for_browse_produce
 
 
+@app.route('/purchase')
+def reference():
+    return render_template('reference.html', key=stripe_keys['publishable_key'])
+
+
+@app.route('/charge', methods=['POST'])
+def charge():
+    amount = 500
+
+    # customer = stripe.Customer.create(
+    #       email=request.form['stripeEmail'],
+    #       card=request.form['stripeToken']
+    #     )
+
+    # charge = stripe.Charge.create(
+    #       customer=customer.id,
+    #       amount=amount,
+    #       currency='AUD',
+    #       description='Flask Charge'
+    #   )
+    return render_template('charge.html', amount=amount)
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html')
@@ -210,6 +249,11 @@ def page_not_found(e):
 @app.route('/shutdown')
 def shutdown():
     shutdown_server()
+
+
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+	return FeedbackController.feedback()
 
 
 if __name__ == '__main__':

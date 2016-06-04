@@ -29,7 +29,7 @@
                         <div class="file-field input-field">
                             <div class="waves-effect waves-light btn">
                                 <span>Choose Image</span>
-                                <input name="prod_image" type="file">
+                                <input id="prod_image" name="prod_image" type="file">
                             </div>
                         </div>
                     </div>
@@ -52,7 +52,7 @@
                                   class="materialize-textarea"></textarea>
                     </div>
                     <div class="input-field col s12">
-                        <select name="category">
+                        <select id="category" name="category">
                             <option value="" disabled selected>Category</option>
                             <option value="Vegetable">Vegetable</option>
                             <option value="Fruit">Fruit</option>
@@ -86,55 +86,62 @@
 
 {% block scripts %}
 <script>
-$(document).ready(function() {
-    $('select').material_select();
-});
-
-imgWidth = $('#prod-img').width();
-console.log(imgWidth);
-$('#prod-img').height(imgWidth*3/4);
-
-
-$(function () {
-    $(":file").change(function () {
-        if (this.files && this.files[0]) {
-            var reader = new FileReader();
-            reader.onload = imageIsLoaded;
-            reader.readAsDataURL(this.files[0]);
-        }
+    $(document).ready(function () {
+        $('select').material_select();
     });
-});
 
-function imageIsLoaded(e) {
-    $('#prod-img').attr('src', e.target.result);
-};
-var existingUnits = [];
-var currency = '$';
-$('#unit').change(function() {
+    imgWidth = $('#prod-img').width();
+    console.log(imgWidth);
+    $('#prod-img').height(imgWidth * 3 / 4);
 
-    $( "#unit option:selected" ).each(function(index, value) {
-        if (index != 0) {
-            if (existingUnits.indexOf($(this).text()) == -1) {
-                existingUnits.push($(this).text());
-                $('#sale-price').append('<div id="'+$(this).text()+'-price"  class="price-unit col s12" >'+
-                '<div class="input-field col s12">'+
-                '<input name="price'+$(this).val()+'" id="price" min=0.01 step=0.01 type="number" class="validate">'+
-                '<label for="price">Price ('+$(this).text()+')</label>'+
-                '</div>'+
-                '</div>');
+
+    $(function () {
+        $(":file").change(function () {
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = imageIsLoaded;
+                reader.readAsDataURL(this.files[0]);
             }
-        }
+        });
     });
 
-    $('#unit option').not(':selected').each(function() {
-        if (existingUnits.indexOf($(this).text()) != -1) {
-            existingUnits.splice(existingUnits.indexOf($(this).text()), 1);
-            var divToRemove = document.getElementById($(this).text()+"-price");
-            $(divToRemove).remove();
-        }
+    function imageIsLoaded(e) {
+        $('#prod-img').attr('src', e.target.result);
+    }
+    ;
+    var existingUnits = [];
+    var currency = '$';
+    $('#unit').change(function () {
+
+        $("#unit option:selected").each(function (index, value) {
+            if (index != 0) {
+                if (existingUnits.indexOf($(this).text()) == -1) {
+                    existingUnits.push($(this).text());
+                    $('#sale-price').append('<div id="' + $(this).text() + '-price"  class="price-unit col s12" >' +
+                            '<div class="input-field col s12">' +
+                            '<input name="price' + $(this).val() + '" id="price" min=0.01 step=0.01 type="number" class="validate">' +
+                            '<label for="price">Price (' + $(this).text() + ')</label>' +
+                            '</div>' +
+                            '</div>');
+                }
+            }
+        });
+
+        $('#unit option').not(':selected').each(function () {
+            if (existingUnits.indexOf($(this).text()) != -1) {
+                existingUnits.splice(existingUnits.indexOf($(this).text()), 1);
+                var divToRemove = document.getElementById($(this).text() + "-price");
+                $(divToRemove).remove();
+            }
+        });
+
     });
 
-});
+    function addItem() {
+        $('#sale-price').append('<div id="Kg-price"  class="price-unit col s12" ><div class="input-field col s12">' +
+                '<input name="price1" id="price1" min=0.01 step=0.01 type="number" class="validate"><label for="price">Price (Kg)' +
+                '</label></div></div>');
+    }
 
 
 </script>

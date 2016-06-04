@@ -25,17 +25,13 @@ class UserController:
                 if user:
                     if not user.check_password(password):
                         errors.append("Email Id/Password do not match")
-
                 else:
                     errors.append("User doesn't exist")
 
             if not errors:
-                session['logged_in'] = True
-                session['email'] = email
-                session['firstname'] = user.first_name
-                session['lastname'] = user.last_name
+                user.add_user_to_session()
                 if request.args.get('redirect'):
-                    return redirect(request.args.get('redirect'))
+                    return redirect(url_for(request.args.get('redirect')))
                 return redirect(url_for('dashboard'))
         return render_template("login.html", errors=errors)
 
@@ -48,6 +44,7 @@ class UserController:
             email = request.form.get('email', '')
             password = request.form.get('password', '')
             conf_pswd = request.form.get('confirm password', '')
+
             if not first_name:
                 errors.append('First Name cannot be empty')
             if not last_name:
@@ -69,6 +66,7 @@ class UserController:
                 db.session.add(user)
                 db.session.commit()
 
+
                 session['logged_in'] = True
                 session['email'] = user.email
                 session['firstname'] = user.first_name
@@ -77,13 +75,13 @@ class UserController:
 
                 user.add_user_to_session()
 
-
                 return redirect(url_for('dashboard'))
         return render_template("register.html", errors=errors)
 
     @staticmethod
     def logout():
         session.pop('logged_in', None)
+        session.pop('id', None)
         session.pop('email', None)
         session.pop('firstname', None)
         session.pop('lastname', None)

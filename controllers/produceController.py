@@ -23,7 +23,9 @@ class ProduceController:
             selected_units = request.form.get('units', '')
             prices = {}
             for sel_unit in selected_units:
-                prices[sel_unit] = request.form.get('price' + selected_units)
+                unit_price = request.form.get('price' + selected_units)
+                if unit_price != "":
+                    prices[sel_unit] = unit_price
             file = request.files['prod_image']
             if not name:
                 errors.append('Name cannot be empty')
@@ -52,44 +54,31 @@ class ProduceController:
                     db.session.add(Price(prod.id, p, prices[p]))
                     db.session.flush()
                 db.session.commit()
-                return 'Success'
+                flash('You successfully added '+name, 'success')
+                return redirect(url_for('sell'))
         units = Unit.query.all()
         current_farm = Farm.query.get(farm_id)
-        if not current_farm:
-            return abort(404)
         return render_template('add_produce.html', units=units, farm=current_farm, address=current_farm.address,
                                errors=errors)
 
     @staticmethod
     def browse_produce(page):
         results_per_page = 12
-        results_filtered = False
         categories = ['Vegetable', 'Fruit', 'Grain', 'Meat', 'Diary', 'Other']
         category_filter = []
         for category in categories:
             if request.args.get(category.lower()) == 'on':
                 category_filter.append(category.lower())
         location = request.args.get('location')
+        search = request.args.get('search')
+        results = Produce.query
         if category_filter:
-            results_filtered = True
-            results = Produce.query.filter(func.lower(Produce.category).in_(category_filter)) \
-                .order_by(Produce.id)
-        if results_filtered and location:
-                results = results.filter(Produce.farm_id == Farm.query.with_entities(Farm.id)
-                                         .filter(and_(Farm.address_id == Address.id, func.lower(Address.city) ==
-                                                      location.lower()))).order_by(Produce.id) \
-                    .paginate(page, results_per_page, False)
-        if not results_filtered and location:
-            results_filtered = True
-            results = Produce.query.filter(Produce.farm_id == Farm.query.with_entities(Farm.id)
-                                           .filter(and_(Farm.address_id == Address.id, func.lower(Address.city) ==
-                                                        location.lower()))).order_by(Produce.id) \
-                .paginate(page, results_per_page, False)
-        if results_filtered and not location:
-            results = results.paginate(page, results_per_page, False)
-            
-        if not results_filtered:
-            results = Produce.query.order_by(Produce.farm_id).paginate(page, results_per_page, False)
+            results = results.filter(func.lower(Produce.category).in_(category_filter))
+        if location:
+            results = results.filter(Produce.farm_id == Farm.query.with_entities(Farm.id).filter(and_(Farm.address_id == Address.id, func.lower(Address.city) == location.lower())))
+        if search:
+            results = results.filter(Produce.name.like("%" + search + "%")).order_by(Produce.id)
+        results = results.order_by(Produce.id).paginate(page, results_per_page, False)
         total = results.total
         pagination = Pagination(results, page, results_per_page, total, results.items)
         return render_template('browse_produce.html', results=results.items, categories=categories,
@@ -99,16 +88,13 @@ class ProduceController:
     def view_produce(produce_id):
         produce1 = Produce.query.get(produce_id)
         if request.method == 'POST':
-            amount = request.form.get('amount')
-            print('amount', type(amount))
-            print('produce', type(produce1.prices[0].price))
+            amount = request.form.get('amount', '')
             if amount:
-                amount = request.form.get('amount', '')
-                item1 = Item(produce1.prices[0].price, produce_id, amount)
+                item1 = Item(produce1.prices[0].price, produce1.prices[0].unit_id, produce_id, amount)
                 db.session.add(item1)
                 db.session.commit()
-                return render_template('view_produce.html', produce=produce1, total=item1.total)
+                return render_template('view_produce.html', produce=produce1, item=item1)
             else:
-                return render_template('view_produce.html', produce=produce1, total="wrong value")
+                return render_template('view_produce.html', produce=produce1, error="Please enter a valid amount")
 
         return render_template('view_produce.html', produce=produce1)

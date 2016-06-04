@@ -1,11 +1,13 @@
 *.pyc
-/venv
-/.idea
-/images/d/produce
-/images/t/produce
+.idea
+/images
 *.db
-<<<<<<< HEAD
 
-=======
 /.db
->>>>>>> test-sprint-2
+
+
+*.memory
+.coverage
+htmlcov
+venv
+

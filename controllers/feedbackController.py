@@ -28,3 +28,4 @@ class FeedbackController:
                 flash('Your feedback is sent. We will contact you shortly. ^_^')
                 return redirect(url_for('contact'))
         return render_template("contact.html", errors=errors)
+

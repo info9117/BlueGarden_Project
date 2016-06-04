@@ -3,7 +3,7 @@
 <head>
     <title>{% block title%}{% endblock %} - Blue Garden</title>
     <!--Import Google Icon Font-->
-<--    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css') }}"
           media="screen,projection"/>
@@ -41,6 +41,7 @@
                 <li><a href="{{ url_for('sell') }}">Sell</a></li>
                 <li><a href="{{ url_for('field') }}">Field</a></li>
                 <li><a href="{{ url_for('process') }}">Process</a></li>
+                <li><a href="{{ url_for('feedback') }}">Feedback</a></li>
                 <li><a class="dropdown-button" href="#!" data-activates="profile-dropdown">{{ session['firstname'] + ' '
                     + session['lastname'] }}<i class="material-icons right">arrow_drop_down</i></a></li>
             </ul>
