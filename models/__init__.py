@@ -22,4 +22,5 @@ from .Process_List import Process_List
 from .Process_Steps import Process_Steps
 from .active_process import Active_Process
 from .active_activity import Active_Activity
+from .password_resets import PasswordResets
 

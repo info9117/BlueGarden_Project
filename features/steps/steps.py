@@ -76,6 +76,30 @@ def step_impl(context):
 def step_impl(context):
     assert 'Password mismatch!' in context.browser.page_source
 
+@given('I am in reset password page')
+def step_impl(context):
+    context.browser.get(context.address + "/resetpassword")
+    email_found = re.search("Enter email", context.browser.page_source)
+    assert email_found
+
+@when('I enter my Email')
+def step_impl(context):
+    reset_password(context, email='fbaggins@lotr.com')
+    assert context.browser.page_source
+
+@then('I will be redirected to "resetdone"')
+def step_impl(context):
+    assert 'An email has been sent' in context.browser.page_source
+
+@when('I enter an unregistered email')
+def step_impl(context):
+    reset_password(context, email='baberahamLincoln@freedom.com')
+    assert context.browser.page_source
+
+@then(u'Email not registered error is shown')
+def step_impl(context):
+    assert 'This email is not registered' in context.browser.page_source
+
 
 @given('I am in the add produce page')
 def step_impl(context):
@@ -179,6 +203,11 @@ def add_produce(context, name, description, category, units, price1, prod_image)
     price1_field.send_keys(price1)
     context.browser.find_element_by_id("prod_image").send_keys(prod_image)
     name_field.submit()
+
+def reset_password(context, email):
+    email_field = context.browser.find_element_by_id("email")
+    email_field.send_keys(email)
+    email_field.submit()
 
 
 @given('at the product details page')

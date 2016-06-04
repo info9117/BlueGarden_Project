@@ -13,7 +13,7 @@ from controllers.cropController import CropController as cropController
 from controllers.templateController import TemplateController as templateController
 from controllers.resourcelistController import ResourceController as resourceController
 from controllers.feedbackController import FeedbackController
-from shared import db
+from shared import db, mail
 
 # Creating application object
 app = Flask(__name__)
@@ -26,6 +26,7 @@ app.config.from_object('config.DevelopmentConfig')
 
 # Creating SQLAlchemy Object
 db.init_app(app)
+mail.init_app(app)
 with app.app_context():
     db.create_all()
 
@@ -78,6 +79,18 @@ def login():
 def register():
     return UserController.register()
 
+@app.route("/resetpassword", methods=['GET','POST'])
+def resetpassword():
+    return userController.resetpassword()
+
+
+@app.route("/resetpassword/<token>/<int:user_id>", methods=['GET', 'POST'])
+def changepassword(token, user_id):
+    return userController.changepassword(token,user_id)
+
+@app.route("/resetdone", methods=['GET','POST'])
+def resetdone():
+    return userController.resetdone()
 
 @app.route('/logout')
 def logout():
