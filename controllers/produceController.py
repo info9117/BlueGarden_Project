@@ -88,14 +88,13 @@ class ProduceController:
     def view_produce(produce_id):
         produce1 = Produce.query.get(produce_id)
         if request.method == 'POST':
-            amount = request.form.get('amount')
+            amount = request.form.get('amount', '')
             if amount:
-                amount = request.form.get('amount', '')
                 item1 = Item(produce1.prices[0].price, produce1.prices[0].unit_id, produce_id, amount)
                 db.session.add(item1)
                 db.session.commit()
                 return render_template('view_produce.html', produce=produce1, item=item1)
             else:
-                return render_template('view_produce.html', produce=produce1, total="wrong value")
+                return render_template('view_produce.html', produce=produce1, error="Please enter a valid amount")
 
         return render_template('view_produce.html', produce=produce1)

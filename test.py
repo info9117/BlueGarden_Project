@@ -171,14 +171,6 @@ class BlueGardenTestCase(BaseTestCase):
         response = self.client.get('/farm/1/produce/add', content_type='html/text', follow_redirects=True)
         self.assertIn(b'Shire Farms', response.data)
 
-    # Products details test
-    def test_view_produce_page_content(self):
-        print('\n## Testing produce details page content ##')
-        response = self.client.get('/produce/1', content_type='html/text')
-        self.assertIn(b'corn', response.data)
-        self.assertIn(b'2.2', response.data)
-        self.assertIn(b'Shire Farms', response.data)
-
     def test_adding_produce_to_farm(self):
         print('\n## Testing Add produce to farm ##')
         self.login('bbaggins@lotr.com', 'bilbobaggins')
@@ -231,6 +223,14 @@ class BlueGardenTestCase(BaseTestCase):
         #     # post_data['prod_image'] = (prod_image, "")
         return self.client.post('/farm/' + str(farm_id) + '/produce/add', content_type='multipart/form-data',
                                 data=post_data, follow_redirects=True)
+
+    # Products details test
+    def test_view_produce_page_content(self):
+        print('\n## Testing produce details page content ##')
+        response = self.client.get('/produce/1', content_type='html/text')
+        self.assertIn(b'corn', response.data)
+        self.assertIn(b'2.2', response.data)
+        self.assertIn(b'Shire Farms', response.data)
 
     def test_browse_produce_content(self):
         print('\n## Testing browse produce page content ##')
@@ -358,9 +358,16 @@ class BlueGardenTestCase(BaseTestCase):
         self.assertIn(b"was added to making cheese", response.data)
 
     def test_add_to_cart(self):
+        print('\n## Testing add to cart - success ##')
         response = self.client.post('/produce/1', data=dict(
             amount='2'))
         self.assertIn(b'4.4', response.data)
+
+    def test_add_to_cart_error(self):
+        print('\n## Testing add to cart - wrong value ##')
+        response = self.client.post('/produce/1', data=dict(
+            amount=''))
+        self.assertIn(b'Please enter a valid amount', response.data)
 
     # Testing purchase page
     def test_purchase_page(self):

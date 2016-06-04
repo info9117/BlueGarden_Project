@@ -71,7 +71,11 @@
             {% if item %}
                 <h1>Total is ${{ item.total }}</h1>
             {% endif %}
+            {% if error %}
+                <h1>{{ error }}</h1>
+            {% endif %}
         </div>
+
 
 
         <!--core JavaScript
