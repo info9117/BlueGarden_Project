@@ -1,14 +1,16 @@
+from coverage import coverage
+cov = coverage(omit=['venv/*', 'test.py'])
+cov.start()
+
 from main import app
 from models import *
 from flask_testing import TestCase
 import unittest
-from coverage import coverage
+
 from io import BytesIO
 import os
 import flask
 
-cov = coverage(branch=True, omit=['venv/*', 'test.py'])
-cov.start()
 
 
 class BaseTestCase(TestCase):
@@ -29,6 +31,11 @@ class BaseTestCase(TestCase):
         db.session.flush()
         db.session.add(Farm('Shire Farms', 1))
         db.session.add(Farm('Mordor Farms', 1))
+        db.session.add(Unit('Kg'))
+        db.session.add(Unit('gm'))
+        db.session.add(Unit('l'))
+        db.session.add(Unit('ml'))
+        db.session.flush()
         db.session.add(Produce('corn', 'vegetable', 'tasty', 1, 1))
         db.session.add(Produce('milk', 'dairy', 'yum', 2, 2))
         db.session.flush()
@@ -38,14 +45,11 @@ class BaseTestCase(TestCase):
         db.session.flush()
         db.session.add(Works(2, 1))
         db.session.add(Works(2, 2))
-
         db.session.add(Item(amount=2, price=2.2, produce_id=1, unit_id=1))
         db.session.flush()
-
         db.session.add(Resource_List('fertiliser'))
         db.session.flush()
         db.session.add(Process_List('making cheese', 'Cheese making process'))
-
         db.session.commit()
 
     def tearDown(self):

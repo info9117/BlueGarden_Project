@@ -28,12 +28,7 @@ app.config.from_object('config.DevelopmentConfig')
 db.init_app(app)
 with app.app_context():
     db.create_all()
-    if not Unit.query.all():
-        db.session.add(Unit('Kg'))
-        db.session.add(Unit('gm'))
-        db.session.add(Unit('l'))
-        db.session.add(Unit('ml'))
-        db.session.commit()
+
 
 
 def serve_forever():

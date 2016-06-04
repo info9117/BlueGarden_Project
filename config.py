@@ -21,5 +21,5 @@ class ProductionConfig(BaseConfig):
 class TestingConfig(BaseConfig):
     DEBUG = False
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db'
     UPLOAD_FOLDER = 'images/t/'
