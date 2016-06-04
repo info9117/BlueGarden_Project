@@ -119,7 +119,7 @@ class ProcessController:
             if target == '' and not errors:
                 # A process commences with NULL target
                 db.session.add(
-                    Active_Process(process.id, user_id, datetime.strptime(Start_Date, '%d %b, %Y'), None, None, None, None))
+                    Active_Process(process.id, user_id, datetime.strptime(Start_Date, '%d %B, %Y'), None, None, None, None))
                 db.session.commit()
                 Active_Process_ID = db.session.query(Active_Process).order_by(Active_Process.id.desc()).first().id
                 ProcessController.init_process(Active_Process_ID, process.id)
@@ -142,7 +142,7 @@ class ProcessController:
                 if other_target:
                     Target_Type = "other"
                     Target_ID = other_target
-                pydate = datetime.strptime(Start_Date, '%d %b, %Y')
+                pydate = datetime.strptime(Start_Date, '%d %B, %Y')
                 db.session.add(Active_Process(process.id, user_id, pydate, None, None, Target_Type, Target_ID))
                 db.session.commit()
                 Active_Process_ID = db.session.query(Active_Process).order_by(Active_Process.id.desc()).first().id
