@@ -23,7 +23,9 @@ class ProduceController:
             selected_units = request.form.get('units', '')
             prices = {}
             for sel_unit in selected_units:
-                prices[sel_unit] = request.form.get('price' + selected_units)
+                unit_price = request.form.get('price' + selected_units)
+                if unit_price != "":
+                    prices[sel_unit] = unit_price
             file = request.files['prod_image']
             if not name:
                 errors.append('Name cannot be empty')
@@ -56,8 +58,6 @@ class ProduceController:
                 return redirect(url_for('sell'))
         units = Unit.query.all()
         current_farm = Farm.query.get(farm_id)
-        if not current_farm:
-            return abort(404)
         return render_template('add_produce.html', units=units, farm=current_farm, address=current_farm.address,
                                errors=errors)
 

@@ -185,6 +185,24 @@ class BlueGardenTestCase(BaseTestCase):
         response = self.add_produce('Eggplant', 'Big eggplants', 'Vegetable', 1, 4.38, 'static/images/eggplant.jpg', 1)
         self.assertIn(b"You successfully added Eggplant", response.data)
 
+    def test_adding_produce_to_farm_incomplete_form(self):
+        print('\n## Testing Add produce to farm - Form not filled ##')
+        self.login('bbaggins@lotr.com', 'bilbobaggins')
+        response = self.add_produce(name="", description="", category="", selected_units=None,
+                                    price1=None, prod_image="static/images/broccoli.pdf", farm_id=1)
+        self.assertIn(b'Name cannot be empty', response.data)
+        self.assertIn(b'Description cannot be empty', response.data)
+        self.assertIn(b'Please choose a category for the produce', response.data)
+        self.assertIn(b'Please choose the units you wish to sell in', response.data)
+        self.assertIn(b"Please upload &#39;png&#39;, &#39;jpg&#39;, &#39;jpeg&#39; or &#39;gif&#39; image for produce", response.data)
+
+    def test_adding_produce_to_farm_no_price(self):
+        print('\n## Testing Add produce to farm - Form not filled ##')
+        self.login('bbaggins@lotr.com', 'bilbobaggins')
+        response = self.add_produce('Eggplant', 'Big eggplants', 'Vegetable', 1, price1="",
+                                    prod_image='static/images/eggplant.jpg', farm_id=1)
+        self.assertIn(b'Please enter the prices for the produce', response.data)
+
     def test_add_produce_not_farmer(self):
         print('\n## Testing add produce page content if the farm doesnt belong to you ##')
         self.login('singarisathwik007@gmail.com', 'dm08b048')
@@ -192,21 +210,25 @@ class BlueGardenTestCase(BaseTestCase):
         self.assertIn(b"Sorry, This farm doesn&#39;t belong to you", response.data)
 
     def add_produce(self, name, description, category, selected_units, price1, prod_image, farm_id):
-        img = open(prod_image, 'rb')
-        try:
-            img_bytes_io = BytesIO(img.read())
-            filename = img.name
-            post_data = {
-                'name': name, 'description': description, 'category': category,
-                'units': selected_units,
-                'price1': price1,
-            }
-            for key, val in post_data.items():
-                if not isinstance(val, str):
-                    post_data[key] = str(val)
-            post_data['prod_image'] = (img_bytes_io, filename)
-        finally:
-            img.close()
+        post_data = {
+            'name': name, 'description': description, 'category': category
+        }
+
+        if selected_units:
+            post_data['units'] = selected_units
+            post_data['price1'] = price1
+
+        for key, val in post_data.items():
+            if not isinstance(val, str):
+                post_data[key] = str(val)
+
+        if prod_image:
+            with open(prod_image, 'rb') as img:
+                img_bytes_io = BytesIO(img.read())
+                filename = img.name
+                post_data['prod_image'] = (img_bytes_io, filename)
+        # else:
+        #     # post_data['prod_image'] = (prod_image, "")
         return self.client.post('/farm/' + str(farm_id) + '/produce/add', content_type='multipart/form-data',
                                 data=post_data, follow_redirects=True)
 
