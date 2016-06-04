@@ -70,10 +70,12 @@ def register(context, first_name, last_name, email, password):
     lastname_field = context.browser.find_element_by_id("lastname")
     email_field = context.browser.find_element_by_id("email")
     password_field = context.browser.find_element_by_id("password")
+    confirm_password = context.browser.find_element_by_id("confirmpassword")
     firstname_field.send_keys(first_name)
     lastname_field.send_keys(last_name)
     email_field.send_keys(email)
     password_field.send_keys(password)
+    confirm_password.send_keys(password)
     email_field.submit()
     
 @given('at the activity page')
