@@ -91,11 +91,6 @@ class UserController:
             db.session.add(crop)
             db.session.commit()
             flash('You success added crop')
-            
-
-
-        
-        
         crop_m=Crop.query.all()
             
         return render_template("addcrop.html",crop_m=crop_m,errors = errors)

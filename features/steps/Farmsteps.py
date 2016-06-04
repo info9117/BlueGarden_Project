@@ -43,7 +43,7 @@ def step_impl(context):
 @given('The user has not registered any existing farms')
 def step_impl(context):
     context.browser.get(context.address + "/register")
-    register(context, "IAMANEW", "USER", "joe@nofarms.yet", "pineapple", "pineapple")
+    register(context, "IAMANEW", "USER", "joe@nofarms.yet", "pineapple")
 
 
 @when('the user views the sell page')
@@ -80,10 +80,12 @@ def register(context, first_name, last_name, email, password):
     lastname_field = context.browser.find_element_by_id("lastname")
     email_field = context.browser.find_element_by_id("email")
     password_field = context.browser.find_element_by_id("password")
+    confirm_password = context.browser.find_element_by_id("confirmpassword")
     firstname_field.send_keys(first_name)
     lastname_field.send_keys(last_name)
     email_field.send_keys(email)
     password_field.send_keys(password)
+    confirm_password.send_keys(password)
     email_field.submit()
 
 
