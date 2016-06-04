@@ -62,9 +62,8 @@ def login_required(function):
             return function(*args, **kwargs)
         else:
             flash('Please login to view this page', 'error')
-            redirect_url = request.url
+            redirect_url = wrapped_function.__name__
             return redirect(url_for('login', redirect=redirect_url))
-
     return wrapped_function
 
 

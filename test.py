@@ -5,6 +5,7 @@ import unittest
 from coverage import coverage
 from io import BytesIO
 import os
+import flask
 
 cov = coverage(branch=True, omit=['venv/*', 'test.py'])
 cov.start()
@@ -79,6 +80,28 @@ class BlueGardenTestCase(BaseTestCase):
         response = self.login('singarisathwik007@gmail.com', 'dm08b48')
         self.assertIn(b'Email Id/Password do not match', response.data)
 
+    def test_login_empty_credentials(self):
+        print('\n## Testing Login page with empty credentials ##')
+        response = self.login('', '')
+        self.assertIn(b'Email Id cannot be empty', response.data)
+        self.assertIn(b'Password cannot be empty', response.data)
+
+    def test_login_non_existing_user(self):
+        print('\n## Testing Login page with non existing user ##')
+        response = self.login('test@gmail.com', 'test')
+        self.assertIn(b'User doesn&#39;t exist', response.data)
+
+    def test_login_required(self):
+        print('\n## Testing Login required feature ##')
+        response = self.client.get('/dashboard', content_type='html/text', follow_redirects=True)
+        self.assertIn(b'Please login to view this page', response.data)
+
+    def test_redirect_feature(self):
+        print('\n## Testing Login required feature ##')
+        response = self.client.get('/dashboard', content_type='html/text', follow_redirects=True)
+        response = self.login_with_redirect('singarisathwik007@gmail.com', 'dm08b048')
+        self.assertIn(b'Hello Sathwik', response.data)
+
     # Testing Logout
     def test_logout(self):
         print('\n## Testing logout ##')
@@ -94,14 +117,23 @@ class BlueGardenTestCase(BaseTestCase):
     # Testing Registration with existing credentials
     def test_register_existing_credentials(self):
         print('\n## Testing Register page with existing credentials ##')
-        response = self.register('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048')
+        response = self.register('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048', 'dm08b048')
         self.assertIn(b'Email Id already exists', response.data)
 
     # Testing Registration with valid credentials
     def test_register_valid_credentials(self):
         print('\n## Testing Register page with valid credentials ##')
-        response = self.register('Frodo', 'Baggins', 'fbaggins@lotr.com', 'frodobaggins')
+        response = self.register('Frodo', 'Baggins', 'fbaggins@lotr.com', 'frodobaggins', 'frodobaggins')
         self.assertIn(b'Hello Frodo', response.data)
+
+    def test_register_empty_credentials(self):
+        print('\n## Testing Register page with empty credentials ##')
+        response = self.register('', '', '', '', 'abc')
+        self.assertIn(b'First Name cannot be empty', response.data)
+        self.assertIn(b'Last Name cannot be empty', response.data)
+        self.assertIn(b'Email Id cannot be empty', response.data)
+        self.assertIn(b'Password cannot be empty', response.data)
+        self.assertIn(b'Password mismatch!', response.data)
 
     # Testing add crop with new crop
     def test_login_addcrop(self):
@@ -126,13 +158,19 @@ class BlueGardenTestCase(BaseTestCase):
             password=password
         ), follow_redirects=True)
 
-    def register(self, first_name, last_name, email, password):
+    def login_with_redirect(self, email, password):
+        return self.client.post('/login?redirect=dashboard', data=dict(
+            email=email,
+            password=password
+        ), follow_redirects=True)
+
+    def register(self, first_name, last_name, email, password, confirm_password):
         return self.client.post('/register', data=dict(
             firstname=first_name,
             lastname=last_name,
             email=email,
             password=password,
-            confirmpassword=password
+            confirmpassword=confirm_password
         ), follow_redirects=True)
 
     def logout(self):
@@ -189,7 +227,7 @@ class BlueGardenTestCase(BaseTestCase):
         self.assertIn(b"Please upload &#39;png&#39;, &#39;jpg&#39;, &#39;jpeg&#39; or &#39;gif&#39; image for produce", response.data)
 
     def test_adding_produce_to_farm_no_price(self):
-        print('\n## Testing Add produce to farm - Form not filled ##')
+        print('\n## Testing Add produce to farm - Form not filled(No price) ##')
         self.login('bbaggins@lotr.com', 'bilbobaggins')
         response = self.add_produce('Eggplant', 'Big eggplants', 'Vegetable', 1, price1="",
                                     prod_image='static/images/eggplant.jpg', farm_id=1)
