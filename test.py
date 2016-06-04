@@ -92,6 +92,20 @@ class BlueGardenTestCase(BaseTestCase):
         print('\n## Testing logout ##')
         response = self.logout()
         self.assertIn(b'You successfully logged out', response.data)
+    #Testing resource list
+    def test_login_resourcelist(self):
+        print('\n## Testing add resource ##')
+        rv = self.login('singarisathwik007@gmail.com', 'dm08b048')
+        response = self.add_resourcelist('this is your resource')
+        #self.assertIn(b'this is your resource',response.data)
+        #assert b'added resource successfully' in response.data
+
+    def add_resourcelist(self, decription):
+        self.login('mrmf@gmail.com', 'shazza')
+        return self.client.post('/addresource', data = dict(
+            decription = decription
+        ), follow_redirects = True)
+
 
     # Testing Registration Page content
     def test_register_page_content(self):
@@ -165,17 +179,10 @@ class BlueGardenTestCase(BaseTestCase):
             crop_id = 57,
             new_state=changestate), follow_redirects=True)
 
-    #Test change crop state       
+    #Test change crop state
     def test_change_state(self):
         rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
-<<<<<<< HEAD
-        rv = self.addcrop('57', 'corn', 'harvest', '57')
-        rv=self.change_state('harvest')
-        assert b'you successfully change the state' in rv.data
-=======
-        rv=self.change_state('1','harvest')
-        assert b'you successfully change the state' in rv.data'''
->>>>>>> sprint-4-jason
+
 
     def test_dashboard_for_content(self):
         with self.client as c:
@@ -252,6 +259,7 @@ class BlueGardenTestCase(BaseTestCase):
         self.add_produce('Orange', 'Big Oranges', 'Fruit', 1, 4.38, 'static/images/oranges.jpg', 1)
         self.add_produce('Potato', 'Big Potatoes', 'Vegetable', 1, 4.38, 'static/images/potato.jpg', 2)
         self.produce_added = True
+
 
 
     def test_add_to_cart(self):

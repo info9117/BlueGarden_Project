@@ -75,6 +75,7 @@ class UserController:
 
 
 
+
     @staticmethod
     def show_dashboard():
         id = session.get("id")
