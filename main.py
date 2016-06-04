@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, url_for, request, redirect, session, flash, send_from_directory, abort
 import stripe
 from functools import wraps
@@ -30,7 +29,6 @@ with app.app_context():
     db.create_all()
 
 
-
 def serve_forever():
     app.run()
 
@@ -41,10 +39,11 @@ def shutdown_server():
         raise RuntimeError("Not running with Werkzeug server")
     func()
 
+
 # keys for payment
 stripe_keys = {
-  'secret_key': 'sk_test_BQokikJOvBiI2HlWgH4olfQ2',
-  'publishable_key': 'pk_test_6pRNASCoBOKtIshFeQd4XMUh'
+    'secret_key': 'sk_test_BQokikJOvBiI2HlWgH4olfQ2',
+    'publishable_key': 'pk_test_6pRNASCoBOKtIshFeQd4XMUh'
 }
 stripe.api_key = stripe_keys['secret_key']
 
@@ -59,6 +58,7 @@ def login_required(function):
             flash('Please login to view this page', 'error')
             redirect_url = wrapped_function.__name__
             return redirect(url_for('login', redirect=redirect_url))
+
     return wrapped_function
 
 
@@ -89,8 +89,8 @@ def logout():
 def addcrop():
     return userController.addcrop()
 
-    
-@app.route('/change_state/<int:crop_id>',methods=['GET', 'POST'])
+
+@app.route('/change_state/<int:crop_id>', methods=['GET', 'POST'])
 @login_required
 def change_state(crop_id):
     return cropController.change_state(crop_id)
@@ -130,7 +130,8 @@ def activity(process_id):
 def field():
     return fieldController.addField()
 
-@app.route('/addresource',methods=['GET', 'POST'])
+
+@app.route('/addresource', methods=['GET', 'POST'])
 @login_required
 def resource():
     return resourceController.add_resource()
@@ -140,6 +141,7 @@ def resource():
 @login_required
 def add_produce_to_farm(farm_id):
     return ProduceController.add_produce(farm_id, app.config['UPLOAD_FOLDER'])
+
 
 """
 @app.route('/produce/<int:produce_id>', methods=['POST', 'GET'])
@@ -161,6 +163,8 @@ def view_produce(produce_id):
     return render_template('view_produce.html', produce=produce1)
 
 """
+
+
 @app.route('/produce/<int:produce_id>', methods=['POST', 'GET'])
 def view_produce(produce_id):
     return ProduceController.view_produce(produce_id)
@@ -168,20 +172,22 @@ def view_produce(produce_id):
 
 @app.route('/uploads/<int:farm_id>/<filename>', )
 def uploaded_image(farm_id, filename):
-    print(safe_join(app.config['UPLOAD_FOLDER']+'produce/' + str(farm_id), filename))
-    return send_from_directory(app.config['UPLOAD_FOLDER']+'produce/' + str(farm_id)+'/',
+    print(safe_join(app.config['UPLOAD_FOLDER'] + 'produce/' + str(farm_id), filename))
+    return send_from_directory(app.config['UPLOAD_FOLDER'] + 'produce/' + str(farm_id) + '/',
                                filename)
+
 
 @app.route('/process', methods=['GET', 'POST'])
 @login_required
 def process():
     return templateController.add_process()
-    
+
+
 @app.route('/active_process/<process_or_crop>/<int:id>', methods=['GET', 'POST'])
 @login_required
-def active_process(process_or_crop,id):
+def active_process(process_or_crop, id):
+    return farmController.active_process(process_or_crop, id)
 
-    return farmController.active_process(process_or_crop,id)
 
 @app.route('/activity/<int:process_id>/add', methods=['GET', 'POST'])
 @login_required
@@ -193,6 +199,7 @@ def url_for_browse_produce(page):
     args = dict(list(request.view_args.items()) + list(request.args.to_dict().items()))
     args['page'] = page
     return url_for('browse_produce', **args)
+
 
 app.jinja_env.globals['url_for_browse_produce'] = url_for_browse_produce
 
@@ -232,7 +239,7 @@ def shutdown():
 
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback():
-	return FeedbackController.feedback()
+    return FeedbackController.feedback()
 
 
 if __name__ == '__main__':

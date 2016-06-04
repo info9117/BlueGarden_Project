@@ -10,8 +10,8 @@ class UserController:
     def login():
         errors = []
         if request.method == 'POST':
-            email = request.form.get('email', '')
-            password = request.form.get('password', '')
+            email = str(request.form.get('email', '')).strip()
+            password = str(request.form.get('password', '')).strip()
             if not email:
                 errors.append('Email Id cannot be empty')
             else:
@@ -35,11 +35,11 @@ class UserController:
     def register():
         errors = []
         if request.method == 'POST':
-            first_name = request.form.get('firstname', '')
-            last_name = request.form.get('lastname', '')
-            email = request.form.get('email', '')
-            password = request.form.get('password', '')
-            conf_pswd = request.form.get('confirmpassword', '')
+            first_name = str(request.form.get('firstname', '')).strip()
+            last_name = str(request.form.get('lastname', '')).strip()
+            email = str(request.form.get('email', '')).strip()
+            password = str(request.form.get('password', '')).strip()
+            conf_pswd = str(request.form.get('confirmpassword', '')).strip()
             if not first_name:
                 errors.append('First Name cannot be empty')
             if not last_name:
@@ -52,8 +52,9 @@ class UserController:
                     errors.append("Email Id already exists")
             if not password:
                 errors.append('Password cannot be empty')
-            if conf_pswd != password:
-                errors.append('Password mismatch! ')
+            else:
+                if conf_pswd != password:
+                    errors.append('Password mismatch! ')
             if not errors:
                 user = User(first_name, last_name, email, password)
                 db.session.add(user)

@@ -29,7 +29,7 @@ def before_all(context):
         db.session.add(Unit('ml'))
         db.session.flush()
         db.session.add(Address('123 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
-        db.session.add(Address('126 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
+        db.session.add(Address('126 Hill Rd', None, 'Melbourne', 'NSW', 'Australia', 2010))
         db.session.add(Farm('Shire Farms', 1))
         db.session.add(Farm('Mordor Farms', 2))
         db.session.add(Produce('corn', 'vegetable', 'tasty', 1, 1))
