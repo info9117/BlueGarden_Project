@@ -46,10 +46,11 @@
         </div>
         <div data-position="title-vendor"><h1 class="page-title" itemprop="name">{{ produce.name }}</h1>
             <p style="font-size: small">{{ produce.farm.name }}</p>
-            <p style="font-size: small">Product of Australia</p><span class="price" name="price" id="amonut"
+            <p style="font-size: small">Product of Australia</p><span class="price" name="price" id="price"
                                                                       type="number">${{ produce.prices[0].price }}</span>
-            <small>per kg {{ produce.prices[0].unit.name }}</small>
+            <small>per {{ produce.prices[0].unit.name }}</small>
             </p>
+            <img src="{{ url_for('uploaded_image', farm_id=produce.farm_id, filename=produce.image.filename) }}" style="max-height: 200px;">
         </div>
         <div align="center">
             {#            <img src="{{ url_for('static', filename='images/eggplant.jpg') }}" style="height: 500px; width: 500px;">#}
@@ -60,10 +61,15 @@
             <input type="number" name="amount" id="amount" class="form-control" placeholder="amount">
             <button id="btncart" class="btn btn-lg btn-primary btn-block" type="submit">Add to cart</button>
         </form>
+        {% if item %}
+            <a href="{{ url_for('checkout', item_id=item.id) }}">
+            <input type="button" value="Checkout" />
+            </a>
+        {% endif %}
 
         <div class="jumbotron">
-            {% if total %}
-                <h1>Total is ${{ total }}</h1>
+            {% if item %}
+                <h1>Total is ${{ item.total }}</h1>
             {% endif %}
         </div>
 
@@ -76,6 +82,5 @@
         <script src="{{ url_for('static', filename='js/ie10-viewport-bug-workaround.js') }}"></script>
     </div>
 </div>
-<img src="{{ url_for('uploaded_image', farm_id=produce.farm_id, filename=produce.image.filename) }}">
 </body>
 </html>

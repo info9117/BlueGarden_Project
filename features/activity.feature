@@ -1,11 +1,11 @@
-Feature: Farmer user can add activities to their farm calendar
+Feature: Farmer user can record activities
     As a farmer
     I want to identify different activities on the farm
-    So that I can track and record farm activities that have occurred on my farm
+    So that I can track and record farm activities that have 
+    occurred throughout farm processes
     
     Scenario: Record an activity
     Given at the activity page
-    When a farmer selects their farm, resource and enters a description and date
-    Then the activity is reistered for that farm
+    When a farmer enters a resource and enters a description
+    Then the new activity is recorded
 
-    

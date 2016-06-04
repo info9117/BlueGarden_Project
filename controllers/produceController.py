@@ -70,6 +70,8 @@ class ProduceController:
             if request.args.get(category.lower()) == 'on':
                 category_filter.append(category.lower())
         location = request.args.get('location')
+        search = request.args.get('search')
+
         if category_filter:
             results_filtered = True
             results = Produce.query.filter(func.lower(Produce.category).in_(category_filter)) \
@@ -77,20 +79,27 @@ class ProduceController:
         if results_filtered and location:
                 results = results.filter(Produce.farm_id == Farm.query.with_entities(Farm.id)
                                          .filter(and_(Farm.address_id == Address.id, func.lower(Address.city) ==
-                                                      location.lower()))).order_by(Produce.id) \
-                    .paginate(page, results_per_page, False)
+                                                      location.lower()))).order_by(Produce.id)
         if not results_filtered and location:
             results_filtered = True
             results = Produce.query.filter(Produce.farm_id == Farm.query.with_entities(Farm.id)
                                            .filter(and_(Farm.address_id == Address.id, func.lower(Address.city) ==
-                                                        location.lower()))).order_by(Produce.id) \
-                .paginate(page, results_per_page, False)
-        if results_filtered and not location:
+                                                        location.lower()))).order_by(Produce.id)
+
+        if results_filtered and search:
+            results = results.filter(Produce.name.like("%"+search+"%")).order_by(Produce.id)
+
+        if not results_filtered and search:
+            results_filtered = True
+            results = Produce.query.filter(Produce.name.like("%" + search + "%")).order_by(Produce.id)
+
+        if results_filtered:
             results = results.paginate(page, results_per_page, False)
-            
+
         if not results_filtered:
             results = Produce.query.order_by(Produce.farm_id).paginate(page, results_per_page, False)
         total = results.total
+        # print(results.query.as_scalar())
         pagination = Pagination(results, page, results_per_page, total, results.items)
         return render_template('browse_produce.html', results=results.items, categories=categories,
                                pagination=pagination)
@@ -100,14 +109,12 @@ class ProduceController:
         produce1 = Produce.query.get(produce_id)
         if request.method == 'POST':
             amount = request.form.get('amount')
-            print('amount', type(amount))
-            print('produce', type(produce1.prices[0].price))
             if amount:
                 amount = request.form.get('amount', '')
-                item1 = Item(produce1.prices[0].price, produce_id, amount)
+                item1 = Item(produce1.prices[0].price, produce1.prices[0].unit_id, produce_id, amount)
                 db.session.add(item1)
                 db.session.commit()
-                return render_template('view_produce.html', produce=produce1, total=item1.total)
+                return render_template('view_produce.html', produce=produce1, item=item1)
             else:
                 return render_template('view_produce.html', produce=produce1, total="wrong value")
 

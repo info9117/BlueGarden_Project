@@ -72,11 +72,12 @@
     
     <form class="addcrop_form" action="{{ url_for('addcrop') }}" method="post">
                     
-                    <input id="id" type=text  name=id>
-                    <input id="cropname" type=text  name=cropname>
-                    <input id="growstate" type=text  name=growstate>
-                    <input id="farmid" type=text  name=farmid>
-                    
+                    <input id="id" type=text  name=id placeholder="crop id">
+                    <input id="cropname" type=text  name=cropname placeholder="crop name">
+                    <input id="growstate" type=text  name=growstate placeholder="grow state">
+                    <input id="farmid" type=text  name=farmid placeholder="farm id">
+
+
                     <button class="btn waves-effect waves-light moderate-pink darken-1" id="submit" type="submit" name="action" value="add crop">
                         submit
                     </button>

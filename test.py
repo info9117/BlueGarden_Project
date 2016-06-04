@@ -17,7 +17,10 @@ class BaseTestCase(TestCase):
         user2.set_user_farmer()
         db.session.add(User('Sathwik', 'Singari', 'singarisathwik007@gmail.com', 'dm08b048'))
         db.session.add(user2)
-        db.session.add(User('Master', 'Farmer', 'mrmf@gmail.com', 'shazza'))
+        user3 = User('Master', 'Farmer', 'mrmf@gmail.com', 'shazza')
+        user4 = User('Not', 'Farmer', 'mrmf@farm.com', 'qwerty')
+        db.session.add(user3)
+        db.session.add(user4)
         db.session.add(Unit('Kg'))
         db.session.add(Unit('gm'))
         db.session.add(Unit('l'))
@@ -37,11 +40,19 @@ class BaseTestCase(TestCase):
         db.session.flush()
         db.session.add(Works(2, 1))
         db.session.add(Works(2, 2))
+
+        db.session.add(Item(amount=2, price=2.2, produce_id=1, unit_id=1))
         db.session.flush()
         db.session.add(Crop(55,'banana', 'need some water', 55))
         db.session.flush()
 
 
+        db.session.add(Resource_List('fertiliser'))
+        db.session.flush()
+        db.session.add(Process_List('making cheese', 'Cheese making process'))
+        db.session.add(Field("east block",'Shire Farms',1))
+        db.session.add(Works(3, 1))
+        user3.set_user_farmer()
         db.session.commit()
 
     def tearDown(self):
@@ -50,7 +61,6 @@ class BaseTestCase(TestCase):
 
 
 class BlueGardenTestCase(BaseTestCase):
-
     produce_added = False
 
     # Testing the home page content
@@ -102,6 +112,7 @@ class BlueGardenTestCase(BaseTestCase):
         self.assertIn(b'Hello Frodo', response.data)
 
 
+
     #Testing add crop with new crop
     def test_login_addcrop(self):
         print('\n## Testing add crop with new crop')
@@ -132,24 +143,21 @@ class BlueGardenTestCase(BaseTestCase):
             firstname=first_name,
             lastname=last_name,
             email=email,
-            password=password
+            password=password,
+            confirmpassword=password
         ), follow_redirects=True)
 
     def logout(self):
         return self.client.get('/logout', follow_redirects=True)
 
-
-
-    # Test add crop function    
-
-    def addcrop(self,id, cropname, growstate, farmid):
-        
-        return self.client.post('/addcrop',data=dict(
-            id = id,
-            crop_name = cropname,
-            grow_state = growstate,
-            farm_id = farmid
-            ),follow_redirects=True)
+    # Test add crop function
+    def addcrop(self, id, cropname, growstate, farmid):
+        return self.client.post('/addcrop', data=dict(
+            id=id,
+            crop_name=cropname,
+            grow_state=growstate,
+            farm_id=farmid
+        ), follow_redirects=True)
 
     #Test change crop state
     def change_state(self,  changestate):
@@ -160,9 +168,14 @@ class BlueGardenTestCase(BaseTestCase):
     #Test change crop state       
     def test_change_state(self):
         rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
+<<<<<<< HEAD
         rv = self.addcrop('57', 'corn', 'harvest', '57')
         rv=self.change_state('harvest')
         assert b'you successfully change the state' in rv.data
+=======
+        rv=self.change_state('1','harvest')
+        assert b'you successfully change the state' in rv.data'''
+>>>>>>> sprint-4-jason
 
     def test_dashboard_for_content(self):
         with self.client as c:
@@ -181,7 +194,6 @@ class BlueGardenTestCase(BaseTestCase):
         self.login('bbaggins@lotr.com', 'bilbobaggins')
         response = self.client.get('/farm/1/produce/add', content_type='html/text', follow_redirects=True)
         self.assertIn(b'Shire Farms', response.data)
-       
 
     # Products details test
     def test_view_produce_page_content(self):
@@ -190,7 +202,6 @@ class BlueGardenTestCase(BaseTestCase):
         self.assertIn(b'corn', response.data)
         self.assertIn(b'2.2', response.data)
         self.assertIn(b'Shire Farms', response.data)
-        
 
     def test_adding_produce_to_farm(self):
         print('\n## Testing Add produce to farm ##')
@@ -214,7 +225,7 @@ class BlueGardenTestCase(BaseTestCase):
             post_data['prod_image'] = (img_bytes_io, filename)
         finally:
             img.close()
-        return self.client.post('/farm/'+str(farm_id)+'/produce/add', content_type='multipart/form-data',
+        return self.client.post('/farm/' + str(farm_id) + '/produce/add', content_type='multipart/form-data',
                                 data=post_data, follow_redirects=True)
 
     def test_browse_produce_content(self):
@@ -242,76 +253,74 @@ class BlueGardenTestCase(BaseTestCase):
         self.add_produce('Potato', 'Big Potatoes', 'Vegetable', 1, 4.38, 'static/images/potato.jpg', 2)
         self.produce_added = True
 
-    # Testing the flag for farmer user type
-    def test_farmer_type(self):
-        print('\n## Testing the flag for farmer user type ##')
-        user = User.query.filter_by(email='mrmf@gmail.com').first()
-        User.set_user_farmer(user)
-        assert 'Master' in [farmer.first_name for farmer in User.query.filter_by(type='C').all()]
-        user.type = 'B'
-        assert 'Master' not in [farmer.first_name for farmer in User.query.filter_by(type='C').all()]
-
-    # Testing new farmer user has no farms yet
-    def test_farm_page_content(self):
-        print('\n## Testing new farmer user has no farms yet ##')
-        self.login('mrmf@gmail.com', 'shazza')
-        response = self.client.get('/sell', follow_redirects=True)
-        self.assertIn(b"You dont have any farms yet.",response.data)
-
-    # Testing that user can add farms that they work on
-    def test_add_farms(self):
-        print('\n## Testing that user can add farms that they work on ##')
-        response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
-        self.assertIn(b"Community Farm",response.data)
-
-    def test_add_duplicate_farms(self):
-        print('\n## Testing that user cannot add duplicate farms that they work on ##')
-        self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
-        response = self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
-        self.assertIn(b"Already Exists",response.data)
-
-    def add_farm(self, name, address1, address2, city, state, country, postcode):
-        self.login('mrmf@gmail.com', 'shazza')
-        return self.client.post('/sell', data=dict(
-            name=name,
-            address1=address1,
-            address2=address2,
-            city=city,
-            state=state,
-            country=country,
-            postcode=postcode
-        ), follow_redirects=True)
-        
-    def add_activity(self, description,field,date,resource):
-        self.login('mrmf@gmail.com', 'shazza')
-        return self.client.post('/activity', data=dict(
-            description=description,
-            field=field,
-            date=date,
-            resource=resource
-        ), follow_redirects=True)
-
-
-    #Testing that user can record activities to their farm
-    def test_add_activity(self):
-        print('\n## Testing that user can record activities to their farm ##')
-        self.add_farm('Community Farm', '1 First St', '', 'Camperdown', 'NSW', 'Aus', '2009')
-        farm_id = 1
-        db.session.add(Field('west block', 'Shire Farms', farm_id))
-        db.session.add(Resource('fertiliser',farm_id))
-        db.session.commit()        
-        field = Field.query.filter_by(farm_id=farm_id).first()
-        resource = Resource.query.filter_by(farm_id=farm_id).first()
-        date = '3 May, 2016'
-        description = 'Mowing the lawn'
-        response = self.add_activity(description,field,date,resource)
-        self.assertIn(b"Activity was recorded",response.data)        
-
 
     def test_add_to_cart(self):
         response = self.client.post('/produce/1', data=dict(
             amount='2'))
         self.assertIn(b'4.4', response.data)
+
+    # Testing purchase page
+    def test_purchase_page(self):
+        print('\n## Testing purchase page ##')
+        self.login('bbaggins@lotr.com', 'bilbobaggins')
+        response = self.client.get('/purchase', content_type='html/text')
+        self.assertIn(b'Amount:', response.data)
+
+    def test_purchase(self):
+        print('\n## Testing purchase page ##')
+        self.login('bbaggins@lotr.com', 'bilbobaggins')
+
+        response = self.client.get('/purchase', content_type='html/text')
+        self.assertIn(b'Amount:', response.data)
+
+    def test_search_produce(self):
+        print('\n## Testing browse produce page content with filters ##')
+        self.login('bbaggins@lotr.com', 'bilbobaggins')
+        if not self.produce_added:
+            self.add_test_produce()
+        response = self.client.get('/search/produce?search=Apple', follow_redirects=True)
+        self.assertIn(b'Apple', response.data)
+
+    # Products details test
+    def test_view_produce_page_content(self):
+        print('\n## Testing produce details page content ##')
+        response = self.client.get('/produce/1', content_type='html/text')
+        self.assertIn(b'corn', response.data)
+        self.assertIn(b'2.2', response.data)
+        self.assertIn(b'Shire Farms', response.data)
+
+    def test_checkout_pagecontent(self):
+        response = self.client.get('/checkout/1', content_type='html/text')
+        self.assertIn(b'corn', response.data)
+
+    def test_checkout_submit(self):
+        response = self.client.post('/checkout/1', data=dict(
+            name="mike",
+            email="mike@gmail.com",
+            phone="123456",
+            address="NSW Redfern",
+            discount="11111"))
+        self.assertIn(b"information has been saved successfully", response.data)
+
+    # Testing feedback page
+    def test_feedback(self):
+        with self.client as c:
+            with c.session_transaction() as session:
+                session['logged_in'] = True
+                session['email'] = 'singarisathwik007@gmail.com'
+                session['firstname'] = 'Sathwik'
+                session['lastname'] = 'Singari'
+                print('\n## Testing feedback page ##')
+
+        response = self.client.post('/feedback',
+                                    data=dict(
+                                        username="sam",
+                                        email="example@gmail.com",
+                                        subject="test message",
+                                        message="Good!"
+                                    ), follow_redirects=True)
+
+        self.assertIn(b'Thank', response.data)
 
 
 if __name__ == '__main__':

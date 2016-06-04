@@ -33,7 +33,6 @@ class UserController:
                 return redirect(url_for('dashboard'))
         return render_template("login.html", errors=errors)
 
-    @staticmethod
     def register():
         errors = []
         if request.method == 'POST':
@@ -41,6 +40,7 @@ class UserController:
             last_name = request.form.get('lastname', '')
             email = request.form.get('email', '')
             password = request.form.get('password', '')
+            conf_pswd = request.form.get('confirmpassword', '')
             if not first_name:
                 errors.append('First Name cannot be empty')
             if not last_name:
@@ -53,6 +53,8 @@ class UserController:
                     errors.append("Email Id already exists")
             if not password:
                 errors.append('Password cannot be empty')
+            if conf_pswd != password:
+                errors.append('Password mismatch! ')
             if not errors:
                 user = User(first_name, last_name, email, password)
                 db.session.add(user)
@@ -72,31 +74,6 @@ class UserController:
         return redirect(url_for('login'))
 
 
-    @staticmethod
-    def addcrop():
-        errors = []
-        crop_m = []
-        myfarm = []
-        #user = User.query.get(User.query.filter_by(email=session['email']).first().id())
-        #myfarms
-        if request.method == 'POST':
-            #if request.form['action']=="add crop":
-            id = request.form.get('id', '')
-            crop_name = request.form.get('cropname', '')
-            grow_state = request.form.get('growstate', '')
-            farm_id = request.form.get('farmid', '')
-            crop = Crop(id, crop_name, grow_state, farm_id)
-            db.session.add(crop)
-            db.session.commit()
-            flash('You success added crop')
-            
-
-
-        
-        
-        crop_m=Crop.query.all()
-            
-        return render_template("addcrop.html",crop_m=crop_m,errors = errors)
 
     @staticmethod
     def show_dashboard():

@@ -8,6 +8,7 @@ class Crop(db.Model):
     #if the crop is harvested, the value of state will be harvested. If not harvested yet, the value will be plant.
     grow_state = db.Column('grow_state', db.String(255))
     farm_id = db.Column('farm_id', db.Integer, db.ForeignKey('farms.id'),nullable=False)
+    #active_process_id = db.Column('active_process_id', db.Integer,db.ForeignKey('Active_Process.id'), nullable=True)
     
     def __init__(self, id,  crop_name, grow_state, farm_id):
         self.id = id
