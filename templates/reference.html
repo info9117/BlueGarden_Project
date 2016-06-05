@@ -5,7 +5,7 @@
             <h1 class="grey-text text-lighten-5">Checkout</h1>
             <form action="/charge" method="post">
     <article>
-      <h5>Amount: $5.00</h5>
+      <h5>Amount: ${{ check.total }}</h5>
     </article>
 
     <script src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button" data-key="{{ key }}"></script>

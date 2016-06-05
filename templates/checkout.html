@@ -57,9 +57,12 @@
             <input type="number" name="discount" id="discount" class="form-control" placeholder="discount">
             <button id="btncheck" class="btn btn-lg btn-primary btn-block" type="submit">Save Buyer Data</button>
         </form>
-        <a href="{{ url_for('reference') }}">
+
+        {% if check %}
+        <a href="{{ url_for('reference', checkId=check.id) }}">
             <input type="button" value="Pay Now" />
         </a>
+        {% endif %}
 
         <h1>Total is ${{ item.total }}</h1>
         {% if check %}

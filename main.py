@@ -182,9 +182,10 @@ def url_for_browse_produce(page):
 app.jinja_env.globals['url_for_browse_produce'] = url_for_browse_produce
 
 
-@app.route('/purchase')
-def reference():
-    return render_template('reference.html', key=stripe_keys['publishable_key'])
+@app.route('/purchase/<int:checkId>')
+def reference(checkId):
+    check1 = Check.query.get(checkId)
+    return render_template('reference.html', key=stripe_keys['publishable_key'], check=check1)
 
 
 @app.route('/charge', methods=['POST'])
