@@ -28,17 +28,10 @@ def before_all(context):
         db.session.add(Unit('l'))
         db.session.add(Unit('ml'))
         db.session.flush()
-
         db.session.add(Address('123 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
         db.session.add(Address('126 Hill Rd', None, 'Sydney', 'NSW', 'Australia', 2010))
         db.session.add(Farm('Shire Farms', 1))
         db.session.add(Farm('Mordor Farms', 2))
-
-        #db.session.add(Image('eggplant.jpg', 'produce/1/eggplant.jpeg'))
-        #db.session.add(Produce('Eggplant', 'Sweet organic eggplants', 'Vegetable', 1, 1))
-        #db.session.add(Price(1, 1, 4.35))
-        #db.session.add(Price(1, 2, 2.8))
-
         db.session.add(Produce('corn', 'vegetable', 'tasty', 1, 1))
         db.session.add(Produce('milk', 'dairy', 'yum', 2, 2))
         db.session.flush()
@@ -51,17 +44,12 @@ def before_all(context):
         db.session.add(Works(4,1))
         db.session.flush()
         db.session.add(User('Joe', 'Farmer', 'farmer_j01@gmail.com', 'louise1993'))
-
         db.session.add(Item(amount=2, price=2.2, produce_id=1, unit_id=1))
-
-        #db.session.add(Works(4, 1))
         db.session.add(Field('west block', 'Shire Farms', 1))
         db.session.add(Resource_List('Fertiliser'))
         db.session.add(Resource_List('Seeds'))
         db.session.add(Process_List('making cheese','Cheese making process'))
         db.session.add(Process_List( 'Grow Spaghetti','How to grow a spaghetti tree' ))
-
-        db.session.add(Resource('fertiliser', 1))
 
         db.session.commit()
 
@@ -74,4 +62,5 @@ def after_all(context):
     with app.app_context():
         db.session.remove()
         db.drop_all()
+    
 

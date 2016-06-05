@@ -9,7 +9,6 @@ class ResourceController:
 
         for resource in (Resource_List.query.all()):
             resourcefull.append(resource.resource_description)
-            print(resource.resource_description)
 
         if request.method =="POST":
             #resource_id = request.form.get('resourceid', '')

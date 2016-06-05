@@ -15,10 +15,11 @@ from controllers.userController import UserController as userController
 from controllers.farmController import FarmController as farmController
 from controllers.fieldController import FieldController as fieldController
 from controllers.cropController import CropController as cropController
-from controllers.templateController import TemplateController as templateController
 from controllers.resourcelistController import ResourceController as resourceController
 from controllers import ProduceController
 from controllers.feedbackController import FeedbackController
+from controllers.processController import ProcessController
+from controllers.cropController import CropController
 
 from controllers import ProduceController
 from shared import db
@@ -96,7 +97,7 @@ def logout():
 @app.route('/addcrop', methods=['GET', 'POST'])
 @login_required
 def addcrop():
-    return userController.addcrop()
+    return CropController.addcrop()
 
     
 @app.route('/change_state/<int:crop_id>',methods=['GET', 'POST'])
@@ -129,16 +130,15 @@ def checkout(item_id):
     return CheckoutController.checkout(item_id)
 
 
-@app.route('/sell', methods=['GET', 'POST'])
+@app.route('/farm', methods=['GET', 'POST'])
 @login_required
-def sell():
-
+def farm():
     return farmController.add_farm()
     
 @app.route('/activity/<int:process_id>', methods=['GET', 'POST'])
 @login_required
 def activity(process_id):
-    return farmController.activity(process_id)
+    return ProcessController.activity(process_id)
 
 
 @app.route('/field', methods=['GET', 'POST'])
@@ -195,14 +195,13 @@ def uploaded_image(farm_id, filename):
 @app.route('/process', methods=['GET', 'POST'])
 @login_required
 def process():
-    return templateController.add_process()
-
+    return ProcessController.add_process()
 
 @app.route('/active_process/<process_or_crop>/<int:id>', methods=['GET', 'POST'])
 @login_required
 def active_process(process_or_crop,id):
+    return ProcessController.active_process(process_or_crop,id)
 
-    return farmController.active_process(process_or_crop,id)
 
 def url_for_browse_produce(page):
     args = dict(list(request.view_args.items()) + list(request.args.to_dict().items()))

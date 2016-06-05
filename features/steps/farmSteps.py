@@ -5,7 +5,7 @@ db.app=app
 db.init_app(app)
 import re
 
-@given('at the sell page')
+@given('at the farm page')
 def step_impl(context):
     context.browser.get(context.address + "/login")
     login(context, 'farmer_j01@gmail.com', 'louise1993')
@@ -22,7 +22,7 @@ def step_impl(context):
 def step_impl(context):
     assert 'Marrickville Community Garden' in context.browser.page_source
 
-@given('logged in at the sell page')
+@given('logged in at the farm page')
 def step_impl(context):
     assert True
 
@@ -39,7 +39,7 @@ def step_impl(context):
     context.browser.get(context.address + "/register")
     register(context, "IAMANEW", "USER", "joe@nofarms.yet", "pineapple")
 
-@when('the user views the sell page')
+@when('the user views the farm page')
 def step_impl(context):
     context.browser.get(context.address + "/farm")
 

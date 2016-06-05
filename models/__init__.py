@@ -13,8 +13,6 @@ from .works import Works
 from .item import Item
 
 from .field import Field
-from .resource import Resource
-from .activity import Activity
 from .crop import Crop
 from .recent_produce import RecentProduce
 from .check import Check
