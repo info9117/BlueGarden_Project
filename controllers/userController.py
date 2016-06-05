@@ -58,7 +58,7 @@ class UserController:
             if not password:
                 errors.append('Password cannot be empty')
             if conf_pswd != password:
-                errors.append('Password mismatch! ')
+                errors.append('Password mismatch!')
             if len(password) < 5:
                 errors.append('Password is too short! -_-##')
             if not errors:
