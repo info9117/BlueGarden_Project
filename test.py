@@ -182,6 +182,10 @@ class BlueGardenTestCase(BaseTestCase):
     #Test change crop state
     def test_change_state(self):
         rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
+        rv = self.addcrop('57', 'corn', 'harvest', '57')
+        rv=self.change_state('harvest')
+        assert b'you successfully change the state' in rv.data
+
 
 
     def test_dashboard_for_content(self):
@@ -263,9 +267,10 @@ class BlueGardenTestCase(BaseTestCase):
 
 
     #testing farmer can update process
-    def test_login_addcrop_activeprocess_finishactivity(self):
+    '''def test_login_addcrop_activeprocess_finishactivity(self):
         rv = self.login('singarisathwik007@gmail.com', 'dm08b048')
         rv = self.addcrop('563', 'corn', 'harvest', '892')
+        rv = self.client.get('/active_process/crop/563', follow_redirects=True)
 
 
 
@@ -276,7 +281,67 @@ class BlueGardenTestCase(BaseTestCase):
         # rv=self.addcrop('1', 'corn', 'plant', '1')
 
         rv = self.login('singarisathwik007@gmail.com', 'dm08b048')
+        rv = self.addcrop('563', 'corn', 'harvest', '892')'''
+    def test_login_addcrop_activeprocess(self):
+        rv = self.login('singarisathwik007@gmail.com', 'dm08b048')
         rv = self.addcrop('563', 'corn', 'harvest', '892')
+        rv = self.client.get('/active_process/crop/563', follow_redirects=True)
+
+    def test_login_addcrop_setfinishedactivity(self):
+        rv = self.login('singarisathwik007@gmail.com', 'dm08b048')
+        rv = self.addcrop('1', 'corn', 'harvest', '1')
+        #rv = self.client.get('/active_process/crop/1', follow_redirects=True)
+        rv = self.add_activity(1, 'plough field', 1, '')
+        response = self.start_process("crop", '', '', 1, "10 June, 2016", 1, 1, '')
+        rv = self.client.post('/update_active_process/1' ,data=dict(
+            rp = "finish_activity",
+            activity_done_id = 1,
+            #act_process = Active_Process(1,1,'10 May, 2016',1,'','crop',1),
+            activity_done = Active_Activity(1,1, True),
+            #apid = 1,
+            crop_id = 1,
+        ),follow_redirects=True)
+        #assert b"you successfully finish this acitivity" in rv.data
+
+
+    def test_login_addcrop_setfinishedprocess(self):
+        rv = self.login('singarisathwik007@gmail.com', 'dm08b048')
+        rv = self.addcrop('1', 'corn', 'harvest', '1')
+        rv = self.client.get('/active_process/crop/1', follow_redirects=True)
+        rv = self.add_activity(1, 'plough field', 1, '')
+        response = self.start_process("crop", '', '', 1, "10 June, 2016", 1, 1, '')
+        rv = self.client.post('/update_active_process/1' ,data=dict(
+            rp = "finish_process",
+            process_done_id = 1,
+            #act_process = Active_Process(1,1,'10 May, 2016',1,'','crop',1),
+            #apid = 1,
+            crop_id = 1,
+        ),follow_redirects=True)
+        response = self.client.get('/update_active_process/1', follow_redirects=True)
+        self.assertIn(b'Completed', response.data)
+        #assert b"you successfully finish this acitivity" in rv.data
+
+
+    def add_activity(self, process, description, resource, activity):
+        rv = self.login('singarisathwik007@gmail.com', 'dm08b048')
+        return self.client.post('/activity/1', data=dict(
+            process=process,
+            description=description,
+            resource=resource,
+            activity=activity
+        ), follow_redirects=True)
+
+    def start_process(self, target, farm, field, crop, date, user_id, process, other_target):
+        return self.client.post('/active_process/process/1', data=dict(
+            target=target,
+            farm=farm,
+            field=field,
+            crop=crop,
+            date=date,
+            user_id=user_id,
+            process=process,
+            other_target=other_target
+        ), follow_redirects=True)
 
 
 
