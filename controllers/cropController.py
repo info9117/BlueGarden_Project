@@ -26,8 +26,6 @@ class CropController:
     @staticmethod
     def update_active_process(crop_id):
         errors = []
-        #if request.method == 'POST':
-            #update_crop_process = request.form.get('update_active_process','')
         act_process = Active_Process.query.filter_by(Target_ID = crop_id).first()
         act_activities = Active_Activity.query.filter_by(Active_Process_ID = act_process.id).all()
 
@@ -37,12 +35,19 @@ class CropController:
                # act_done_id = activity_done_id
                 print(activity_done_id)
                 activity_done = Active_Activity.query.filter_by(id = activity_done_id).first()
-
+                print(activity_done)
+                print(activity_done.Action_Completed)
                 activity_done.Action_Completed = True
                 db.session.add(activity_done)
                 db.session.commit()
+                print(activity_done.Action_Completed)
+
+                act_process = Active_Process.query.filter_by(Target_ID = crop_id).first()
+                act_activities = Active_Activity.query.filter_by(Active_Process_ID = act_process.id).all()
                 flash("you successfully finish this acitivity")
-                return redirect(url_for('update_active_process', crop_id = crop_id))
+                #return redirect(url_for('update_active_process', crop_id = crop_id, act_activities  = act_activities))
+                return render_template('update_active_process.html',errors = errors, crop_id = crop_id, act_activities  = act_activities )
+
             if request.form['submit'] == "finish_process":
                 done = True
                 process_done_id = request.form.get('finish_process','')
