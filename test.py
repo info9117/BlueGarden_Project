@@ -351,6 +351,23 @@ class BlueGardenTestCase(BaseTestCase):
         ), follow_redirects=True)
         self.assertIn(b"was added to making cheese", response.data)
 
+    #testing farmer can update process
+    def test_login_addcrop_activeprocess_finishactivity(self):
+        rv = self.login('singarisathwik007@gmail.com', 'dm08b048')
+        rv = self.addcrop('563', 'corn', 'harvest', '892')
+
+
+
+    def finish_activity(self):
+        print('\n## Testing add crop with new crop')
+
+        # rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
+        # rv=self.addcrop('1', 'corn', 'plant', '1')
+
+        rv = self.login('singarisathwik007@gmail.com', 'dm08b048')
+        rv = self.addcrop('563', 'corn', 'harvest', '892')
+
+
     def test_add_to_cart(self):
         response = self.client.post('/produce/1', data=dict(
             amount='2'))

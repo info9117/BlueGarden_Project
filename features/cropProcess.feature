@@ -10,8 +10,3 @@ Feature: crop process
   Given at the crop screen
   When a farmer choose an crop
   Then a new page display all the activities of that process
-
-  Scenario: Farmer update the process
-    Given at the update_Process page
-    When a farmer choose a finished activity
-    Then this activity will be specified finished
