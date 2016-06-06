@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Field{% endblock %}
+{% block title %}Resource List{% endblock %}
 {% block content %}
 
 <div class="ver-hor-align-parent grey darken-4">
@@ -49,15 +49,9 @@
                 </form>
             </div>
             <div>
-                {% if myfarms %}
-                    <ul class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 white left-align"><p>My Farms</p>
-                {% for myfarm in myfarms %}
-                    <a href="send me to add produce to my farm">{{ myfarm }} <br></a>
-                {% endfor %}
-                    </ul>
-                {% endif %}
+
                 {% if resourcefull !="" %}
-                    <ul class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 yellow left-align"><p>My Fields</p>
+                    <ul class="col s10 offset-s1 m6 offset-m3 l4 offset-l4 yellow left-align"><p>My Resources</p>
                 {% for resource in resourcefull %}
                     <a href="That's one heck of a field">{{ resource }} <br></a>
                 {% endfor %}

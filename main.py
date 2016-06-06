@@ -105,6 +105,13 @@ def change_state(crop_id):
     return cropController.change_state(crop_id)
 
 
+@app.route('/update_active_process/<int:crop_id>', methods = ['GET', 'POST'])
+@login_required
+def update_active_process(crop_id):
+    return cropController.update_active_process(crop_id)
+
+
+
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -145,6 +152,8 @@ def resource():
     return resourceController.add_resource()
 
 
+
+
 @app.route('/farm/<int:farm_id>/produce/add', methods=['GET', 'POST'])
 @login_required
 def add_produce_to_farm(farm_id):
@@ -169,7 +178,9 @@ def view_produce(produce_id):
     
     return render_template('view_produce.html', produce=produce1)
 
+
 """
+
 @app.route('/produce/<int:produce_id>', methods=['POST', 'GET'])
 def view_produce(produce_id):
     return ProduceController.view_produce(produce_id)
@@ -185,7 +196,8 @@ def uploaded_image(farm_id, filename):
 @login_required
 def process():
     return templateController.add_process()
-    
+
+
 @app.route('/active_process/<process_or_crop>/<int:id>', methods=['GET', 'POST'])
 @login_required
 def active_process(process_or_crop,id):

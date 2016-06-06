@@ -11,8 +11,6 @@ class Active_Activity(db.Model):
     Activity_ID = db.Column('Activity_ID', db.Integer, db.ForeignKey('Process_Steps.activity_id'), nullable=False)
     Action_Completed = db.Column('Start_Date', db.Boolean, nullable=False)
 
-    
-
     def __init__(self, Active_Process_ID, Activity_ID, Action_Completed):
         self.Active_Process_ID = Active_Process_ID
         self.Activity_ID = Activity_ID

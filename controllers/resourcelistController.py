@@ -17,5 +17,6 @@ class ResourceController:
             resource_list = Resource_List(resource_description)
             db.session.add(resource_list)
             db.session.commit()
+            flash('added resource successfully')
             return redirect(url_for('resource'))
         return render_template("resourcelist.html", errors = errors, resourcefull = resourcefull)
