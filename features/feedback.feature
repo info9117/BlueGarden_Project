@@ -1,4 +1,5 @@
-Feature: As a customers i want to send feedback
+
+Feature: As a customer I want to send feedback
 
 	Scenario: Send feedback
 		Given I am in feedback page

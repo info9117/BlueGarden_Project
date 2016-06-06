@@ -250,6 +250,11 @@ def page_not_found(e):
 def shutdown():
     shutdown_server()
 
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+	return FeedbackController.feedback()
+
+
 
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback():

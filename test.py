@@ -194,10 +194,10 @@ class BlueGardenTestCase(BaseTestCase):
     '''#Test change crop state
     def change_state(self, cropid, changestate):
         return self.client.post('/change_state/1',data=dict(
-            oristate = Crop.query.get(cropid), 
+            oristate = Crop.query.get(cropid),
             new_state=changestate), follow_redirects=True)
 
-    #Test change crop state       
+    #Test change crop state
     def test_change_state(self):
         rv=self.login('singarisathwik007@gmail.com', 'dm08b048')
         rv=self.change_state('1','harvest')
@@ -367,7 +367,7 @@ class BlueGardenTestCase(BaseTestCase):
         self.assertIn(b'Eggplant', response.data)
         self.assertIn(b'4.35', response.data)
         self.assertIn(b'Shire Farms', response.data)
-       
+
     def add_activity(self, process, description, resource):
         self.login('mrmf@gmail.com', 'shazza')
         return self.client.post('/activity/0', data=dict(
@@ -434,6 +434,26 @@ class BlueGardenTestCase(BaseTestCase):
         response = self.client.post('/produce/1', data=dict(
             amount='2'))
         self.assertIn(b'4.4', response.data)
+
+
+	def test_feedback(self):
+		with self.client as c:
+			with c.session_transaction() as session:
+				session['logged_in'] = True
+				session['email'] = 'singarisathwik007@gmail.com'
+				session['firstname'] = 'Sathwik'
+				session['lastname'] = 'Singari'
+				print('\n## Testing feedback page ##')
+
+		response = self.client.post('/feedback', data=dict(
+			username="sam",
+			email="example@gmail.com",
+			subject="test message",
+			message="Good!"
+			), follow_redirects=True)
+
+		self.assertIn(b'Thank', response.data)
+
 
     def test_add_to_cart_error(self):
         print('\n## Testing add to cart - wrong value ##')
