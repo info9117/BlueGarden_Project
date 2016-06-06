@@ -82,6 +82,10 @@ def index():
 def login():
     return UserController.login()
 
+@app.route("/manager_login", methods=['GET', 'POST'])
+def manager_login():
+    return UserController.manager_login()
+
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():

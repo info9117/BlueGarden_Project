@@ -4,24 +4,23 @@
 <a href="#" data-activates="mobile-demo" class="button-collapse">
     <i class="material-icons moderate-pink-text text-darken-1">menu</i>
 </a>
+    <!-- This section controls items can be displayed on webpage -->
 <ul class="right hide-on-med-and-down">
     <li><a href="{{ url_for('browse_produce') }}">Browse</a></li>
-    <li><a href="{{ url_for('login') }}">Login</a></li>
+    <li><a href="{{ url_for('login') }}">User Login</a></li>
+    <li><a href="{{ url_for('manager_login') }}">Manager Login</a></li>
+    <li><a href="{{ url_for('feedback') }}">Contact Us</a></li>
 </ul>
 <ul class="side-nav" id="mobile-demo">
     <li><a href="{{ url_for('browse_produce') }}">Browse</a></li>
-    <li><a href="{{ url_for('login') }}">Login</a></li>
+    <li><a href="{{ url_for('login') }}">User Login</a></li>
+    <li><a href="{{ url_for('manager_login') }}">Manager Login</a></li>
+    <li><a href="{{ url_for('feedback') }}">Contact Us</a></li>
 </ul>
-    <!-- --------------------------------------------------------------------- -->
+    <!-- End of 'this section' -->
 <a href="#" data-activates="mobile-demo" class="button-collapse">
     <i class="material-icons moderate-pink-text text-darken-1">menu</i>
 </a>
-<ul class="right hide-on-med-and-down">
-    <li><a href="{{ url_for('feedback') }}">Contact Us</a></li>
-</ul>
-<ul class="side-nav" id="mobile-demo">
-    <li><a href="{{ url_for('feedback') }}">Contact Us</a></li>
-</ul>
 {% endblock %}
 
 {% block content %}

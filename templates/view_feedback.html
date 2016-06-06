@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}FeedBack{% endblock %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col s12 left-align moderate-pink-text text-darken-1">
+            <h3 class="hide-on-med-and-down">Feedback View</h3>
+            <h4 class="hide-on-large-only">Feedback View</h4>
+        </div>
+    </div>
+    <div class="row white z-depth-1" style="padding: 50px;">
+		{% if success == True %}
+		</div>
+		{% endif %}
+        <div class="col m12 22 hide-on-small-only">
+            <form method="POST" name="feedback_form" action="">
+
+                <div class="col m9 19">
+                    <font size="3px">Name</font>
+                    <input name="username" id="username" type="text" placeholder="username" readonly>
+                </div>
+				<div class="col m9 19">
+                    <font size="3px">Email</font>
+                    <input name="email" id="email" type="email" placeholder="email" readonly>
+                </div>
+				<div class="col m9 19">
+                    <font size="3px">Subject</font>
+                    <input name="subject" id="subject" type="text" placeholder="subject" readonly>
+                </div>
+				<div class="col m9 19">
+                    <font size="3px">Message</font>
+                    <textarea name="message" id="message" type="text" placeholder="message" rows="5" style="height: auto;" readonly></textarea>
+                </div>
+				<div class="col m9 19">
+					<button class="btn waves-effect waves-light moderate-pink darken-1" type="button">Previous</button>
+                <div class="col m9 19">
+					<button class="btn waves-effect waves-light moderate-pink darken-1" type="button">Next</button>
+				</div>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

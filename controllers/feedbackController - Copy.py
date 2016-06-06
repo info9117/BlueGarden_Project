@@ -1,7 +1,7 @@
-<<<<<<< HEAD
+
 from flask import request, render_template, redirect, url_for, flash, session
 
-from models.contact import Contact
+from models.contact_deprecate import Contact
 from models.farm import *
 
 
@@ -30,7 +30,6 @@ class FeedbackController:
                 return redirect(url_for('contact'))
         return render_template("contact.html", errors=errors)
 
-=======
 from flask import request, render_template, session, redirect, url_for, flash
 
 from models.feedback import *
@@ -53,8 +52,3 @@ class FeedbackController:
 			success = True
 
 		return render_template("feedback.html", success=success)
-
-
-
-
->>>>>>> origin/sprint-3-himika-test-pass
