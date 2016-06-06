@@ -93,9 +93,9 @@ def logout():
     return userController.logout()
 
 
-@app.route('/contact', methods=['GET', 'POST'])
+'''@app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    return feedbackController.feedback()
+    return feedbackController.feedback()'''
 
 
 @app.route('/addcrop', methods=['GET', 'POST'])
@@ -249,11 +249,6 @@ def page_not_found(e):
 @app.route('/shutdown')
 def shutdown():
     shutdown_server()
-
-@app.route('/feedback', methods=['GET', 'POST'])
-def feedback():
-	return FeedbackController.feedback()
-
 
 
 @app.route('/feedback', methods=['GET', 'POST'])
