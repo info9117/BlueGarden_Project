@@ -71,6 +71,19 @@ def login_required(function):
     return wrapped_function
 
 
+# Manager Login Required wrap
+def manager_login_required(function):
+    @wraps(function)
+    def wrapped_function(*args, **kwargs):
+        if session.get('type', 'M'):
+            return function(*args, **kwargs)
+        else:
+            flash('Please login to view this page', 'error')
+            redirect_url = wrapped_function.__name__
+            return redirect(url_for('login', redirect=redirect_url))
+    return wrapped_function
+
+
 @app.route("/")
 def index():
     if session.get('logged_in', False):
@@ -96,11 +109,10 @@ def register():
 def logout():
     return userController.logout()
 
-
-'''@app.route('/contact', methods=['GET', 'POST'])
-def contact():
-    return feedbackController.feedback()'''
-
+@app.route('/view_feedback', methods=['GET', 'POST'])
+@manager_login_required
+def view_feedback():
+    return FeedbackController.view_feedback()
 
 @app.route('/addcrop', methods=['GET', 'POST'])
 @login_required

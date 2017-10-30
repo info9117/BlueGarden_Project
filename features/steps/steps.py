@@ -1,4 +1,3 @@
-
 import time
 from behave import *
 import re
@@ -43,7 +42,8 @@ def step_impl(context):
 
 @when('I register with First name, Last name, Email Id , Password & ConfirmPassword')
 def step_impl(context):
-    register(context,  first_name='Frodo', last_name='Baggins', email='fbaggins@lotr.com', password='frodobaggins', confirmpassword='frodobaggins')
+    register(context, first_name='Frodo', last_name='Baggins', email='fbaggins@lotr.com', password='frodobaggins',
+             confirmpassword='frodobaggins')
     assert context.browser.page_source
 
 
@@ -55,7 +55,8 @@ def step_impl(context):
 
 @when('I register with First name, Last name, existing Email Id , Password & ConfirmPassword')
 def step_impl(context):
-    register(context, first_name='Frodo', last_name='Baggins', email='fbaggins@lotr.com', password='frodobaggins',confirmpassword='frodobaggins')
+    register(context, first_name='Frodo', last_name='Baggins', email='fbaggins@lotr.com', password='frodobaggins',
+             confirmpassword='frodobaggins')
     assert context.browser.page_source
 
 
@@ -63,12 +64,16 @@ def step_impl(context):
 def step_impl(context):
     assert 'Email Id already exists' in context.browser.page_source
 
+
 # begin of add_produce feature
 
-@when('I register with First name, Last name, Email Id , Password & ConfirmPassword(Password and ConfirmPassword is not equal)')
+@when(
+    'I register with First name, Last name, Email Id , Password & ConfirmPassword(Password and ConfirmPassword is not equal)')
 def step_impl(context):
-    register(context, first_name='Frodo', last_name='Baggins', email='fbaggins@lotr.com', password='frodobaggins', confirmpassword='fefefefe')
+    register(context, first_name='Frodo', last_name='Baggins', email='fbaggins@lotr.com', password='frodobaggins',
+             confirmpassword='fefefefe')
     assert context.browser.page_source
+
 
 @then('I should be shown the error')
 def step_impl(context):
@@ -93,6 +98,7 @@ def step_impl(context):
 def step_impl(context):
     time.sleep(3)
     assert 'You successfully added Eggplant' in context.browser.page_source
+
 
 # end of add_produce feature
 
@@ -123,7 +129,6 @@ def step_impl(context):
     assert 'Browse Produce' in context.browser.page_source
 
 
-
 @when(u'I go to browse produce page and apply filters')
 def step_impl(context):
     context.browser.get(context.address + '/farm/1/produce/add')
@@ -132,17 +137,14 @@ def step_impl(context):
     assert True
 
 
-
 @then(u'I see produce in the page')
 def step_impl(context):
     assert 'Eggplant' in context.browser.page_source
 
 
-
 @then(u'I see filtered produce in the page')
 def step_impl(context):
     assert 'Corn' in context.browser.page_source
-
 
 
 def login(context, email, password):
@@ -153,7 +155,7 @@ def login(context, email, password):
     email_field.submit()
 
 
-def register(context, first_name, last_name, email, password,confirmpassword):
+def register(context, first_name, last_name, email, password, confirmpassword):
     firstname_field = context.browser.find_element_by_id("firstname")
     lastname_field = context.browser.find_element_by_id("lastname")
     email_field = context.browser.find_element_by_id("email")
@@ -167,14 +169,13 @@ def register(context, first_name, last_name, email, password,confirmpassword):
     email_field.submit()
 
 
-
 def add_produce(context, name, description, category, units, price1, prod_image):
     name_field = context.browser.find_element_by_id("name")
     description_field = context.browser.find_element_by_id("description")
     name_field.send_keys(name)
     description_field.send_keys(description)
-    context.browser.execute_script('$(function() { $("#category").val("'+category+'"); });')
-    context.browser.execute_script('$(function() { $("#unit").val("'+units+'"); });')
+    context.browser.execute_script('$(function() { $("#category").val("' + category + '"); });')
+    context.browser.execute_script('$(function() { $("#unit").val("' + units + '"); });')
     context.browser.execute_script('addItem()')
     price1_field = context.browser.find_element_by_id("price1")
     price1_field.send_keys(price1)
@@ -187,18 +188,18 @@ def step_impl(context):
     context.browser.get(context.address + "/produce/1")
 
 
-
-
 @given(u'the product details page and produce price')
 def step_impl(context):
     context.browser.get(context.address + "/produce/1")
+
 
 @then('the system shows product details product name, farm name, price, unit and image')
 def step_impl(context):
     """
     :type context: behave.runner.Context
     """
-    assert context.browser.page_source    
+    assert context.browser.page_source
+
 
 @when(u'the user selects the {amount} of the product')
 def step_impl(context, amount):
@@ -218,7 +219,8 @@ def step_impl(context, total):
     :type total: float
     """
     assert str(total) in context.browser.page_source
-	
+
+
 def send_feedback(context, username, email, subject, message):
     username_field = context.browser.find_element_by_id("username")
     email_field = context.browser.find_element_by_id("email")
@@ -229,15 +231,17 @@ def send_feedback(context, username, email, subject, message):
     subject_field.send_keys(subject)
     message_field.send_keys(message)
     email_field.submit()
-	
+
+
 @given('I am in feedback page')
 def step_impl(context):
-	context.browser.get(context.address + "/login")
-	login(context, 'singarisathwik007@gmail.com', 'dm08b048')
+    context.browser.get(context.address + "/login")
+    login(context, 'singarisathwik007@gmail.com', 'dm08b048')
 
-	context.browser.get(context.address + "/feedback")
-	register_found = re.search("feedback", context.browser.page_source)
-	assert register_found
+    context.browser.get(context.address + "/feedback")
+    register_found = re.search("feedback", context.browser.page_source)
+    assert register_found
+
 
 @when('I register with User name, Email, Subject, Message')
 def step_impl(context):
@@ -257,12 +261,14 @@ def step_impl(context):
     context.browser.get(context.address + "/purchase")
     assert 'Amount:' in context.browser.page_source
 
+
 @when(u'I click the payment button')
 def step_impl(context):
     time.sleep(5)
     context.browser.execute_script('$(".stripe-button").click();')
     time.sleep(5)
     assert True
+
 
 @then(u'I can enter my credit card details to pay')
 def step_impl(context):
@@ -303,7 +309,8 @@ def step_impl(context, name, email, phone, address, discount):
     name_field.submit()
 
 
-@then(u'the system saves the information into the database and shows success message to the user and total value of item and total value after discount')
+@then(
+    u'the system saves the information into the database and shows success message to the user and total value of item and total value after discount')
 def step_impl(context):
     """
     :type context: behave.runner.Context
@@ -321,20 +328,3 @@ def send_feedback(context, username, email, subject, message):
     subject_field.send_keys(subject)
     message_field.send_keys(message)
     email_field.submit()
-
-@given('I am in feedback page')
-def step_impl(context):
-	context.browser.get(context.address + "/login")
-	login(context, 'singarisathwik007@gmail.com', 'dm08b048')
-	context.browser.get(context.address + "/feedback")
-	register_found = re.search("feedback", context.browser.page_source)
-	assert register_found
-
-@when('I register with User name, Email, Subject, Message')
-def step_impl(context):
-    send_feedback(context, username='sam', email='example@gmail.com', subject="feedback", message='Hello!')
-    assert context.browser.page_source
-
-@then('I should be shown thank message')
-def step_impl(context):
-    assert 'Thanks' in context.browser.page_source

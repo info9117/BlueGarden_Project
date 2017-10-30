@@ -14,7 +14,7 @@ def step_impl(context):
     assert 'Welcome. Manager.'
 
 
-@then('system should display all received feedback, including <name>, <email>, <title>, <enquiry>')
+@then('system should display all received feedback, including (?P<name>.+), (?P<email>.+), (?P<title>.+), (?P<enquiry>.+)')
 def step_impl(context):
     contact(context, name='Fate', email='fate@microsoft.com', title='Hey!', enquiry='I am not happy. -_-##')
 
@@ -37,5 +37,4 @@ def contact(context, name, email, title, enquiry):
     title_field.send_keys(title)
     enquiry_field.send_keys(enquiry)
     email_field.submit()
-
 
